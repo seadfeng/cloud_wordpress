@@ -1,0 +1,65 @@
+zh-CN:
+  active_admin:
+    import: "导入"
+    do_import: "导入"
+    scopes:
+      open_tickets: "工单受理中"
+      opens: "开启"
+      closeds: "已关闭" 
+    set_default: "设置默认 %{model}" 
+    notice:
+      updated: "更新成功"
+    store:
+      store_type: "类型" 
+      deliveries: "配送商家"
+    delete_model: "归档 %{model}"
+    delete: "归档"
+    delete_confirmation: "Are you sure you want to archive this?"
+    batch_action:
+      succesfully_updated: 
+        one: "Successfully updated 1 %{model}"
+        other: "Successfully updated %{count} %{plural_model}"
+      succesfully_created: 
+        one: "Successfully created 1 %{model}"
+        other: "Successfully created %{count} %{plural_model}"
+      delete_confirmation: "Are you sure you want to archive these %{plural_model}?"
+      succesfully_destroyed:
+        one: "Successfully archived 1 %{model}"
+        other: "Successfully archived %{count} %{plural_model}"
+      labels:
+        destroy: "归档"
+    filters:
+      store_store_api_store_version_store_type_name: "商店类型"
+  active_admin_paranoia:
+    batch_actions:
+      restore_confirmation: "Are you sure you want to restore these %{plural_model}?"
+      succesfully_restored:
+        one: "Successfully restored 1 %{model}"
+        other: "Successfully restored %{count} %{plural_model}"
+    archived: "归档"
+    non_archived: "未归档"
+    restore_model: "恢复 %{model}"
+    restore: "恢复"
+    restore_confirmation: "Are you sure you want to restore this?"
+    something_wrong: "Something went wrong. Please try again"
+  time:
+      am: "AM"
+      pm: "PM"
+      formats:
+       default: "%Y/%m/%d"
+       short: "%b %d"
+       long: "%Y-%m-%d %H:%M:%S" 
+  activerecord:
+    errors:
+      models:
+        configuration_product:
+          attributes:
+            taxon:
+              required: "产品分类必须选择填写"
+    models:
+      ticket:
+        one: "问题追踪"
+        other: "问题追踪"
+      ticket_comment:
+        one: "问题议论"
+        other: "问题议论" 

@@ -1,4 +1,4 @@
-module Amz
+module Wordpress
     module Backend
         module Paranoia
             module DSL

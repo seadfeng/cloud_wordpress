@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.requirements << 'none'
 
   spec.add_dependency "wordpress_core", spec.version  
-  # spec.add_dependency "wordpress_backend", spec.version  
+  spec.add_dependency "wordpress_backend", spec.version  
 
 end
 

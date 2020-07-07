@@ -5,7 +5,6 @@ require "devise"
 require "draper" 
 require "pundit" 
 require "enumerize"  
-require "ckeditor"  
 require "chartkick"  
 require "groupdate"   
  

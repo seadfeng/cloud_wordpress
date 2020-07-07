@@ -66,8 +66,7 @@ module Amz
 
             def ck_js
                 insert_into_file(File.join('config/initializers', 'active_admin.rb'), after: "ActiveAdmin.setup do |config|\n") do
-                    <<-EOF
-                        config.register_javascript '//cdn.ckeditor.com/4.11.3/standard/ckeditor.js'
+                    <<-EOF 
                         config.register_javascript 'chartkick'
                         config.register_javascript 'Chart.bundle'
                         config.favicon = 'wordpress/favicon.ico'
