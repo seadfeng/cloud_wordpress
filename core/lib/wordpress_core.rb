@@ -1,2 +1,2 @@
-require "wordpress/core/engine"
+require "wordpress/core"
 

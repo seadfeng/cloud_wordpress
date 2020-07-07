@@ -1,5 +1,10 @@
-require "wordpress/core/railtie"
-require "rest-client"
+require "wordpress/core/engine"
+require 'rails/all' 
+require 'paranoia' 
+require 'sidekiq'
+require 'rest-client'
+require 'state_machine'
+require 'wordpress/auth/devish'
 module Wordpress
   ROOT_PATH = Pathname.new(File.join(__dir__, "../../")) 
 
@@ -26,3 +31,4 @@ module Wordpress
   end
 
 end
+

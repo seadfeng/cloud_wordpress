@@ -2,7 +2,7 @@ require 'rails/generators'
 
 # require 'amz/core'
 
-module Amz
+module Wordpress
     module Generators
         class InstallGenerator < Rails::Generators::Base 
             source_root File.expand_path("../templates", __dir__)
@@ -76,7 +76,7 @@ module Amz
             end 
 
             def install_js_packages 
-                packages += " chartkick"
+                packages = " chartkick"
                 packages += " chart.js" 
                 run "yarn add #{packages}" 
             end 
