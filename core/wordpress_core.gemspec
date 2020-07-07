@@ -1,12 +1,12 @@
 $:.push File.expand_path("lib", __dir__)
 
 # Maintain your gem's version:
-require "core/version"
+require "wordpress/core/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
   spec.name        = "wordpress_core"
-  spec.version     = WordpressCore::VERSION
+  spec.version     = Wordpress::VERSION
   spec.authors     = ["Sead Feng"]
   spec.email       = ["seadfeng@gmail.com"]
   spec.homepage    = "https://gitlab.seadapp.com/wordpress/wordpress"

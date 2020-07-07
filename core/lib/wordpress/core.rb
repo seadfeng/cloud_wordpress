@@ -1,8 +1,7 @@
-require "core/railtie"
+require "wordpress/core/railtie"
 
 module Wordpress
-  ROOT_PATH = Pathname.new(File.join(__dir__, "../../"))
-  mattr_accessor :user_class 
+  ROOT_PATH = Pathname.new(File.join(__dir__, "../../")) 
 
   # Used to configure Wordpress.
   #
