@@ -1,0 +1,9 @@
+---
+:verbose: false
+:pidfile: ./tmp/pids/sidekiq.pid
+:logfile: ./log/sidekiq.log
+:concurrency:  4
+:queues:
+  - default
+  - mailers
+  - wordpress 

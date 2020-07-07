@@ -1,5 +1,5 @@
 require "wordpress/core/railtie"
-
+require "rest-client"
 module Wordpress
   ROOT_PATH = Pathname.new(File.join(__dir__, "../../")) 
 

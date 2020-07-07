@@ -4,7 +4,7 @@ require "./core/lib/wordpress/core/version"
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
   spec.name        = "wordpress"
-  spec.version     = Amz::VERSION
+  spec.version     = Wordpress::VERSION
   spec.authors     = ["Sead Feng"]
   spec.email       = ["seadfeng@gmail.com"]
   spec.homepage    = "https://gitlab.seadapp.com/wordpress/wordpress"
@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.requirements << 'none'
 
   spec.add_dependency "wordpress_core", spec.version  
-  spec.add_dependency "wordpress_backend", spec.version  
+  # spec.add_dependency "wordpress_backend", spec.version  
 
 end
 
