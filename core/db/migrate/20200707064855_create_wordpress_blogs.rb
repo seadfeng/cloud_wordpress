@@ -2,7 +2,7 @@ class CreateWordpressBlogs < ActiveRecord::Migration[6.0]
   def up
     create_table :wordpress_blogs do |t|
       t.belongs_to :admin_user 
-      t.belongs_to :servier 
+      t.belongs_to :server 
       t.belongs_to :locale 
       t.belongs_to :cloudflare 
       t.belongs_to :domain 

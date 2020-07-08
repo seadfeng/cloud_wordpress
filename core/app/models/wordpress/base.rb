@@ -7,8 +7,10 @@ module Wordpress
             if has_attribute?(:preferences) && !preferences.nil?
                 self.preferences = default_preferences.merge(preferences)
             end
-        end 
-    
+        end  
+        
+        self.abstract_class = true
+
         def self.belongs_to_required_by_default
             false
         end

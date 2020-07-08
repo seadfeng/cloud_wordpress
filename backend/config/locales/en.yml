@@ -1,0 +1,63 @@
+en: 
+  active_admin:
+    send_job: "#%{id} %{name} Send to Job"
+    successfully_updated: "Successfully updated %{name}" 
+    successfully_created: "Successfully created %{name}" 
+    create_failure: "%{name} create failure" 
+    import: "Import"
+    filters:
+      store: "Store"
+      asin: "ASIN"
+    batch_actions:
+      delete_confirmation: "Are you sure you want to archive these %{plural_model}?"
+      succesfully_destroyed:
+        one: "Successfully archived 1 %{model}"
+        other: "Successfully archived %{count} %{plural_model}"
+      labels:
+        destroy: "Archive"
+  active_admin_paranoia:
+    batch_actions:
+      restore_confirmation: "Are you sure you want to restore these %{plural_model}?"
+      succesfully_restored:
+        one: "Successfully restored 1 %{model}"
+        other: "Successfully restored %{count} %{plural_model}"
+    archived: "Archived"
+    non_archived: "Non Archived"
+    restore_model: "Restore %{model}"
+    restore: "Restore"
+    restore_confirmation: "Are you sure you want to restore this?"
+    something_wrong: "Something went wrong. Please try again"
+  active_admin_import:
+    file: 'File'
+    file_error: "Error: %{message}"
+    file_format_error: "You can import only valid csv file"
+    file_empty_error: "You can't import empty file"
+    no_file_error: "Please, select file to import"
+    details: "Please, select file to import"
+    imported:
+      one: "Successfully imported 1 %{model}"
+      other: "Successfully imported %{count} %{plural_model}"
+    failed:
+      one:   "Failed to import 1 %{model}: %{message}"
+      other: "Failed to import %{count} %{plural_model}: %{message}"
+    import_model: "Import %{plural_model}"
+    import_btn: "Import"
+    import_btn_disabled: "Wait..."
+    csv_options: "CSV options"
+    col_sep: 'Col sep'
+    row_sep: 'Row sep'
+    quote_char: 'Quote char'
+  products:
+    discontinue:
+      flash:
+        success: "Discontinued"
+    move_to_draft:
+      flash:
+        success: "Has Moved To Draft"
+    publish:
+      flash:
+        success: "Publish Success!"
+    models:
+      product:
+        one: "Product"
+        other: "Products"

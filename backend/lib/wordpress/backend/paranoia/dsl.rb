@@ -30,7 +30,7 @@ module Wordpress
                         end
                     end
             
-                    batch_action :restore, confirm: proc{ I18n.t('active_admin_paranoia.batch_actions.restore_confirmation', plural_model: resource_class.to_s.downcase.pluralize) }, if: proc{ authorized?(Amz::Backend::Paranoia::Auth::RESTORE, resource_class) && params[:scope] == 'archived' } do |ids|
+                    batch_action :restore, confirm: proc{ I18n.t('active_admin_paranoia.batch_actions.restore_confirmation', plural_model: resource_class.to_s.downcase.pluralize) }, if: proc{ authorized?(Wordpress::Backend::Paranoia::Auth::RESTORE, resource_class) && params[:scope] == 'archived' } do |ids|
                         resource_class.to_s.camelize.constantize.restore(ids, recursive: true)
                         options = { notice: I18n.t('active_admin_paranoia.batch_actions.succesfully_restored', count: ids.count, model: resource_class.to_s.camelize.constantize.model_name, plural_model: resource_class.to_s.downcase.pluralize) }
                         # For more info, see here: https://github.com/rails/rails/pull/22506
@@ -42,7 +42,7 @@ module Wordpress
                     end
             
                     action_item :restore, only: :show do
-                        link_to(I18n.t('active_admin_paranoia.restore_model', model: resource_class.to_s.titleize), "#{resource_path(resource)}/restore", method: :put, data: { confirm: I18n.t('active_admin_paranoia.restore_confirmation') }) if authorized?(Amz::Backend::Paranoia::Auth::RESTORE, resource) && resource.deleted?
+                        link_to(I18n.t('active_admin_paranoia.restore_model', model: resource_class.to_s.titleize), "#{resource_path(resource)}/restore", method: :put, data: { confirm: I18n.t('active_admin_paranoia.restore_confirmation') }) if authorized?(Wordpress::Backend::Paranoia::Auth::RESTORE, resource) && resource.deleted?
                     end
             
                     member_action :restore, method: :put, confirm: proc{ I18n.t('active_admin_paranoia.restore_confirmation') }, if: proc{ authorized?(ActiveAdmin::Auth::RESTORE, resource_class) } do
