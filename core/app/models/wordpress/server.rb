@@ -1,5 +1,6 @@
 module Wordpress
   class Server < Wordpress::Base
+    acts_as_paranoid
     include Validates
     belongs_to :cloudflare
     has_many :blogs 

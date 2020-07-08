@@ -6,9 +6,9 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
     permit_params  :name,  :max_size ,:description, :domain,
                    :host, :host_port,:host_user, :host_password, 
                    :mysql_host, :mysql_host_user, :mysql_password, :mysql_port, :installed, :mysql_user
-
     
-                   
+    active_admin_paranoia
+
     controller do
         def update  
             params[:server][:host_password] = resource.mysql_password if params[:server][:host_password].blank?

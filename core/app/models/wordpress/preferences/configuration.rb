@@ -29,7 +29,7 @@ module Wordpress::Preferences
       end
   
       def preferences
-        ::Wordpress::Preferences::ScopedStore.new(self.class.name.underscore)
+        ::Wordpress::Preferences::ScopedCloudflare.new(self.class.name.underscore)
       end
   
       def reset

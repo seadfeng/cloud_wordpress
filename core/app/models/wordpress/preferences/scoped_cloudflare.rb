@@ -5,20 +5,20 @@ module Wordpress::Preferences
         @suffix = suffix
       end
   
-      def store
+      def cloudflare
         Wordpress::Preferences::Cloudflare.instance
       end
   
       def fetch(key, &block)
-        store.fetch(key_for(key), &block)
+        cloudflare.fetch(key_for(key), &block)
       end
   
       def []=(key, value)
-        store[key_for(key)] = value
+        cloudflare[key_for(key)] = value
       end
   
       def delete(key)
-        store.delete(key_for(key))
+        cloudflare.delete(key_for(key))
       end
   
       private

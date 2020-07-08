@@ -4,6 +4,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id
         menu priority: 50 
         active_admin_paranoia
+        
         controller do
             def create  
                 params[:blog][:admin_user_id] = current_admin_user.id
