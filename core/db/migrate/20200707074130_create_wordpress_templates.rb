@@ -7,10 +7,10 @@ class CreateWordpressTemplates < ActiveRecord::Migration[6.0]
       t.string 	   :description
       
       t.string 	   :wordpress_user,        null: false, default: "admin"
-      t.string 	   :wordpress_passwd,      null: false, default: ""
+      t.string 	   :wordpress_password,      null: false, default: ""
  
       t.string 	   :mysql_user,            null: false, default: ""
-      t.string     :mysql_password,          null: false, default: ""
+      t.string     :mysql_password,        null: false, default: ""
 
       t.boolean    :installed,             null: false, default: 0
 
