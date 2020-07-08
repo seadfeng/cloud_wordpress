@@ -4,7 +4,9 @@ require 'paranoia'
 require 'sidekiq'
 require 'rest-client'
 require 'state_machine'
+require 'net/ssh'
 require 'wordpress/auth/devish'
+
 module Wordpress
   ROOT_PATH = Pathname.new(File.join(__dir__, "../../")) 
 

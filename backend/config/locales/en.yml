@@ -47,17 +47,3 @@ en:
     col_sep: 'Col sep'
     row_sep: 'Row sep'
     quote_char: 'Quote char'
-  products:
-    discontinue:
-      flash:
-        success: "Discontinued"
-    move_to_draft:
-      flash:
-        success: "Has Moved To Draft"
-    publish:
-      flash:
-        success: "Publish Success!"
-    models:
-      product:
-        one: "Product"
-        other: "Products"

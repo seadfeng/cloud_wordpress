@@ -57,9 +57,27 @@ zh-CN:
             taxon:
               required: "产品分类必须选择填写"
     models:
-      ticket:
-        one: "问题追踪"
-        other: "问题追踪"
-      ticket_comment:
-        one: "问题议论"
-        other: "问题议论" 
+      proxy:
+        one: "PHP代理"
+        other: "PHP代理"
+      setting:
+        one: "设置"
+        other: "设置"
+      comment:
+        one: "备注"
+        other: "备注"
+      permission:
+        one: "权限"
+        other: "权限"
+      server:
+        one: "服务器"
+        other: "服务器"
+      template:
+        one: "WP模版"
+        other: "WP模版"
+      blog:
+        one: "博客"
+        other: "博客"
+      locale:
+        one: "地区/语言"
+        other: "地区/语言" 
