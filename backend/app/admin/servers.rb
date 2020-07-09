@@ -3,7 +3,7 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
     actions :all, except: [:destroy, :show] 
     batch_action :destroy, false
     menu priority: 70 , parent: "Settings"  
-    permit_params  :name,  :max_size ,:description, :domain,
+    permit_params  :name,  :max_size ,:description, :domain, :cloudflare_id,
                    :host, :host_port,:host_user, :host_password, 
                    :mysql_host, :mysql_host_user, :mysql_password, :mysql_port, :installed, :mysql_user
     

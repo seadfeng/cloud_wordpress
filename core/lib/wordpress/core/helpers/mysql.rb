@@ -2,62 +2,50 @@
 # ssh_info = { host: '127.0.0.1', user: 'root', password: 'password' }
 # mysql = { user: 'root', user_host: '127.0.0.1' , user_password: 'user_password', database: "user_database", collection_user: "root", collection_password: "pwd", collection_host: "127.0.0.1"   }
 #  my = Wordpress::Core::Helpers::Mysql.new( ssh_info, mysql)
+#  Net::SSH.start( ssh_info[:host],  ssh_info[:user] , :password => ssh_info[:password]) do |ssh|
 module Wordpress
     module Core
         module Helpers
             class Mysql
-                attr_reader :ssh_info, :mysql 
+                attr_reader :mysql 
 
-                def initialize( ssh_info, mysql )
-                    @ssh_info = ssh_info
+                def initialize( mysql ) 
                     @mysql  = mysql 
                 end     
 
                 def create_db_and_user
-                    begin
-                        Net::SSH.start( ssh_info[:host],  ssh_info[:user] , :password => ssh_info[:password]) do |ssh|
-                            channel = ssh.open_channel do |ch| 
-                                ssh.exec "#{collection_mysql} << EOF
-                                        #{create_database} #{mysql_grant}
-                                        EOF
-                                    " do |ch, success|
-                                    raise "could not execute command" unless success
-                                    # "on_data" is called when the process writes something to stdout
-                                    ch.on_data do |c, data|
-                                        $stdout.print data
-                                    end
-                                
-                                    # "on_extended_data" is called when the process writes something to stderr
-                                    ch.on_extended_data do |c, type, data|
-                                        $stderr.print data
-                                    end
-                                
-                                    ch.on_close { puts "done!" }
-                                end 
-                            end
-                        end
-                    rescue
-                        puts "FU!"
-                    end 
-                end 
+                    "#{collection_mysql} << EOF
+                        #{create_database} #{mysql_grant}
+                    EOF"          
+                end  
 
-                def import_db(file_path)
-                    begin
-                        Net::SSH.start( ssh_info[:host],  ssh_info[:user] , :password => ssh_info[:password]) do |ssh|
-                            channel = ssh.open_channel do |ch| 
-                                ssh.exec import_mysql(file_path) 
-                            end
-                        end
-                    rescue
-                        puts "FU!"
-                    end 
+                def import_mysql_sql(file_path) 
+                    "
+                        use #{mysql[:database]};
+                        source #{file_path};
+                    "
                 end
-
-                private 
 
                 def import_mysql(file_path) 
                     "#{collection_mysql} #{mysql[:database]} < #{file_path}"
                 end
+
+                def update_password(wp_password)
+                    "
+                        update wp_users set user_pass=md5(\"#{wp_password}\") where id=1;
+                    "
+                end
+                
+                def update_siteurl(new_url)
+                    "
+                        update wp_options set option_value=\"#{new_url}\" where option_name=\"siteurl\";
+                        update wp_options set option_value=\"#{new_url}\" where option_name=\"home\"; 
+                    "
+                end
+
+                private 
+
+                
 
                 def create_database
                     "create database IF not  EXISTS #{mysql[:database]};"

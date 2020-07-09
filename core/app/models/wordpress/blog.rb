@@ -15,6 +15,28 @@ module Wordpress
 
     before_validation :check_server_and_cloudflare
 
+    def cloudflare_domain 
+      "#{number}#{server.domain}"
+    end
+
+    def cloudflare_origin 
+      "https://#{cloudflare_domain}/"
+    end 
+    
+    def online_origin
+      proto = "http://"
+      proto = "https://" if use_ssl
+      if domain 
+        if cname == "@" || cname.blank?
+          "#{proto}#{domain.name}/"
+        else
+          "#{proto}#{cname}.#{domain.name}/"
+        end 
+      else
+        nil
+      end
+    end
+
     private
 
     def check_server_and_cloudflare
