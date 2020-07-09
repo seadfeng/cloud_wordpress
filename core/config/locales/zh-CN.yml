@@ -57,6 +57,9 @@ zh-CN:
             taxon:
               required: "产品分类必须选择填写"
     models:
+      domain:
+        one: "域名"
+        other: "域名"
       proxy:
         one: "PHP代理"
         other: "PHP代理"

@@ -17,9 +17,9 @@ module Wordpress
                     begin
                         Net::SSH.start( ssh_info[:host],  ssh_info[:user] , :password => ssh_info[:password]) do |ssh|
                             channel = ssh.open_channel do |ch| 
-                                ssh.exec "#{collection_mysql} <<!
+                                ssh.exec "#{collection_mysql} << EOF
                                         #{create_database} #{mysql_grant}
-                                    !
+                                        EOF
                                     " do |ch, success|
                                     raise "could not execute command" unless success
                                     # "on_data" is called when the process writes something to stdout
@@ -41,7 +41,23 @@ module Wordpress
                     end 
                 end 
 
+                def import_db(file_path)
+                    begin
+                        Net::SSH.start( ssh_info[:host],  ssh_info[:user] , :password => ssh_info[:password]) do |ssh|
+                            channel = ssh.open_channel do |ch| 
+                                ssh.exec import_mysql(file_path) 
+                            end
+                        end
+                    rescue
+                        puts "FU!"
+                    end 
+                end
+
                 private 
+
+                def import_mysql(file_path) 
+                    "#{collection_mysql} #{mysql[:database]} < #{file_path}"
+                end
 
                 def create_database
                     "create database IF not  EXISTS #{mysql[:database]};"
