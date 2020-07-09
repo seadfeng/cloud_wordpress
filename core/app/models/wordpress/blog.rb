@@ -1,7 +1,8 @@
 module Wordpress
   class Blog < Wordpress::Base
+    include Wordpress::Blog::StateMachine 
     acts_as_paranoid
-    include Wordpress::NumberGenerator.new(prefix: 'W')
+    include Wordpress::NumberGenerator.new(prefix: 'w')
     belongs_to :admin_user
     belongs_to :locale
     belongs_to :cloudflare
@@ -16,7 +17,7 @@ module Wordpress
     before_validation :check_server_and_cloudflare
 
     def cloudflare_domain 
-      "#{number}#{server.domain}"
+      "#{number}.#{cloudflare.domain}"
     end
 
     def cloudflare_origin 

@@ -1,23 +1,29 @@
 module Wordpress
     class Blog < Wordpress::Base
         module StateMachine
-            extend ActiveSupport::Concern
-            include Wordpress::Blog::StateMachine  
-
-            included do    
-                state_machine :state, initial: :new do
-                    before_transition [:new ] => :installed, :do => :touch_installed_at
+            extend ActiveSupport::Concern  
+            included do  
+                extend Enumerize
+                enumerize :state, in: [:pending, :processing, :installed, :published], default: :pending    
+                state_machine :state, initial: :pending do
+                    before_transition [:pending ] => :processing, :do => :send_job
+                    before_transition [:processing ] => :installed, :do => :touch_installed_at
                     before_transition [:installed ] => :published, :do => :touch_published_at
 
                     event :install do 
-                        transition [:new]  => :installed
+                        transition [:pending]  => :processing
+                    end 
+                    
+                    event :install do 
+                        transition [:processing]  => :installed
                     end 
 
                     event :publish do 
                         transition [:installed]  => :published
                     end 
 
-                    state :new
+                    state :pending
+                    state :processing
                     state :installed 
                     state :published do 
                         validate :validate_published 
@@ -29,6 +35,10 @@ module Wordpress
                 end
 
                 private
+
+                def send_job
+                    Wordpress::BlogInstallJob.perform_later(self)
+                end
 
                 def touch_installed_at
                     update_attribute(:installed_at, Time.current)

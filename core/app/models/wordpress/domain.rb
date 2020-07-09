@@ -1,7 +1,7 @@
 module Wordpress
   class Domain < Wordpress::Base
-    acts_as_paranoid
     include Validates
+    acts_as_paranoid 
     has_many :blogs
 
     with_options presence: true do 

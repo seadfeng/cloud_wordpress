@@ -1,7 +1,9 @@
 module Wordpress
   class Cloudflare < Wordpress::Base
-    acts_as_paranoid
     include Wordpress::Cloudflare::Preference
+    include Validates
+    acts_as_paranoid
+    
     
     has_many :blogs
 
@@ -10,7 +12,8 @@ module Wordpress
 
     with_options presence: true do 
       validates_uniqueness_of :api_user, case_sensitive: true, allow_blank: false     
-      validates :api_user,  :api_token, :name 
+      validates :api_user,  :api_token, :name , :domain
+      validates :domain, domain: true 
     end  
 
   end

@@ -4,7 +4,11 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id
         menu priority: 50 
         active_admin_paranoia
-        actions :all, except: [:show] 
+        # actions :all, except: [:show] 
+
+        state_action :install
+        state_action :publish
+        
         
         controller do
             def create  
@@ -18,15 +22,17 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             selectable_column
             id_column   
             column :admin_user  
-            column :locale  
-            column :server  
-            column :cloudflare
+            column :locale 
+            if current_admin_user.admin? 
+                column :server  
+                column :cloudflare
+            end
             column :domain    
             column :origin do |source|
                 link_to source.cloudflare_origin, source.cloudflare_origin
             end
             column :website_url do |source|
-                link_to source.online_origin, source.online_origin
+                link_to source.online_origin, source.online_origin, target: "_blank" if source.online_origin
             end    
             column :name    
             column :description    
@@ -56,5 +62,30 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             end
             f.actions
         end 
+
+        show do
+            panel t('active_admin.details', model: resource_class.to_s.titleize) do
+                attributes_table_for resource do 
+                    row :admin_user  
+                    row :locale  
+                    row :server  
+                    row :cloudflare
+                    row :domain    
+                    row :origin do |source|
+                        link_to source.cloudflare_origin, source.cloudflare_origin
+                    end
+                    row :website_url do |source|
+                        link_to source.online_origin, source.online_origin, target: "_blank" if source.online_origin
+                    end 
+                    row :name
+                    row :description
+                    tag_row :state, machine: :state  
+                    row :installed_at  
+                    row :published_at  
+                    row :updated_at 
+                    row :created_at   
+                end
+            end
+        end
     end
 end
