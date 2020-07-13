@@ -14,8 +14,12 @@ module Wordpress
                         transition [:pending]  => :processing
                     end 
                     
-                    event :install do 
+                    event :processed do 
                         transition [:processing]  => :installed
+                    end 
+
+                    event :error do 
+                        transition [:processing]  => :pending
                     end 
 
                     event :publish do 

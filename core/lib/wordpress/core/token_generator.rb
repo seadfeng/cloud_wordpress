@@ -1,10 +1,10 @@
 module Wordpress
     module Core
       module TokenGenerator
-        def generate_token(model_class = Amz::Visitor)
+        def generate_token(model_class = Wordpress::ApiToken, key_name = 'key')
           loop do
             token = "#{random_token}#{unique_ending}"
-            break token unless model_class.exists?(token: token)
+            break token unless model_class.exists?("#{key_name}": token)
           end
         end
   
