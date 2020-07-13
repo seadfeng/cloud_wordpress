@@ -1,14 +1,25 @@
 if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
     ActiveAdmin.register Wordpress::Blog, as: "Blog" do
         init_controller 
-        permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id
+        permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id, :cname
         menu priority: 50 
         active_admin_paranoia
         # actions :all, except: [:show] 
 
         state_action :install
         state_action :processed
-        state_action :publish 
+        state_action :has_done
+        state_action :publish  
+        
+
+        # Scope
+        scope :pending
+        scope :installed
+        scope :processing
+        scope :done
+        scope :published
+        scope :published_today
+        scope :published_month
 
         
         controller do
@@ -51,6 +62,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         end
 
         filter :state, as: :check_boxes  
+        filter :use_ssl 
         filter :server
         filter :cloudflare
         filter :domain_name
@@ -64,7 +76,8 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                             url:  admin_domains_path, 
                             fields: [:name], 
                             display_name: :name, 
-                            minimum_input_length: 2      
+                            minimum_input_length: 2     
+                f.input :cname
                 f.input :name     
                 f.input :description    
             end

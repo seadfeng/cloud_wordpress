@@ -1,6 +1,7 @@
 module Wordpress
   class Blog < Wordpress::Base
     include Wordpress::Blog::StateMachine 
+    include Wordpress::Blog::Scope
     acts_as_paranoid
     include Wordpress::NumberGenerator.new(prefix: 'w')
     belongs_to :admin_user

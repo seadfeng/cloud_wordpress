@@ -1,9 +1,9 @@
-.status_tag { 
-    &.complete,
-    &.published,
+.status_tag {  
     &.installed,
     &.open,
-    &.done { background:  #7DB942; }  
+    &.done { background:  #29c7b3; }  
+    &.complete, 
+    &.published { background:  #7DB942; }  
     &.draft,
     &.processing { background: orange; } 
 } 
