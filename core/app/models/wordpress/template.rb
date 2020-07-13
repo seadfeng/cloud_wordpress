@@ -26,12 +26,12 @@ module Wordpress
     end 
 
     def set_mysql_password 
-      self.mysql_password = SecureRandom.urlsafe_base64(nil, false)
+      self.mysql_password = random_password
     end
 
     def set_wordpress_admin_user
       self.wordpress_user = "admin"
-      self.wordpress_password = random_password
+      self.wordpress_password = random_password  
     end
 
     def origin
@@ -39,13 +39,18 @@ module Wordpress
     end
 
     def reset_password
-      self.wordpress_password
+      self.wordpress_password = random_password
+    end
+
+    def send_install_job
+      Wordpress::TemplateInstallJob.perform_later(self)
     end
 
     private 
 
     def random_password
-      SecureRandom.urlsafe_base64(nil, false)
+      random = SecureRandom.urlsafe_base64(nil, false) 
+      "!0O#{random}"
     end
 
   end

@@ -10,12 +10,11 @@ module Wordpress
 
                 def create_virtual_host 
                     vhost_file = "/etc/httpd/conf.d/vhost/#{conf_file_name}"
-                    ssh = "
-                    if [ ! -f \"#{vhost_file\" ];then
+                    ssh = "if [ ! -f \"#{vhost_file}\" ];then
                         echo \"#{virtual_host}\" > #{vhost_file}
                         service httpd restart
-                    fi
-                    "
+                        fi
+                        "
                 end 
 
                 def mkdir_directory

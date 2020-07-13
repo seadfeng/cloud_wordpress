@@ -17,6 +17,9 @@ module Wordpress
 
     before_validation :check_server_and_cloudflare
 
+    before_validation :set_wordpress_user_and_password
+    after_create :set_mysql_user_and_password
+
     def cloudflare_domain 
       "#{number}.#{cloudflare.domain}"
     end
@@ -39,6 +42,16 @@ module Wordpress
       end
     end
 
+    def set_wordpress_user_and_password
+      self.user = "admin"
+      self.password = random_password
+    end
+
+    def set_mysql_user_and_password 
+      update_attribute(:mysql_user, "wp_user_#{self.id}")
+      update_attribute(:mysql_password, random_password)
+    end
+
     private
 
     def check_server_and_cloudflare
@@ -49,6 +62,11 @@ module Wordpress
         self.cloudflare_id = Cloudflare.active&.first&.id
       end
     end 
+
+    def random_password
+      random = SecureRandom.urlsafe_base64(nil, false) 
+      "!0O#{random}"
+    end
 
     
   end

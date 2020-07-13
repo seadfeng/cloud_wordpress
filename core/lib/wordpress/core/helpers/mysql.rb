@@ -15,7 +15,7 @@ module Wordpress
 
                 def create_db_and_user
                     "#{collection_mysql} << EOF
-                        #{create_database} #{mysql_grant}
+                        #{create_database} #{create_mysql_user} #{mysql_grant}
                     EOF"          
                 end  
 
