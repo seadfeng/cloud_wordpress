@@ -7,16 +7,20 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         # actions :all, except: [:show] 
 
         state_action :install
-        state_action :publish
-        
+        state_action :processed
+        state_action :publish 
+
         
         controller do
             def create  
                 params[:blog][:admin_user_id] = current_admin_user.id
                 super 
             end
-        end
+        end 
 
+        member_action :login, method: :put do   
+            render "admin/blogs/login.html.erb" , locals: { blog_url: resource.cloudflare_origin, user: resource.user , password: resource.password } 
+        end
 
         index do
             selectable_column
@@ -29,12 +33,15 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             end
             column :domain    
             column :origin do |source|
-                link_to source.cloudflare_origin, source.cloudflare_origin
+                link_to source.cloudflare_origin, source.cloudflare_origin 
             end
             column :website_url do |source|
                 link_to source.online_origin, source.online_origin, target: "_blank" if source.online_origin
             end    
-            column :name    
+            column :name   
+            column :login do |source|
+                link_to image_tag("icons/arrows.svg", width: "20", height: "20")  , login_admin_blog_path(source) , target: "_blank" , method: :put , class: "" if source.installed?  
+            end 
             column :description    
             tag_column :state, machine: :state   
             column :status    
@@ -43,6 +50,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             actions
         end
 
+        filter :state, as: :check_boxes  
         filter :server
         filter :cloudflare
         filter :domain_name

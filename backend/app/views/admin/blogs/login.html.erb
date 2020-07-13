@@ -1,0 +1,8 @@
+<iframe name="ifraRight" id="ifraRight" src="<%= blog_url %>/wp-login.php" frameborder="0" height="10" onload="$('#wp-submit').click();"></iframe>
+<form name="loginform" id="loginform" action="<%= blog_url %>/wp-login.php" method="post">
+		<input type="hidden" name="log" id="user_login" class="input" value="<%= user %>" size="20"></label> 
+		<input type="hidden" name="pwd" id="user_pass" class="input" value="<%=  password %>" size="20"></label>   
+		<input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Login">
+		<input type="hidden" name="redirect_to" value="<%= blog_url %>/wp-admin/">
+		<input type="hidden" name="testcookie" value="1"> 
+</form> 

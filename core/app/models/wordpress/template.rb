@@ -34,6 +34,10 @@ module Wordpress
       self.wordpress_password = random_password
     end
 
+    def origin
+      "#{Wordpress::Conifg.template_origin}/#{self.id}"
+    end
+
     private 
 
     def random_password
