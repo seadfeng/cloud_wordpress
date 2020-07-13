@@ -17,17 +17,25 @@ module Wordpress
                     "#{collection_mysql} << EOF
                         #{create_database} #{create_mysql_user} #{mysql_grant}
                     EOF"          
-                end  
+                end   
+
+                def import_mysql(file_path) 
+                    "#{collection_mysql} #{mysql[:database]} < #{file_path}"
+                end 
+
+                def only_update_password(wp_password)
+                    "#{collection_mysql} << EOF
+                        #{update_password(wp_password)} 
+                    EOF" 
+                end
+
+                private  
 
                 def import_mysql_sql(file_path) 
                     "
                         use #{mysql[:database]};
                         source #{file_path};
                     "
-                end
-
-                def import_mysql(file_path) 
-                    "#{collection_mysql} #{mysql[:database]} < #{file_path}"
                 end
 
                 def update_password(wp_password)
@@ -42,11 +50,7 @@ module Wordpress
                         update wp_options set option_value=\"#{new_url}\" where option_name=\"home\"; 
                     "
                 end
-
-                private 
-
                 
-
                 def create_database
                     "create database IF not  EXISTS #{mysql[:database]};"
                 end

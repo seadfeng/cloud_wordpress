@@ -1,20 +1,18 @@
 require 'wordpress/core/helpers/mysql'
 module Wordpress
-    class TemplateInstallJob < ApplicationJob
-      queue_as :default
-      sidekiq_options retry: 3
-      attr_reader :template 
-      
+    class TemplateInstallJob < Wordpress::TemplateJob 
+        
       # rails c
       # template = Wordpress::Template.last
       # tp = Wordpress::TemplateInstallJob.perform_now(template)
       def perform(template)  
         config = Wordpress::Config
         directory = "#{config.template_directory}/#{template.id}"
-        file_name = template.install_url.gsub!(/.*\/([^\/]*\.gz)$/,'\1')
+        file_name =  "#{template.install_url}"
+        file_name.gsub!(/.*\/([^\/]*\.gz)$/,'\1')
         unless file_name.nil?  
             mysql_info = { user: template.mysql_user, 
-                      user_host: config.template_host , 
+                      user_host: config.template_mysql_host , 
                       user_password: template.mysql_password, 
                       database: template.mysql_user, 
                       collection_user: config.template_mysql_host_user, 
@@ -24,18 +22,29 @@ module Wordpress
             begin
                 Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password) do |ssh| 
                     mkdir_path = "mkdir #{directory} -p"
+
                     ssh.exec mkdir_path
                     puts mkdir_path
+
+                    down_install = " cd #{directory} && wget #{template.install_url} && tar xf #{file_name} && chown apache:apache ./ -R "
+
                     ssh.exec "if [ ! -f '#{directory}/#{file_name}' ];then 
-									   cd #{directory} && wget #{template.install_url} && tar xf #{file_name} && chown apache:apache ./ -R
-									   echo 'User-agent: *' >> robots.txt
-									   echo 'Disallow: /' >> robots.txt
-                                    fi"
+                                        echo 'User-agent: *' >> robots.txt
+									    echo 'Disallow: /' >> robots.txt
+                                       #{down_install}  
+                              fi"
                     ssh.exec mysql.create_db_and_user  
-                    check_ok = ssh.exec! "if [  -f '#{directory}/#{file_name}' ];then
+
+                    puts mysql.create_db_and_user
+
+                    check_ok = ssh.exec! "if [  -d '#{directory}/wordpress' ];then
                                 echo 'OK'
-                               fi" 
-                    template.update_attribute(:installed , 1) if check_ok == "OK" 
+                               fi"  
+                    if /OK/.match(check_ok) 
+                        template.update_attribute(:installed , 1) 
+                    else
+                        raise "Downloading..."
+                    end
                 end
             rescue Exception, ActiveJob::DeserializationError => e
                 logger = Logger.new(log_file)

@@ -3,8 +3,8 @@ class CreateWordpressServers < ActiveRecord::Migration[6.0]
     create_table :wordpress_servers do |t|
       t.belongs_to :cloudflare 
       t.integer  :max_size,  null: false, default: 200 
-      t.string  :name
-      t.text    :description
+      t.string   :name
+      t.text     :description
       t.datetime :deleted_at
 
       ## Domain

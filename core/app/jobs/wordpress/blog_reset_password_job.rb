@@ -1,8 +1,5 @@
 module Wordpress
-    class BlogResetPasswordJob < ApplicationJob
-      queue_as :default
-      sidekiq_options retry: 3
-      attr_reader :blog
+    class BlogResetPasswordJob <  Wordpress::BlogJob 
       
       def perform(blog) 
 

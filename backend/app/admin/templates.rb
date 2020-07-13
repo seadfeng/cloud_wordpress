@@ -28,6 +28,8 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
 
     member_action :reset_password, method: :put do   
       resource.reset_password 
+      options = { notice: I18n.t('active_admin.reset_password',  default: "Reset Password: Processing") }
+      redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
     end
 
     index do
@@ -41,7 +43,7 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
           link_to image_tag("icons/arrows.svg", width: "20", height: "20")  , login_admin_template_path(source) , target: "_blank" , method: :put , class: ""  if source.installed 
         end
         column :reset_password do |source| 
-          link_to image_tag("icons/arrows.svg", width: "20", height: "20")  , reset_password_admin_template_path(source) , target: "_blank" , method: :put , class: ""  if source.installed 
+          link_to  I18n.t('active_admin.reset',  default: "Reset")  , reset_password_admin_template_path(source) , method: :put , class: ""  if source.installed 
         end
         column :installed
         column :created_at

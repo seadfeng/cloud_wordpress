@@ -20,6 +20,10 @@ module Wordpress
     before_validation :set_wordpress_user_and_password
     after_create :set_mysql_user_and_password
 
+    def mysql_db
+      self.mysql_user
+    end
+
     def cloudflare_domain 
       "#{number}.#{cloudflare.domain}"
     end

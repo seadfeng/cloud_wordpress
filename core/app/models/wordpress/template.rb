@@ -20,6 +20,7 @@ module Wordpress
     before_validation :set_mysql_password
     before_validation :set_wordpress_admin_user
     after_create :set_mysql_user
+    after_create :send_install_job
   
     def set_mysql_user 
       update_attribute(:mysql_user, "wp_blog_#{self.id}")
@@ -38,8 +39,9 @@ module Wordpress
       "#{Wordpress::Conifg.template_origin}/#{self.id}"
     end
 
-    def reset_password
-      self.wordpress_password = random_password
+    def reset_password 
+      update_attribute(:wordpress_password, random_password) 
+      Wordpress::TemplateResetPasswordJob.perform_later(self)
     end
 
     def send_install_job
