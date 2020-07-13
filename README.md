@@ -8,7 +8,7 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "amz", git: "git@gitlabonline.seadapp.com:wordpress/cloud.git"
+gem "wordpress_cloud", git: "git@gitlabonline.seadapp.com:wordpress/cloud.git"
 ```
 
 And then execute:
