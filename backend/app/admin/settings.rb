@@ -2,7 +2,7 @@ ActiveAdmin.register_page "Settings" do
     menu priority: 160  
 
     content do
-        panel "模版设置" do   
+        panel "模版主机设置" do   
             form method: "post", action: admin_settings_update_path do
                 input name: "authenticity_token" , value: form_authenticity_token , type: "hidden" 
                 fieldset class: "inputs" do

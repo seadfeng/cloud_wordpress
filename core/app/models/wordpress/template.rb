@@ -38,6 +38,10 @@ module Wordpress
       "#{Wordpress::Conifg.template_origin}/#{self.id}"
     end
 
+    def reset_password
+      self.wordpress_password
+    end
+
     private 
 
     def random_password

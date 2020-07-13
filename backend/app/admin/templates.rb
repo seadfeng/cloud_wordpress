@@ -26,6 +26,10 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
       render "admin/blogs/login.html.erb" , locals: { blog_url: resource.origin, user: resource.wordpress_user , password: resource.wordpress_password } 
     end
 
+    member_action :reset_password, method: :put do   
+      resource.reset_password 
+    end
+
     index do
         selectable_column
         id_column
@@ -35,6 +39,9 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
         column :wordpress_user 
         column :login do |source| 
           link_to image_tag("icons/arrows.svg", width: "20", height: "20")  , login_admin_template_path(source) , target: "_blank" , method: :put , class: ""  if source.installed 
+        end
+        column :reset_password do |source| 
+          link_to image_tag("icons/arrows.svg", width: "20", height: "20")  , reset_password_admin_template_path(source) , target: "_blank" , method: :put , class: ""  if source.installed 
         end
         column :installed
         column :created_at
