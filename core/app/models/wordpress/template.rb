@@ -48,6 +48,14 @@ module Wordpress
       Wordpress::TemplateInstallJob.perform_later(self)
     end
 
+    def tar_later
+      Wordpress::TemplateTarJob.perform_later(self)
+    end
+
+    def tar_now
+      Wordpress::TemplateTarJob.perform_now(self)
+    end
+
     private 
 
     def random_password

@@ -6,10 +6,10 @@ module Wordpress
       attr_reader :template
       
       def perform(template)  
-
+        @template = template
       end
 
-      private
+      private 
 
       def log_file
         # To create new (and to remove old) logfile, add File::CREAT like;

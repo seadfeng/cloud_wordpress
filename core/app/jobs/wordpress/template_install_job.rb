@@ -1,7 +1,7 @@
-require 'wordpress/core/helpers/mysql'
+
 module Wordpress
     class TemplateInstallJob < Wordpress::TemplateJob 
-        
+
       # rails c
       # template = Wordpress::Template.last
       # tp = Wordpress::TemplateInstallJob.perform_now(template)

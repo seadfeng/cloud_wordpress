@@ -22,6 +22,10 @@ module Wordpress
                 def import_mysql(file_path) 
                     "#{collection_mysql} #{mysql[:database]} < #{file_path}"
                 end 
+                
+                def dump_mysql 
+                    "mysqldump -u#{mysql[:collection_user]} -p#{mysql[:collection_password]} -h#{mysql[:collection_host]} #{mysql[:database]} > #{mysql[:database]}.sql"
+                end
 
                 def only_update_password(wp_password)
                     "#{collection_mysql} << EOF

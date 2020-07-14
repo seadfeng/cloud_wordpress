@@ -32,6 +32,16 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
       redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
     end
 
+    member_action :tar, method: :put do     
+      begin
+        resource.tar_now 
+        options = { notice: I18n.t('active_admin.tar.done',  default: "打包完成") } 
+      rescue => exception 
+        options = { alert: I18n.t('active_admin.tar.failure',  default: "打包失败") } 
+      end
+      redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options))  
+    end
+
     index do
         selectable_column
         id_column
@@ -44,6 +54,9 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
         end
         column :reset_password do |source| 
           link_to  I18n.t('active_admin.reset',  default: "Reset")  , reset_password_admin_template_path(source) , method: :put , class: ""  if source.installed 
+        end
+        column :tar do |source| 
+          link_to  I18n.t('active_admin.tar',  default: "打包")  , tar_admin_template_path(source) , method: :put , class: ""  if source.installed 
         end
         column :installed
         column :created_at
