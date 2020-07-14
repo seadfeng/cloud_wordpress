@@ -6,7 +6,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         active_admin_paranoia
         # actions :all, except: [:show] 
 
-        state_action :install
+        # state_action :install
         state_action :processed
         state_action :has_done
         state_action :publish  
@@ -31,6 +31,10 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
 
         member_action :login, method: :put do   
             render "admin/blogs/login.html.erb" , locals: { blog_url: resource.cloudflare_origin, user: resource.user , password: resource.password } 
+        end
+
+        member_action :install, method: :put do   
+            render "admin/blogs/install.html.erb"  
         end
 
         index do
@@ -69,7 +73,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
 
         form do |f|
             f.inputs I18n.t("active_admin.blogs.form" , default: "Blog")  do  
-                f.input :locale
+                f.input :locale if  current_admin_user.admin? || f.object.pending?
                 # f.input :server_id , as: :select, collection: Wordpress::Server.all    
                 # f.input :cloudflare_id , as: :select, collection: Wordpress::Cloudflare.all    
                 f.input :domain_id,  as: :search_select, 
@@ -88,7 +92,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             panel t('active_admin.details', model: resource_class.to_s.titleize) do
                 attributes_table_for resource do 
                     row :admin_user  
-                    row :locale  
+                    row :locale 
                     row :server  
                     row :cloudflare
                     row :domain    

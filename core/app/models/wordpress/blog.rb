@@ -10,6 +10,8 @@ module Wordpress
     belongs_to :domain
     belongs_to :server
 
+    has_many :templates, through: :locale
+
     with_options presence: true do 
       validates_uniqueness_of :domain, case_sensitive: true, allow_blank: true, scope: :cname     
       validates :cloudflare,  :server , :locale , :admin_user
