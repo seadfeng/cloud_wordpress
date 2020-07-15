@@ -3,8 +3,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         init_controller 
         permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id, :cname
         menu priority: 50 
-        active_admin_paranoia
-        actions :all, except: [:new] , :if => proc { Server.active.size.blank? || Cloudflare.active.size == 0   }
+        active_admin_paranoia 
 
         # state_action :install
         state_action :processed
@@ -23,7 +22,15 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
 
         
         controller do
-            def create  
+            def new
+                if Server.active.size.blank? || Cloudflare.active.size == 0
+                    options = { alert: I18n.t('active_admin.check_server_and_cloudflare',  default: "无可用服务器或者Cloudflare") }
+                    redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+                else
+                    super
+                end 
+            end
+            def create   
                 params[:blog][:admin_user_id] = current_admin_user.id
                 super 
             end
