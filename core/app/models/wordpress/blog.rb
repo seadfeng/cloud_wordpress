@@ -23,6 +23,10 @@ module Wordpress
     after_create :set_mysql_user_and_password 
     before_destroy :can_destroy?
 
+    def display_name
+      "ID ( #{id} ):  #{online_origin}"
+    end
+
     def can_destroy? 
       errors.add(:state, :cannot_destroy_if_processing) if self.processing?
     end

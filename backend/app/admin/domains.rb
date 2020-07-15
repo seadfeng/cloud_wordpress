@@ -9,6 +9,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
         index do
             selectable_column
             id_column   
+            column :blogs 
             column :name   
             column :description   
             column :state   

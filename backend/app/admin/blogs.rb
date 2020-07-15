@@ -98,23 +98,26 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             selectable_column
             id_column   
             column :admin_user  
-            column :locale 
+            column :locale do |source|
+                source.locale.code
+            end
             if current_admin_user.admin? 
                 column :server  
                 column :cloudflare
             end
-            column :domain    
-            column :origin do |source|
-                link_to source.cloudflare_origin, source.cloudflare_origin 
-            end
             column :website_url do |source|
-                link_to source.online_origin, source.online_origin, target: "_blank" if source.online_origin
+                link_to  source.online_origin , source.online_origin, target: "_blank" if source.online_origin
             end    
+            # column :domain    
+            column :origin do |source|
+                link_to image_tag("icons/interface.svg", width: "20", height: "20"), source.cloudflare_origin, target: "_blank" 
+            end
+            
             column :name   
             column :login do |source|
                 link_to image_tag("icons/arrows.svg", width: "20", height: "20")  , login_admin_blog_path(source) , target: "_blank" , method: :put , class: "" if source.installed?  
             end 
-            column :description    
+            # column :description    
             tag_column :state, machine: :state   
             column :status    
             column :installed_at
