@@ -31,13 +31,20 @@ module Wordpress
                     end 
 
                     state :pending
-                    state :processing
+                    state :processing do 
+                        validate :validate_server_and_cloudflare
+                    end
                     state :installed 
                     state :done 
                     state :published do 
                         validate :validate_published 
                     end 
                 end 
+
+                def validate_server_and_cloudflare
+                    errors.add(:state, :cannot_install_if_none_server) if server.blank?
+                    errors.add(:state, :cannot_install_if_none_cloudflare) if cloudflare.blank?
+                end
 
                 def validate_published
                     errors.add(:state, :cannot_published_if_none_domain) if domain.blank?

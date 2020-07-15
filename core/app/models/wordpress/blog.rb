@@ -20,7 +20,7 @@ module Wordpress
     before_validation :check_server_and_cloudflare
 
     before_validation :set_wordpress_user_and_password
-    after_create :set_mysql_user_and_password
+    after_create :set_mysql_user_and_password 
 
     def mysql_db
       self.mysql_user
@@ -62,11 +62,21 @@ module Wordpress
 
     def check_server_and_cloudflare
       if self.server_id.blank? 
-        self.server_id = Server.active&.first&.id
+        servers = Server.active
+        if servers&.first
+          self.server_id = Server.active.first
+        else
+          errors.add(:state, :cannot_create_if_none_server) 
+        end
       end
-      if self.cloudflare_id.blank?  
-        self.cloudflare_id = Cloudflare.active&.first&.id
-      end
+      if self.cloudflare_id.blank? 
+        cloudflares = Cloudflare.active
+        if cloudflares&.first
+          self.cloudflare_id = Cloudflare.active.first
+        else
+          errors.add(:state, :cannot_create_if_none_cloudflare) 
+        end
+      end 
     end 
 
     def random_password

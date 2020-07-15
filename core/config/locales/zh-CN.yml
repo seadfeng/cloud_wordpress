@@ -52,10 +52,10 @@ zh-CN:
   activerecord:
     errors:
       models:
-        configuration_product:
+        wordpress/server:
           attributes:
-            taxon:
-              required: "产品分类必须选择填写"
+            host:
+              cannot_change_if_has_blogs: "服务器上已有博客，禁止修改IP地址" 
     models:
       domain:
         one: "域名"

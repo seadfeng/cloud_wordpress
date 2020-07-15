@@ -18,6 +18,13 @@ module Wordpress
       validates :cloudflare,  :host , :domain , :host_user, :host_password, :mysql_host, :mysql_host_user, :mysql_password, :mysql_user
     end  
 
+    before_validation :check_host,  if: :host_password_changed?
+    before_validation :check_blogs, if: :host_changed?
+
+    def check_blogs 
+        errors.add(:host, :cannot_change_if_has_blogs) if blogs.any? 
+    end
+
     def check_host 
       begin  
         Net::SSH.start(self.host, self.host_user, :password => self.host_password) do |ssh|  
@@ -49,8 +56,7 @@ module Wordpress
               ch.on_data do |c, data|
                 # $stdout.print data
                 ok_status = true if /^mysql$/.match(data) 
-              end 
-              # raise "could not collection" unless success  
+              end  
             end  
           end 
           channel.wait

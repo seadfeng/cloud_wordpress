@@ -4,7 +4,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id, :cname
         menu priority: 50 
         active_admin_paranoia
-        # actions :all, except: [:show] 
+        actions :all, except: [:new] , :if => proc { Server.active.size.blank? || Cloudflare.active.size == 0   }
 
         # state_action :install
         state_action :processed
@@ -48,6 +48,16 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         end
 
         index do
+            if Server.active.size.blank? 
+                div class: "flash flash_error" do  
+                    link_to "设置服务器", admin_servers_path
+                end
+            end
+            if Cloudflare.active.size == 0 
+                div class: "flash flash_error" do  
+                    link_to "设置Cloudflare", admin_cloudflares_path
+                end
+            end
             selectable_column
             id_column   
             column :admin_user  
@@ -97,7 +107,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                 f.input :description    
             end
             f.actions
-        end 
+        end  
 
         show do
             panel t('active_admin.details', model: resource_class.to_s.titleize) do
