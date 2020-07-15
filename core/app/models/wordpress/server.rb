@@ -5,7 +5,7 @@ module Wordpress
     belongs_to :cloudflare
     has_many :blogs 
     scope :active, ->{ left_joins(:blogs)
-                       .select("COUNT( #{Blog.quoted_table_name}.id) AS blog_count, #{Server.quoted_table_name}.*")
+                       .select("COUNT( #{Blog.quoted_table_name}.id) AS blog_count, #{Server.quoted_table_name}.*").distinct
                        .group("#{Server.quoted_table_name}.id")
                        .where("#{Server.quoted_table_name}.host_status = 1 and #{Server.quoted_table_name}.mysql_status = 1")
                        .having("blog_count <  #{Server.quoted_table_name}.max_size")
@@ -50,16 +50,16 @@ module Wordpress
                 # $stdout.print data
                 ok_status = true if /^mysql$/.match(data) 
               end 
-              # raise "could not collection" unless success
-              if ok_status
-                self.mysql_status = 1
-              else
-                self.mysql_status = 0
-              end 
-              self.save
+              # raise "could not collection" unless success  
             end  
           end 
           channel.wait
+          if ok_status
+            self.mysql_status = 1
+          else
+            self.mysql_status = 0
+          end 
+          self.save
           ok_status
         end 
       rescue Exception  => e  
