@@ -21,7 +21,7 @@ module Wordpress
 
     before_validation :set_wordpress_user_and_password
     after_create :set_mysql_user_and_password 
-    before_destroy :can_destroy?
+    before_destroy :can_destroy? 
 
     def display_name
       "ID ( #{id} ):  #{online_origin}"

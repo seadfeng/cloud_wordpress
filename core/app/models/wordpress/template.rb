@@ -46,6 +46,14 @@ module Wordpress
       "#{origin}/wordpress"
     end
 
+    def down_url
+      "#{origin}/#{template_tar_file}"
+    end 
+
+    def template_tar_file
+      "wp-#{self.id}.tar.bz2"
+    end
+
     def reset_password 
       update_attribute(:wordpress_password, random_password) 
       Wordpress::TemplateResetPasswordJob.perform_later(self)

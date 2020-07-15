@@ -15,7 +15,7 @@ module Wordpress
                 collection_host: config.template_mysql_connection_host   }
             mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
             Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password) do |ssh| 
-                ssh.exec "cd #{directory} && #{mysql.dump_mysql} && tar cjf seadapp#{template.id}.tar.bz2 #{mysql_info[:database]}.sql wordpress"
+                ssh.exec "cd #{directory} && #{mysql.dump_mysql} && tar cjf #{template.template_tar_file} #{mysql_info[:database]}.sql wordpress"
             end
         rescue Exception, ActiveJob::DeserializationError => e
             logger = Logger.new(log_file)

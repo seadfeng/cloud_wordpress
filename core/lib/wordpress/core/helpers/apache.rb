@@ -21,14 +21,14 @@ module Wordpress
                     "mkdir #{virtual[:directory]} -p" 
                 end
 
-                def down_load_install(mysql) 
+                def down_load_install(options) 
                     wordpress_config = "wordpress/wp-config.php"
                     " 
                     if [ ! -f \"#{directory}/#{file_name}\" ];then
-                        cd #{virtual[:directory]} && wget #{virtual[:wordpress_down_url]} && tar xf #{file_name} && chown apache:apache ./ -R 
-                        sed -i \"s/#{mysql[:template][:mysql_user]}/#{mysql[:blog][:mysql_user]}/g\" #{wordpress_config} 
-                        sed -i \"s/#{ mysql[:template][:mysql_password]}/#{mysql[:blog][:mysql_password]}/g\" #{wordpress_config} 
-                        sed -i \"s/#{ mysql[:template][:mysql_host] }/#{mysql[:blog][:mysql_host]}/g\" #{wordpress_config} 
+                        cd #{virtual[:directory]} && wget #{virtual[:wordpress_down_url]} && tar xf #{options[:template][:file_name]} && chown apache:apache ./ -R 
+                        sed -i \"s/#{ options[:template][:mysql_user]}/#{options[:blog][:mysql_user]}/g\" #{wordpress_config} 
+                        sed -i \"s/#{ options[:template][:mysql_password]}/#{options[:blog][:mysql_password]}/g\" #{wordpress_config} 
+                        sed -i \"s/#{ options[:template][:mysql_host] }/#{options[:blog][:mysql_host]}/g\" #{wordpress_config} 
                         sed -i \"/define(WP_DEBUG, false);/a\if (\\\$_SERVER[\\\"HTTP_X_FORWARDED_HOST\\\"]) { \\\$scheme = \\\"http://\\\"; if (\\\$_SERVER[\\\"HTTPS\\\"]==\\\"on\\\") { \\\$scheme = \\\"https://\\\" ;} \\\$home = \\\$scheme.\\\$_SERVER[\\\"HTTP_X_FORWARDED_HOST\\\"]; \\\$siteurl = \\\$scheme.\\\$_SERVER[\\\"HTTP_X_FORWARDED_HOST\\\"]; define(\\\"WP_HOME\\\", \\\$home); define(\\\"WP_SITEURL\\\", \\\$siteurl); }\" #{wordpress_config}
                         sed -i \"/define(WP_DEBUG, false);/a\if (\\\$_SERVER[\\\"HTTP_X_FORWARDED_PROTO\\\"]==\\\"https\\\") { \\\$_SERVER[\\\"HTTPS\\\"] = \\\"on\\\"; }\" #{wordpress_config}
                     fi
