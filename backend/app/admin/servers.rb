@@ -11,7 +11,7 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
 
     controller do
         def update  
-            params[:server][:host_password] = resource.mysql_password if params[:server][:host_password].blank?
+            params[:server][:host_password] = resource.host_password if params[:server][:host_password].blank?
             params[:server][:mysql_password] = resource.mysql_password if params[:server][:mysql_password].blank?
             super 
         end
@@ -77,6 +77,13 @@ end
         end
         column :host_status do |source|
             if source.host_status
+               span "OK", class: "status_tag published"
+            else
+                span "连接失败", class: "status_tag processing"
+            end
+        end
+        column :mysql_status do |source|
+            if source.mysql_status
                span "OK", class: "status_tag published"
             else
                 span "连接失败", class: "status_tag processing"

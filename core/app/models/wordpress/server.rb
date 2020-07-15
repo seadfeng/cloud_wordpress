@@ -7,8 +7,10 @@ module Wordpress
     scope :active, ->{ left_joins(:blogs)
                        .select("COUNT( #{Blog.quoted_table_name}.id) AS blog_count, #{Server.quoted_table_name}.*")
                        .group("#{Server.quoted_table_name}.id")
+                       .where("#{Server.quoted_table_name}.host_status = 1 and #{Server.quoted_table_name}.mysql_status = 1")
                        .having("blog_count <  #{Server.quoted_table_name}.max_size")
                       }
+
 
     with_options presence: true do 
       validates_uniqueness_of :host, case_sensitive: true, allow_blank: false   
@@ -38,14 +40,35 @@ module Wordpress
       }
       mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
       begin  
+        ok_status = false
         Net::SSH.start(self.host, self.host_user, :password => self.host_password) do |ssh|  
-          ssh.exec mysql.collection
+          channel = ssh.open_channel do |ch|    
+            ch.exec "#{mysql.collection} << EOF
+            show databases;
+            EOF" do |ch, success| 
+              ch.on_data do |c, data|
+                # $stdout.print data
+                ok_status = true if /^mysql$/.match(data) 
+              end 
+              # raise "could not collection" unless success
+              if ok_status
+                self.mysql_status = 1
+              else
+                self.mysql_status = 0
+              end 
+              self.save
+            end  
+          end 
+          channel.wait
+          ok_status
         end 
-      rescue Exception  => e
+      rescue Exception  => e  
+        puts "#{e.message}"
+        self.mysql_status = 0
+        self.save 
         nil
       end 
-    end
-    
+    end 
 
     def install
       Wordpress::ServerJob.perform_later(self)
