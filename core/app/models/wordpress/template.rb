@@ -26,7 +26,7 @@ module Wordpress
     after_create :send_install_job
   
     def set_mysql_user 
-      update_attribute(:mysql_user, "wp_blog_#{self.id}")
+      update_attribute(:mysql_user, "wp_template_#{self.id}")
     end 
 
     def set_mysql_password 

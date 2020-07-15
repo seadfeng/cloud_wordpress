@@ -17,6 +17,47 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
         end
     end
 
+    action_item :test_ssh, only: :edit  do 
+            link_to(
+                I18n.t('active_admin.test_ssh', default: "SSH连接测试"),
+                check_host_admin_server_path(resource),  
+                method: "put"
+              )  
+    end
+
+    action_item :test_mysql, only: :edit  do 
+        link_to(
+            I18n.t('active_admin.test_mysql', default: "Mysql连接测试"),
+            check_mysql_admin_server_path(resource),  
+            method: "put"
+          )  
+end
+
+    member_action :install, method: :put do   
+        resource.install 
+        options = { notice: I18n.t('active_admin.installing',  default: "正在安装") }
+        redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+    end
+
+    member_action :check_host, method: :put do   
+        if resource.check_host 
+            options = { notice: I18n.t('active_admin.connection_ssh_succeeded',  default: "SSH连接成功") }  
+        else
+            options = { notice: I18n.t('active_admin.connection_ssh_failed',  default: "SSH连接失败") }   
+        end
+        redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+    end
+
+    member_action :check_mysql, method: :put do   
+        if resource.check_mysql 
+            options = { notice: I18n.t('active_admin.connection_mysql_succeeded',  default: "Mysql连接成功") }  
+        else
+            options = { notice: I18n.t('active_admin.connection_mysql_failed',  default: "Mysql连接失败") }   
+        end
+        redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+    end
+
+
     index do
         selectable_column
         id_column
@@ -27,6 +68,13 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
             source.domain
         end
         column :host 
+        column :install do |source|
+            if source.installed
+                "OK"
+            else
+                link_to I18n.t('active_admin.install',  default: "安装Apahce+php"), install_admin_server_path(source)
+            end
+        end
         column :created_at
         column :updated_at
         actions
@@ -36,8 +84,7 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
     filter :domain 
     filter :host 
     filter :created_at
-    filter :updated_at 
-
+    filter :updated_at  
 
     form do |f|
         f.inputs I18n.t("active_admin.php_service.form" , default: "服务器")  do  
@@ -52,7 +99,7 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
           f.input :host_password , placeholder: "password" , label: "主机账户密码" , hint: "密码保存后不显示"    
           hr
           f.input :mysql_host, placeholder: "192.168.10.10"  , label: "Mysql主机地址"   
-          f.input :mysql_host_user, placeholder: "192.168.%.%"  , label: "Mysql用户主机地址" , hint: "root@#{f.object.mysql_host_user.blank? ? "127.0.0.1" : f.object.mysql_host_user}"      
+          f.input :mysql_host_user, placeholder: "192.168.%.%"  , label: "Mysql账户主机地址" , hint: "root@#{f.object.mysql_host_user.blank? ? "127.0.0.1" : f.object.mysql_host_user}"      
           f.input :mysql_port, placeholder: "3306" , label: "Mysql端口"   
 	      f.input :mysql_user, placeholder: "root" , label: "Mysql账户名"  
           f.input :mysql_password , placeholder: "password" , label: "Mysql账户密码" , hint: "密码保存后不显示"     
@@ -65,6 +112,8 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
         ul do
            li "博客服务器节点: 创建的博客网站文件所在处"
            li  "Mysql主机信息相对当前服务器填写"
+           li  "添加新服务器后可一键安装Apache + PHP环境"
+           li  "Mysql服务器需要手工安装"
         end
     end
 

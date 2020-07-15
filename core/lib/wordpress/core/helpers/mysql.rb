@@ -33,6 +33,10 @@ module Wordpress
                     EOF" 
                 end
 
+                def collection 
+                    collection_mysql
+                end
+
                 private  
 
                 def import_mysql_sql(file_path) 
