@@ -18,7 +18,7 @@ module Wordpress
 
     def check_host 
       begin  
-        Net::SSH.start(self.host, self.host_user, :password => self.host_passwd) do |ssh|  
+        Net::SSH.start(self.host, self.host_user, :password => self.host_password) do |ssh|  
           self.host_status = 1 
           self.save
         end 
@@ -38,10 +38,10 @@ module Wordpress
       }
       mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
       begin  
-        Net::SSH.start(self.host, self.host_user, :password => self.host_passwd) do |ssh|  
+        Net::SSH.start(self.host, self.host_user, :password => self.host_password) do |ssh|  
           ssh.exec mysql.collection
         end 
-      rescue 
+      rescue Exception  => e
         nil
       end 
     end
