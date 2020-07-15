@@ -16,10 +16,9 @@ module Wordpress
            }
           apache_info ={
             directory:  Wordpress::Config.server_directory,
-            wordpress_down_url: ,
-            server_name: ,
-            port: 80, 
-
+            wordpress_down_url: template.down_url ,
+            server_name: blog.origin,
+            port: 80,  
           }
           down_load_options = {
             template: {
@@ -35,16 +34,16 @@ module Wordpress
           }
           mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
           apache = Wordpress::Core::Helpers::Apache.new(apache_info)
+          down_load_and_install = apache.down_load_and_install(down_load_options)
+          create_virtual_host = apache.create_virtual_host
             Net::SSH.start( server.host,  server.host_user, :password => server.host_password) do |ssh| 
-              channel = ssh.open_channel do |ch|    
-                ch.exec " " do |ch, success| 
-                  ch.on_data do |c, data|
-                    # $stdout.print data
-                    ok_status = true if /^mysql$/.match(data) 
-                  end  
-                end  
-              end 
-              channel.wait
+              ssh.exec "#{down_load_and_install}"
+              # channel = ssh.open_channel do |ch|    
+              #   ch.exec " " do |ch, success| 
+                   
+              #   end  
+              # end 
+              # channel.wait
             end
             
         rescue Exception, ActiveJob::DeserializationError => e

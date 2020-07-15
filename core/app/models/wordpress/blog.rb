@@ -54,16 +54,24 @@ module Wordpress
     def cloudflare_origin 
       "https://#{cloudflare_domain}/"
     end 
+
+    def origin
+      if domain 
+        if cname == "@" || cname.blank?
+          "#{domain.name}"
+        else
+          "#{cname}.#{domain.name}"
+        end 
+      else
+        nil
+      end
+    end
     
     def online_origin
       proto = "http://"
       proto = "https://" if use_ssl
-      if domain 
-        if cname == "@" || cname.blank?
-          "#{proto}#{domain.name}/"
-        else
-          "#{proto}#{cname}.#{domain.name}/"
-        end 
+      if domain  
+        "#{proto}#{origin}/" 
       else
         nil
       end
@@ -102,7 +110,7 @@ module Wordpress
 
     def random_password
       random = SecureRandom.urlsafe_base64(nil, false) 
-      "!0O#{random}"
+      "0O*#{random}"
     end
 
     

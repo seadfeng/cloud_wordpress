@@ -56,6 +56,66 @@ ActiveAdmin.register_page "Settings" do
         end
     end
 
+
+    action_item :check_ssh  do 
+        link_to(
+            I18n.t('active_admin.check_ssh', default: "SSH连接测试"),
+            admin_settings_check_ssh_path, 
+            method: "put" 
+            )  
+    end
+    action_item :check_mysql  do 
+        link_to(
+            I18n.t('active_admin.check_mysql', default: "Mysql连接测试"),
+            admin_settings_check_mysql_path, 
+            method: "put" 
+            )  
+    end
+
+    page_action :check_ssh, method: :put do 
+        begin   
+            Net::SSH.start(Wordpress::Config.template_host, Wordpress::Config.template_host_user, :password => Wordpress::Config.template_host_password) do |ssh|  
+                redirect_to admin_settings_path, notice: "SSH连接成功"
+            end 
+        rescue    
+            redirect_to admin_settings_path, alert: "SSH连接失败"
+            nil
+        end 
+    end
+
+    page_action :check_mysql, method: :put do  
+        require "wordpress/core/helpers/mysql"
+        mysql_info = { 
+            collection_user: Wordpress::Config.template_mysql_host_user, 
+            collection_password: Wordpress::Config.template_mysql_host_password, 
+            collection_host: Wordpress::Config.template_mysql_connection_host   
+        }
+        mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
+        begin  
+            ok_status = false
+            Net::SSH.start(Wordpress::Config.template_host, Wordpress::Config.template_host_user, :password => Wordpress::Config.template_host_password) do |ssh|  
+                channel = ssh.open_channel do |ch|    
+                    ch.exec "#{mysql.collection} << EOF
+                    show databases;
+                    EOF" do |ch, success| 
+                        ch.on_data do |c, data|
+                            # $stdout.print data
+                            ok_status = true if /^mysql$/.match(data) 
+                        end  
+                    end  
+                end 
+                channel.wait
+                if ok_status
+                    redirect_to admin_settings_path, notice: "Mysql连接成功"
+                else
+                    redirect_to admin_settings_path, alert: "Mysql连接失败"
+                end   
+            end
+        rescue   
+            redirect_to admin_settings_path, alert: "Mysql连接失败"
+        end  
+    end
+
     page_action :update, method: :post do 
         if params[:setting] 
             Wordpress::Config.template_origin = params[:setting][:template_origin]

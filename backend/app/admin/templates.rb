@@ -12,18 +12,27 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
         unless resource.installed
             link_to(
                 I18n.t('active_admin.installed', default: "已安装"),
-                installed_admin_template_path(resource),  
+                installed_admin_template_path(resource), 
+                method: "put" 
               ) 
         end  
+    end
+
+    member_action :install, method: :put do   
+      resource.send_install_job  
+      options = { notice: I18n.t('active_admin.installing',  default: "正在安装") }
+      redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
     end
 
     member_action :installed, method: :put do   
         resource.installed = 1
         resource.save
+        options = { notice: I18n.t('active_admin.updated',  default: "已更新") }
+        redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
     end
   
     member_action :login, method: :put do   
-      render "admin/blogs/login.html.erb" , locals: { blog_url: resource.origin, user: resource.wordpress_user , password: resource.wordpress_password } 
+      render "admin/blogs/login.html.erb" , locals: { blog_url: resource.origin_wordpress, user: resource.wordpress_user , password: resource.wordpress_password } 
     end
 
     member_action :reset_password, method: :put do   
@@ -60,7 +69,9 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
         column :tar do |source| 
           link_to  I18n.t('active_admin.tar',  default: "打包")  , tar_admin_template_path(source) , method: :put , class: ""  if source.installed 
         end
-        column :installed
+        column :installed do |source|
+          link_to "安装" , install_admin_template_path(source), method: "put" unless source.installed
+        end
         column :created_at
         column :updated_at
         actions
