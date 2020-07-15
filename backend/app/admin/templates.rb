@@ -20,7 +20,7 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
 
     member_action :install, method: :put do   
       resource.send_install_job  
-      options = { notice: I18n.t('active_admin.installing',  default: "正在安装") }
+      options = { notice: I18n.t('active_admin.waiting_install',  default: "##{resource.id}:安装包正在下载，下载后请使用系统生成的mysql/wp账户信息手工填写安装") }
       redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
     end
 

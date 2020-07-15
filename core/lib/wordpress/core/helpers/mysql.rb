@@ -29,6 +29,8 @@ module Wordpress
 
                 def only_update_password(wp_password)
                     "#{collection_mysql} << EOF
+                        show databases;
+                        use #{mysql[:database]};
                         #{update_password(wp_password)} 
                     EOF" 
                 end
@@ -40,23 +42,16 @@ module Wordpress
                 private  
 
                 def import_mysql_sql(file_path) 
-                    "
-                        use #{mysql[:database]};
-                        source #{file_path};
-                    "
+                    "use #{mysql[:database]}; source #{file_path};"
                 end
 
                 def update_password(wp_password)
-                    "
-                        update wp_users set user_pass=md5(\"#{wp_password}\") where id=1;
-                    "
+                    "update wp_users set user_pass=md5(\"#{wp_password}\") where id=1;"
                 end
                 
                 def update_siteurl(new_url)
-                    "
-                        update wp_options set option_value=\"#{new_url}\" where option_name=\"siteurl\";
-                        update wp_options set option_value=\"#{new_url}\" where option_name=\"home\"; 
-                    "
+                    "update wp_options set option_value=\"#{new_url}\" where option_name=\"siteurl\";
+                     update wp_options set option_value=\"#{new_url}\" where option_name=\"home\";"
                 end
                 
                 def create_database
