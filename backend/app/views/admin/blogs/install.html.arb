@@ -1,0 +1,13 @@
+
+
+panel "选择模版" do
+    table_for resource.templates do 
+        column :id  
+        column :locale  
+        column :name   
+        column :install do |template|
+            link_to I18n.t('active_admin.install', default: "安装"), do_install_admin_blog_path(resource,template_id: template.id) ,method: "put"
+        end
+    end
+
+end

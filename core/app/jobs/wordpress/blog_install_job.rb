@@ -1,6 +1,6 @@
 module Wordpress
-    class BlogInstallJob < Wordpress::BlogJob 
-      tte
+    class BlogInstallJob < Wordpress::BlogJob  
+      
       def perform( blog, template) 
 
         begin 
