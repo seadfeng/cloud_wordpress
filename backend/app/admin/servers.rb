@@ -70,9 +70,16 @@ end
         column :host 
         column :install do |source|
             if source.installed
-                "OK"
+                span "已安装", class: "status_tag published"
             else
                 link_to I18n.t('active_admin.install',  default: "安装Apahce+php"), install_admin_server_path(source)
+            end
+        end
+        column :host_status do |source|
+            if source.host_status
+               span "OK", class: "status_tag published"
+            else
+                span "连接失败", class: "status_tag processing"
             end
         end
         column :created_at
