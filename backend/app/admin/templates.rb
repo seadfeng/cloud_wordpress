@@ -46,8 +46,10 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
         selectable_column
         id_column
         column :locale
-        column :name 
-        column :description 
+        column :url do |soruce|
+          link_to "#{soruce.origin_wordpress}", "#{soruce.origin_wordpress}", target: "_blank" 
+        end
+        column :name  
         column :wordpress_user 
         column :login do |source| 
           link_to image_tag("icons/arrows.svg", width: "20", height: "20")  , login_admin_template_path(source) , target: "_blank" , method: :put , class: ""  if source.installed 
@@ -73,6 +75,7 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
         f.inputs I18n.t("active_admin.template.form" , default: "服务器")  do  
           f.input :locale, label: "语言"        
           f.input :install_url, placeholder: "https://wordpress.org/latest.tar.gz" , label: "安装地址"        
+          f.input :name  
         #   f.input :mysql_user , placeholder: "user" 
         #   f.input :mysql_password , placeholder: "password"  
         #   f.input :wordpress_user , placeholder: "admin" 

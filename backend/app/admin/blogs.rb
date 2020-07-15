@@ -37,6 +37,16 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             render "admin/blogs/install.html.erb"  
         end
 
+        action_item :install, only: :show  do
+            unless resource.installed?
+                link_to(
+                    I18n.t('active_admin.install', default: "安装"),
+                    install_admin_blog_path(resource),  
+                    method: "put"
+                  ) 
+            end  
+        end
+
         index do
             selectable_column
             id_column   
@@ -70,6 +80,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         filter :server
         filter :cloudflare
         filter :domain_name
+        
 
         form do |f|
             f.inputs I18n.t("active_admin.blogs.form" , default: "Blog")  do  

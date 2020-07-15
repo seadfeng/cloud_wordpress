@@ -12,7 +12,9 @@ module Wordpress
     belongs_to :locale
 
     with_options presence: true do 
-      validates :mysql_password,  :install_url, :locale
+      validates :mysql_password,  :install_url, :locale, :name
+      validates_uniqueness_of :name, case_sensitive: true, allow_blank: false      
+
     end  
     
     validates :install_url,  url: true  
@@ -37,7 +39,11 @@ module Wordpress
     end
 
     def origin
-      "#{Wordpress::Conifg.template_origin}/#{self.id}"
+      "#{Wordpress::Config.template_origin}/#{self.id}"
+    end
+
+    def origin_wordpress
+      "#{origin}/wordpress"
     end
 
     def reset_password 
