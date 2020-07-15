@@ -21,10 +21,18 @@ module Wordpress
 
     before_validation :set_wordpress_user_and_password
     after_create :set_mysql_user_and_password 
+    before_destroy :can_destroy?
+
+    def can_destroy? 
+      errors.add(:state, :cannot_destroy_if_processing) if self.processing?
+    end
 
     def install_with_template(template = nil)
       template = master_template if template.nil? 
-      Wordpress::BlogInstallJob.perform_later(self, template ) if template
+      if template
+        self.install
+        Wordpress::BlogInstallJob.perform_later(self, template ) 
+      end
     end
 
     def master_template

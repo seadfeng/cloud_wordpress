@@ -35,9 +35,7 @@ zh-CN:
       restore_confirmation: "Are you sure you want to restore these %{plural_model}?"
       succesfully_restored:
         one: "Successfully restored 1 %{model}"
-        other: "Successfully restored %{count} %{plural_model}"
-    archived: "归档"
-    non_archived: "未归档"
+        other: "Successfully restored %{count} %{plural_model}" 
     restore_model: "恢复 %{model}"
     restore: "恢复"
     restore_confirmation: "Are you sure you want to restore this?"

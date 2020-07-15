@@ -6,7 +6,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         active_admin_paranoia 
 
         # state_action :install
-        state_action :processed
+        # state_action :processed
         state_action :has_done
         state_action :publish  
         
@@ -40,22 +40,33 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             render "admin/blogs/login.html.erb" , locals: { blog_url: resource.cloudflare_origin, user: resource.user , password: resource.password } 
         end
 
-        member_action :install, method: :put do   
-            if resource.templates.size > 1
-                render "admin/blogs/install"  
-            elsif  resource.templates.size == 1
-                resource.install_with_template
+        member_action :install, method: :put do  
+            if resource.pending? 
+                if resource.templates.size > 1
+                    render "admin/blogs/install"  
+                elsif  resource.templates.size == 1
+                    resource.install_with_template
+                    options = { alert: I18n.t('active_admin.installing',  default: "正在安装") }
+                    redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+                else
+                    options = { alert: I18n.t('active_admin.none_template', lang:  resource.locale.name ,  default: "%{lang}:无可用博客模版") }
+                    redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+                end 
             else
-                options = { alert: I18n.t('active_admin.none_template', lang:  resource.locale.name ,  default: "%{lang}:无可用博客模版") }
-                redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
-            end 
+                options = { alert: I18n.t('active_admin.processing',  default: "安装正在受理,请耐心等待") }
+                redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options))  
+            end
         end
 
         member_action :do_install, method: :put do   
              if params[:template_id]
-                template = Template.find params[:template_id]
-                resource.install_with_template(template)
-                options = { notice: I18n.t('active_admin.installing',  default: "正在安装") }
+                if resource.pending?
+                    template = Template.find params[:template_id]
+                    resource.install_with_template(template)
+                    options = { notice: I18n.t('active_admin.installing',  default: "正在安装") }
+                else
+                    options = { alert: I18n.t('active_admin.processing',  default: "安装正在受理,请耐心等待") }
+                end
                 redirect_to  admin_blog_path(resource) , options 
              else
                 options = { alert: I18n.t('active_admin.none_template', lang:  resource.locale.name ,  default: "%{lang}:无可用博客模版") }

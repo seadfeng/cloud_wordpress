@@ -6,7 +6,7 @@ module Wordpress
                 extend Enumerize
                 enumerize :state, in: [:pending, :processing, :installed, :done, :published], default: :pending    
                 state_machine :state, initial: :pending do
-                    before_transition [:pending ] => :processing, :do => :send_job
+                    # before_transition [:pending ] => :processing, :do => :send_job
                     before_transition [:processing ] => :installed, :do => :touch_installed_at
                     before_transition [:done ] => :published, :do => :touch_published_at
 
@@ -52,9 +52,9 @@ module Wordpress
 
                 private
 
-                def send_job
-                    Wordpress::BlogInstallJob.perform_later(self)
-                end
+                # def send_job
+                #     Wordpress::BlogInstallJob.perform_later(self)
+                # end
 
                 def touch_installed_at
                     update_attribute(:installed_at, Time.current)
