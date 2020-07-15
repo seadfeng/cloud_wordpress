@@ -41,7 +41,14 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         end
 
         member_action :install, method: :put do   
-            render "admin/blogs/install.html.erb"  
+            if resource.templates.size > 1
+                render "admin/blogs/install.html.erb"  
+            elsif  resource.templates.size == 1
+                resource.install_with_template
+            else
+                options = { alert: I18n.t('active_admin.none_template', lang:  resource.locale.name ,  default: "%{lang}:无可用博客模版") }
+                redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+            end 
         end
 
         action_item :install, only: :show  do

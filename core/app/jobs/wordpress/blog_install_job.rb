@@ -1,7 +1,7 @@
 module Wordpress
     class BlogInstallJob < Wordpress::BlogJob 
-      
-      def perform(blog) 
+      tte
+      def perform( blog, template) 
 
         begin 
           server = blog.server

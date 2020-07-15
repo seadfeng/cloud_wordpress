@@ -16,11 +16,10 @@ module Wordpress
         generator_method   = method(:generate_permalink)
         generator_instance = self
 
-        host.class_eval do
-            validates(:number, presence: true, uniqueness: { allow_blank: true })
-
+        host.class_eval do 
+            validates_uniqueness_of :number, presence: true 
             before_validation do |instance|
-            instance.number ||= generator_method.call(host)
+                instance.number ||= generator_method.call(host)
             end
 
             define_singleton_method(:number_generator) { generator_instance }

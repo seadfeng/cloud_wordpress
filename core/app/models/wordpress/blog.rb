@@ -13,7 +13,7 @@ module Wordpress
     has_many :templates, through: :locale
 
     with_options presence: true do 
-      validates_uniqueness_of :domain, case_sensitive: true, allow_blank: true, scope: :cname     
+      validates_uniqueness_of :domain, allow_blank: true, scope: :cname     
       validates :cloudflare,  :server , :locale , :admin_user
     end  
 
@@ -21,6 +21,15 @@ module Wordpress
 
     before_validation :set_wordpress_user_and_password
     after_create :set_mysql_user_and_password 
+
+    def install_with_template(template = nil)
+      template = master_template if template.nil? 
+      Wordpress::BlogInstallJob.perform_later(self, template ) if template
+    end
+
+    def master_template
+      templates.first if templates.any?
+    end
 
     def mysql_db
       self.mysql_user
@@ -64,7 +73,7 @@ module Wordpress
       if self.server_id.blank? 
         servers = Server.active
         if servers&.first
-          self.server_id = Server.active.first
+          self.server_id = Server.active.first.id
         else
           errors.add(:state, :cannot_create_if_none_server) 
         end
@@ -72,7 +81,7 @@ module Wordpress
       if self.cloudflare_id.blank? 
         cloudflares = Cloudflare.active
         if cloudflares&.first
-          self.cloudflare_id = Cloudflare.active.first
+          self.cloudflare_id = Cloudflare.active.first.id
         else
           errors.add(:state, :cannot_create_if_none_cloudflare) 
         end
