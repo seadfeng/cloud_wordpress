@@ -2,7 +2,7 @@ module Wordpress
     class BlogResetPasswordJob <  Wordpress::BlogJob 
       
       def perform(blog) 
-
+        logger = Logger.new(log_file)
         begin
           server = blog.server
           mysql_info = { 
@@ -14,18 +14,22 @@ module Wordpress
             collection_password: server.mysql_password, 
             collection_host: server.mysql_host  
            }
-          channel = ssh.open_channel do |ch|    
-            ch.exec "#{mysql.only_update_password(blog.password)}"  do |ch, success|  
-              ch.on_data do |c, data|
-                $stdout.print data 
-                if /^#{mysql_info[:database]}$/.match(data)
-                  logger.info("Database checked: #{mysql_info[:database]}") 
-                  logger.info("Password has Updated!") 
-                end
+           mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
+           Net::SSH.start( server.host,  server.host_user, :password => server.host_password) do |ssh| 
+            logger.info("ssh connected") 
+            channel = ssh.open_channel do |ch|    
+              ch.exec "#{mysql.only_update_password(blog.password)}"  do |ch, success|  
+                ch.on_data do |c, data|
+                  $stdout.print data 
+                  if /^#{mysql_info[:database]}$/.match(data)
+                    logger.info("Database checked: #{mysql_info[:database]}") 
+                    logger.info("Password has Updated!") 
+                  end
+                end  
               end  
-            end  
-          end 
-          channel.wait 
+            end 
+            channel.wait 
+          end
         rescue Exception, ActiveJob::DeserializationError => e
           logger.error("Blog Id:#{blog.id} ================") 
           logger.error(I18n.t('active_admin.active_job', message: e.message, default: "ActiveJob: #{e.message}"))

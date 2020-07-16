@@ -19,7 +19,7 @@ module Wordpress
     
     validates :install_url,  url: true  
     
-    before_validation :set_mysql_password, only: :create
+    before_validation :set_mysql_password 
     before_validation :set_wordpress_admin_user
     before_validation :tar_later, if: :installed_changed? , only: :update
     after_create :set_mysql_user
@@ -30,7 +30,7 @@ module Wordpress
     end 
 
     def set_mysql_password 
-      self.mysql_password = random_password
+      self.mysql_password = random_password if mysql_password.blank?
     end
 
     def set_wordpress_admin_user

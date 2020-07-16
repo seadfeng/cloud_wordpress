@@ -2,7 +2,7 @@ require 'wordpress/core/helpers/apache'
 require 'wordpress/core/helpers/mysql'
 module Wordpress
     class BlogJob < ApplicationJob
-      queue_as :default
+      queue_as :wordpress
       sidekiq_options retry: 3
       attr_reader :blog
       

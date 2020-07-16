@@ -84,8 +84,9 @@ module Wordpress
             channelc.wait 
             import_mysql = "#{mysql.import_mysql("#{apache_info[:directory]}/#{template.mysql_user}.sql")}" 
             ssh.exec import_mysql
+            ssh.exec mysql.only_update_siteurl(blog.cloudflare_origin)
 
-            Wordpress::BlogResetPasswordJob.perform_now(blog)
+            Wordpress::BlogResetPasswordJob.perform_later(blog)
           end
             
         rescue Exception, ActiveJob::DeserializationError => e 

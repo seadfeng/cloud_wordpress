@@ -38,6 +38,15 @@ module Wordpress
                     EOF" 
                 end
 
+                def only_update_siteurl(new_url)
+                    "#{collection_mysql} << EOF
+                        show databases;
+                        use #{mysql[:database]};
+                        #{update_siteurl(new_url)} 
+                        quit;
+                    EOF" 
+                end
+
                 def collection 
                     collection_mysql
                 end

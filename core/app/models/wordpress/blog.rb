@@ -19,9 +19,14 @@ module Wordpress
 
     before_validation :check_server_and_cloudflare
 
-    before_validation :set_wordpress_user_and_password
+    before_validation :set_wordpress_user_and_password, only: :create
     after_create :set_mysql_user_and_password 
     before_destroy :can_destroy? 
+
+    def reset_password
+      update_attribute(:password, random_password)
+      Wordpress::BlogResetPasswordJob.perform_later(self)
+    end
 
     def display_name
       "ID ( #{id} ):  #{online_origin}"
@@ -78,8 +83,8 @@ module Wordpress
     end
 
     def set_wordpress_user_and_password
-      self.user = "admin"
-      self.password = random_password
+      self.user = "admin" if user.blank?
+      self.password = random_password if password.blank?
     end
 
     def set_mysql_user_and_password 

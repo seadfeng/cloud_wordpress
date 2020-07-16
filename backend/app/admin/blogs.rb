@@ -36,6 +36,12 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             end
         end 
 
+        member_action :reset_password, method: :put do   
+            resource.reset_password 
+            options = { notice: I18n.t('active_admin.reset_password',  default: "Reset Password: Processing") }
+            redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+        end 
+
         member_action :login, method: :put do   
             render "admin/blogs/login.html.erb" , locals: { blog_url: resource.cloudflare_origin, user: resource.user , password: resource.password } 
         end
@@ -108,14 +114,16 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             column :website_url do |source|
                 link_to  source.online_origin , source.online_origin, target: "_blank" if source.online_origin
             end    
-            # column :domain    
+            column :reset_password do |source|
+                link_to  I18n.t('active_admin.reset',  default: "Reset") , reset_password_admin_blog_path(source), method: :put    
+            end  
             column :origin do |source|
                 link_to image_tag("icons/interface.svg", width: "20", height: "20"), source.cloudflare_origin, target: "_blank" 
-            end 
-            column :name   
+            end  
             column :login do |source|
                 link_to image_tag("icons/arrows.svg", width: "20", height: "20")  , login_admin_blog_path(source) , target: "_blank" , method: :put , class: "" if source.installed?  
             end 
+            column :name
             # column :description    
             tag_column :state, machine: :state   
             column :status    
