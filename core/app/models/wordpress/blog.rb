@@ -23,6 +23,10 @@ module Wordpress
     after_create :set_mysql_user_and_password 
     before_destroy :can_destroy? 
 
+    def directory
+       "#{Wordpress::Config.server_directory}/#{locale.code}/#{self.number}"
+    end
+
     def reset_password
       update_attribute(:password, random_password)
       Wordpress::BlogResetPasswordJob.perform_later(self)
@@ -92,7 +96,46 @@ module Wordpress
       update_attribute(:mysql_password, random_password)
     end
 
+    def update_wp_config
+      logger = Logger.new(log_file)
+      begin
+        Net::SSH.start( server.host,  server.host_user, :password => server.host_password) do |ssh| 
+          logger.info("Blog Id:#{self.id} Start! ********************************/") 
+          logger.info("SSH Connected: #{server.host}") 
+          ssh_str = "
+                      #{config_replace_db}
+                      #{config_replace_user}
+                      #{config_replace_db_password}
+                      #{config_replace_db_host}
+                      grep '#{self.mysql_password}' #{directory_wordpress_config}
+                    "
+          channel = ssh.open_channel do |ch|    
+            puts ssh_str
+            ch.exec ssh_str do |ch, success| 
+              ch.on_data do |c, data|
+                $stdout.print data  
+                if /#{self.mysql_password}/.match(data)
+                  logger.info("wp-config.php updated!") 
+                end
+              end 
+            end
+          end
+          channel.wait
+          logger.info("Blog Id:#{self.id} End! ********************************/") 
+        end
+      rescue Exception  => e 
+        logger.error("Blog Id:#{self.id} ================")  
+        logger.error(e.backtrace.join("\n"))
+        nil
+      end
+      
+    end
+
     private
+
+    def log_file 
+      File.open('log/wordpress_blog.log', File::WRONLY | File::APPEND | File::CREAT)
+    end
 
     def check_server_and_cloudflare
       if self.server_id.blank? 
@@ -119,19 +162,27 @@ module Wordpress
     end
 
     def config_replace_db
-      "sed -i \"/DB_NAME/ c define( 'DB_NAME', '#{mysql_db}' );\" "
+      "sed -i \"/'DB_NAME'/ c define( 'DB_NAME', '#{mysql_db}' );\" #{directory_wordpress_config}"
     end
 
     def config_replace_user
-      "sed -i \"/DB_USER/ c define( 'DB_USER', '#{self.mysql_user}' );\" "
+      "sed -i \"/'DB_USER'/ c define( 'DB_USER', '#{self.mysql_user}' );\" #{directory_wordpress_config}"
     end
 
     def config_replace_db_password
-      "sed -i \"/DB_PASSWORD/ c define( 'DB_PASSWORD', '#{self.mysql_password}' );\" "
+      "sed -i \"/'DB_PASSWORD'/ c define( 'DB_PASSWORD', '#{self.mysql_password}' );\" #{directory_wordpress_config}"
     end
 
     def config_replace_db_host
-      "sed -i \"/DB_HOST/ c define( 'DB_HOST', '#{server.mysql_host}' );\" "
+      "sed -i \"/'DB_HOST'/ c define( 'DB_HOST', '#{server.mysql_host}' );\" #{directory_wordpress_config}"
+    end
+
+    def directory_wordpress
+      "#{directory}/wordpress"
+    end
+
+    def directory_wordpress_config
+      "#{directory_wordpress}/wp-config.php"
     end
 
     

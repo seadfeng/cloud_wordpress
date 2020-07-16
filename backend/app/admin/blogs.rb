@@ -64,6 +64,15 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             end
         end
 
+        member_action :update_wp_config, method: :put do   
+             if resource.update_wp_config
+                options = { notice: I18n.t('active_admin.notice.updated',  default: "Updated!") }
+             else
+                options = { alert: I18n.t('active_admin.notice.failure',  default: "更新失败") }
+             end
+             redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options))  
+        end
+
         member_action :do_install, method: :put do   
              if params[:template_id]
                 if resource.pending?
@@ -85,6 +94,15 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                 link_to(
                     I18n.t('active_admin.install', default: "安装"),
                     install_admin_blog_path(resource),  
+                    method: "put"
+                  ) 
+            end  
+        end
+        action_item :update_wp_config, only: :show  do
+            if resource.installed?
+                link_to(
+                    I18n.t('active_admin.update_wp_config', default: "更新配置"),
+                    update_wp_config_admin_blog_path(resource),  
                     method: "put"
                   ) 
             end  

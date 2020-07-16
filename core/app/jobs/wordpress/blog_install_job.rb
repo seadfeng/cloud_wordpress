@@ -15,7 +15,7 @@ module Wordpress
             collection_host: server.mysql_host  
            }
           apache_info ={
-            directory:  "#{Wordpress::Config.server_directory}/#{blog.locale.code}/#{blog.number}",
+            directory:  blog.directory,
             wordpress_down_url: template.down_url ,
             server_name: blog.cloudflare_domain,
             port: 80,  
