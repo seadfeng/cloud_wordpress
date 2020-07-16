@@ -1,7 +1,7 @@
 require 'wordpress/core/helpers/mysql'
 module Wordpress
     class TemplateJob < ApplicationJob
-      queue_as :default
+      queue_as :wordpress
       sidekiq_options retry: 3
       attr_reader :template
       

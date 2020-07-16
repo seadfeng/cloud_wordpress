@@ -43,6 +43,7 @@ echo 'SetEnvIf Ssl-Offloaded 1 HTTPS=on' >> /etc/httpd/conf/httpd.conf
 echo 'SetEnvIf Server-Https SSL HTTPS=on' >> /etc/httpd/conf/httpd.conf
 echo 'SetEnvIf X-Forwarded-Proto https HTTPS=on' >> /etc/httpd/conf/httpd.conf
 
-
 systemctl restart httpd.service
+
+echo 'Install OK'
  
