@@ -1,5 +1,5 @@
 ActiveAdmin.register_page "Settings" do
-    menu priority: 160  
+    menu priority: 160, label: "系统设置" 
 
     content do
         panel "模版主机设置" do   

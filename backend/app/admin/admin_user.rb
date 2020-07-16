@@ -1,5 +1,6 @@
 if defined?(ActiveAdmin) && defined?(AdminUser)
     ActiveAdmin.register AdminUser do
+      menu priority: 100
       init_controller
       begin
         role_changeable
@@ -38,7 +39,7 @@ if defined?(ActiveAdmin) && defined?(AdminUser)
           f.input :email
           f.input :first_name
           f.input :last_name 
-          f.input :time_zone , label: I18n.t('amz.time_zone', default: "Time Zone") , as: :select, collection: TZInfo::Timezone.all_country_zone_identifiers
+          f.input :time_zone , as: :select, collection: TZInfo::Timezone.all_country_zone_identifiers
           f.input :password
           f.input :password_confirmation 
         end

@@ -2,7 +2,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
     ActiveAdmin.register Wordpress::Domain, as: "Domain" do
         init_controller 
         permit_params   :name , :description  
-        menu priority: 50 
+        menu priority: 6 
         active_admin_paranoia 
 
 

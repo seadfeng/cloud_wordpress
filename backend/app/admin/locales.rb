@@ -2,7 +2,7 @@ ActiveAdmin.register Wordpress::Locale,  as: "Locale" do
     init_controller    
     actions :all, except: [:destroy] 
     batch_action :destroy, false
-    menu priority: 60 
+    menu priority: 60 , parent: "Settings"  
     permit_params  :code,  :name  ,  :position  
 
 

@@ -10,6 +10,7 @@ ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
         selectable_column
         id_column
         column :name
+        column :remaining
         column :domain
         column :api_user  
         column :description  

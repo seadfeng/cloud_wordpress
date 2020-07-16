@@ -64,7 +64,10 @@ end
         column :cname do |source|
             source.domain
         end
-        column :cloudflare
+        column :cloudflare 
+        column :max_size do |source|
+            "#{source.blogs.size}/#{source.max_size}"
+        end
         column :name
         column :description  
         column :host 
