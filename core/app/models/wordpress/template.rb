@@ -35,7 +35,7 @@ module Wordpress
 
     def set_wordpress_admin_user
       self.wordpress_user = "admin"
-      self.wordpress_password = random_password  
+      self.wordpress_password = random_password  if wordpress_password.blank?
     end
 
     def origin

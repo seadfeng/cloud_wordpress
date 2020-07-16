@@ -8,6 +8,14 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
 
     active_admin_paranoia
 
+    controller do
+      def update  
+          params[:template][:mysql_password] = resource.mysql_password if params[:template][:mysql_password].blank?
+          super 
+      end
+    end
+
+
     action_item :installed, only: :show  do
         unless resource.installed
             link_to(
@@ -88,7 +96,7 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
           f.input :install_url, placeholder: "https://wordpress.org/latest.tar.gz" , label: "安装地址"        
           f.input :name  
         #   f.input :mysql_user , placeholder: "user" 
-        #   f.input :mysql_password , placeholder: "password"  
+          f.input :mysql_password , placeholder: "password" if current_admin_user.admin? 
         #   f.input :wordpress_user , placeholder: "admin" 
         #   f.input :wordpress_password , placeholder: "password" 
           f.input :description, label: "备注"   
