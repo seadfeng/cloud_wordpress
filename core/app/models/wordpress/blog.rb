@@ -118,6 +118,22 @@ module Wordpress
       "i-#{random}"
     end
 
+    def config_replace_db
+      "sed -i \"/DB_NAME/ c define( 'DB_NAME', '#{mysql_db}' );\" "
+    end
+
+    def config_replace_user
+      "sed -i \"/DB_USER/ c define( 'DB_USER', '#{self.mysql_user}' );\" "
+    end
+
+    def config_replace_db_password
+      "sed -i \"/DB_PASSWORD/ c define( 'DB_PASSWORD', '#{self.mysql_password}' );\" "
+    end
+
+    def config_replace_db_host
+      "sed -i \"/DB_HOST/ c define( 'DB_HOST', '#{server.mysql_host}' );\" "
+    end
+
     
   end
 end
