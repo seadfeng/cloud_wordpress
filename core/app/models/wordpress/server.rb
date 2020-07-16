@@ -27,7 +27,7 @@ module Wordpress
 
     def check_host 
       begin  
-        Net::SSH.start(self.host, self.host_user, :password => self.host_password) do |ssh|  
+        Net::SSH.start(self.host, self.host_user, :password => self.host_password, :port => self.host_port)   do |ssh|  
           self.host_status = 1 
           self.save
         end 

@@ -1,23 +1,34 @@
 ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do 
-    permit_params  :host, :port, :user, :host_password,  :name, :description ,:connection_type
+    permit_params  :host, :port, :user, :password,  :name, :description ,:connection_type
     batch_action :destroy, false
     actions :all, except: [:destroy] 
-    menu priority: 80  
-    
+    menu priority: 80   
+
+    controller do
+        def update  
+            params[:proxy][:password] = resource.password if params[:proxy][:password].blank?
+            super 
+        end
+    end
+
 	index do
 		selectable_column
 		id_column     
-		column :host  
-		column :name
+        column :host  
+        column :connection_type
+        column :user
+        column :name  
+        column :status  
 		column :description
-		column :install do |post|
-			if post.installed
-				 span "已安装" , style: "background-color: #5cb85c;display:block;min-width:35px;text-align:center"
-			else
-				link_to I18n.t("active_admin.php_proxy.dns" , default: "安装") , install_admin_roxy_path(post) , method: :put , class: "status_tag yes" ,style: "color:#FFF"
-			end
-		end   
+		# column :install do |post|
+		# 	if post.installed
+		# 		 span "已安装" , style: "background-color: #5cb85c;display:block;min-width:35px;text-align:center"
+		# 	else
+		# 		link_to I18n.t("active_admin.proxy.dns" , default: "安装") , install_admin_proxy_path(post) , method: :put , class: "status_tag yes" ,style: "color:#FFF"
+		# 	end
+		# end   
 		column :created_at
+		column :updated_at
 		actions
 	end
 
@@ -30,13 +41,29 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
 	    end
     end
 
+    member_action :test, method: :put do 
+        if resource.test
+            options = { notice: I18n.t('active_admin.connection_succeeded',  default: "连接成功") } 
+        else
+            options = { alert: I18n.t('active_admin.connection_failed',  default: "连接失败") } 
+        end
+        redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+    end
+
+    action_item :test, only: :show  do 
+        link_to(
+            I18n.t('active_admin.test_connection', default: "连接测试"),
+            test_admin_proxy_path(resource),  
+            method: "put"
+          )  
+    end
+
     form do |f|
-        f.inputs I18n.t("active_admin.proxy.form" , default: "代理")  do  
+        f.inputs I18n.t("active_admin.proxy.form" , default: "代理")  do   
+            f.input :host   
             f.input :name    
-            f.input :host      
             f.input :connection_type, as: :select,  collection: Wordpress::Proxy::CONNECTION_TYPES     
-            f.input :port       
-            f.input :name       
+            f.input :port        
             f.input :user       
             f.input :password       
             f.input :description    

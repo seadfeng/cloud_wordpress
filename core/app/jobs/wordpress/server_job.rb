@@ -9,7 +9,7 @@ module Wordpress
         logger = Logger.new(log_file)  
         begin  
             logger.info("Sever Id:#{server.id} ***********************/") 
-            Net::SSH.start(server.host, server.host_user, :password => server.host_password) do |ssh|  
+            Net::SSH.start(server.host, server.host_user, :password => server.host_password, :port => server.host_port) do |ssh|  
               logger.info("SSH connected") 
               centos_ver = ssh.exec! "rpm --eval '%{centos_ver}'"   
 

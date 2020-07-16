@@ -1,7 +1,7 @@
 ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
     init_controller    
-    actions :all, except: [:destroy, :show] 
-    batch_action :destroy, false
+    actions :all, except: [:show] 
+    # batch_action :destroy, false
     menu priority: 60 , parent: "Settings"  
     permit_params  :api_user, :name, :api_token ,:description , :domain
     active_admin_paranoia
