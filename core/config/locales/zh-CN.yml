@@ -8,6 +8,7 @@ zh-CN:
         done: "完成"
         published: "已发布"
   active_admin:
+    sidekiq: "队列"
     import: "导入"
     do_import: "导入"
     scopes:

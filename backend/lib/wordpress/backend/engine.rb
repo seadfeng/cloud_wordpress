@@ -11,7 +11,7 @@ module Wordpress
                 ActiveAdmin.setup do |config|
                     config.namespace :admin do |admin|
                         admin.build_menu :default do |menu|
-                            menu.add label: "Sidekiq", url: "/sidekiq", html_options: { target: :blank }  
+                            menu.add label: I18n.t("active_admin.sidekiq", default: "Sidekiq"), url: "/sidekiq", html_options: { target: :blank }, priority: 1000  
                         end
                     end
                     config.default_per_page = [20, 50, 100] 
