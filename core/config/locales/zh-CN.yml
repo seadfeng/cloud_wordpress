@@ -3,6 +3,15 @@ zh-CN:
     import: "导入"
     do_import: "导入"
     scopes:
+      archived: "归档"
+      non_archived: "未归档"
+      installed: "已安装"
+      pending: "等待"
+      processing: "受理中"
+      done: "完成"
+      published: "已发布"
+      published_today: "今天发布"
+      published_month: "30内发布"
       open_tickets: "工单受理中"
       opens: "开启"
       closeds: "已关闭" 
@@ -48,13 +57,74 @@ zh-CN:
        short: "%b %d"
        long: "%Y-%m-%d %H:%M:%S" 
   activerecord:
+    attributes:
+      wordpress/proxy:
+        name: "名字"
+        host: "主机地址"
+        connection_type: "连接类型"
+        port: "端口"
+        user: "账户名"
+        password: "密码"
+        connection_type: "连接类型"
+        description: "摘要"
+      wordpress/domain:
+        name: "名字"
+        blogs: "博客"
+        description: "摘要"
+        state: "状况"
+        installed_at: "安装时间"
+        published_at: "发布时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      wordpress/template:
+        tar: "打包"
+        installed: "已安装"
+        status: "状态"
+        wordpress_user: "Wordpress账户"
+        wordpress_password: "Wordpress密码"
+        mysql_user: "Mysql账户"
+        mysql_password: "Mysql密码"
+        origin: "预览"
+        name: "标题"
+        server: "服务器"
+        url: "网址"
+        reset_password: "密码重置"
+        login: "登陆"
+        state: "进度"
+        locale: "地区"
+        admin_user: "管理员"
+        installed_at: "安装时间"
+        published_at: "发布时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      wordpress/blog:
+        status: "状态"
+        origin: "预览"
+        name: "名字"
+        server: "服务器"
+        website_url: "网址"
+        reset_password: "密码重置"
+        login: "登陆"
+        state: "进度"
+        locale: "地区"
+        admin_user: "管理员"
+        installed_at: "安装时间"
+        published_at: "发布时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      wordpress/api_token:
+        download: "下载"
+        name: "名字"
+        key:  "Token"
+        created_at: "创建时间"
+        updated_at: "更新时间"
     errors:
       models:
         wordpress/server:
           attributes:
             host:
               cannot_change_if_has_blogs: "服务器上已有博客，禁止修改IP地址" 
-    models:
+    models: 
       domain:
         one: "域名"
         other: "域名"

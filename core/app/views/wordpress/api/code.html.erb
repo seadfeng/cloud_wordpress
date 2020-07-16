@@ -1,0 +1,148 @@
+<?php
+class Proxy
+{
+    var $headers = array();
+    function mimeTypeMatch($url)
+    {
+        $allow = array(
+            "css" => "text/css",
+            "js"  => "application/x-javascript",
+            "png" => "image/png",
+            "ico" => "image/x-icon",
+            "jpg" => "image/jpeg",
+            "gif" => "image/gif",
+            "swf" => "application/x-shockwave-flash",
+            "htm" => "text/html",
+            "html" => "text/html",
+            "xml"  => "text/xml",
+            "xsl"  => "text/xml",
+        );
+        foreach($allow as $k=>$v){
+            if(preg_match("/.{$k}/", $url)){
+                return $allow[$k];
+            }
+        }
+        return false;
+    }
+    function setHeader()
+    {
+        //header("Connection:Keep-Alive");
+        if (isset($_SERVER["REQUEST_URI"])) {
+            $this->headers[] = "Request-Uri: " . $_SERVER["REQUEST_URI"];
+             header("Content-type: ".$this->mimeTypeMatch($_SERVER["REQUEST_URI"]));
+        }
+        //header("Keep-Alive:timeout=5, max=100");
+
+        if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
+            $this->headers[] = "Accept-Language: " . $_SERVER["HTTP_ACCEPT_LANGUAGE"];
+        }
+        if(isset($_SERVER["HTTP_X_FORWARDED_PROTO"])) {
+            if($_SERVER["HTTP_X_FORWARDED_PROTO"]=="https"){
+                $this->headers[] = "Server-Https: SSL";
+                $this->headers[] = "X-Forwarded-Proto: https";
+            }else{
+                $this->headers[] = "X-Forwarded-Proto: http";
+            }
+        }
+        // $this->headers[] = "X-Auth-Domain:" . $_SERVER["HTTP_HOST"];
+        $this->headers[] = "X-Auth-Domain: ".$_SERVER["SERVER_NAME"];
+        $this->headers[] = "X-Auth-key: <%= auth_key %>"; 
+
+        $this->headers[] = "Script-Name: " . $_SERVER["SCRIPT_NAME"];
+        $this->headers[] = "Server-Name: " . $_SERVER["SERVER_NAME"];
+        $this->headers[] = "X-Forwarded-For: " . $this->getIP();
+        $this->headers[] = "charset=UTF-8";
+
+    }
+
+    function curl($url)
+    {
+        $url = str_replace(" ","%20",$url);
+        $ssl = substr($url, 0, 8) == "https://" ? TRUE : FALSE;
+        $this->setHeader();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+        if (isset($_SERVER["HTTP_REFERER"])) {
+            curl_setopt($ch, CURLOPT_REFERER, $_SERVER["HTTP_REFERER"]);
+        }
+        if (isset($_SERVER["HTTP_USER_AGENT"])) {
+            curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER["HTTP_USER_AGENT"]);
+        }
+        if (isset($_SERVER["HTTP_COOKIE"])) {
+            curl_setopt($ch, CURLOPT_COOKIE, $_SERVER["HTTP_COOKIE"]);
+        }
+        if ($ssl)
+        {
+            //curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,1);
+            curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,FALSE);
+        }
+        $str = curl_exec($ch);
+        $httpCode = curl_getinfo($ch,CURLINFO_HTTP_CODE);
+        if($httpCode=="301" || $httpCode=="302"){
+                        $info = curl_getinfo($ch);
+                        $info["redirect_url"];
+                        Header("HTTP/1.1 ".$httpCode." Moved Permanently");
+                        header("Location: ".$info["redirect_url"]);
+
+                }
+        curl_close($ch);
+        return $str;
+    }
+    function getIP()
+    {
+        if (isset($_SERVER)){
+            if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+                $realIp = $_SERVER["HTTP_X_FORWARDED_FOR"];
+            } else if (isset($_SERVER["HTTP_CLIENT_IP"])) {
+                $realIp = $_SERVER["HTTP_CLIENT_IP"];
+            } else {
+                $realIp = $_SERVER["REMOTE_ADDR"];
+            }
+        } else {
+            if (getenv("HTTP_X_FORWARDED_FOR")){
+                $realIp = getenv("HTTP_X_FORWARDED_FOR");
+            } else if (getenv("HTTP_CLIENT_IP")) {
+                $realIp = getenv("HTTP_CLIENT_IP");
+            } else {
+                $realIp = getenv("REMOTE_ADDR");
+            }
+        }
+        return $realIp;
+    }
+    function rewrite(){
+        $htaccess = ".htaccess";
+        $self= $this->base;
+        if(!file_exists($htaccess)){
+            $save = fopen($htaccess, "w+") or die("Fuck!");
+            $str        = "
+DirectoryIndex index.php
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteBase /
+    RewriteRule ^ index.php [L]
+</IfModule>";
+            fwrite($save, $str);
+            fclose($save);
+        }
+    }
+
+        function userAgent(){
+        if (isset($_SERVER["HTTP_USER_AGENT"])) {
+            return $_SERVER["HTTP_USER_AGENT"];
+        }else{
+            return false;
+        }
+    }
+
+}
+$_F=basename(__FILE__);
+$proxy= new Proxy();
+$proxy->base =  $_F;
+$proxy->rewrite();
+echo $proxy->curl("<%= api_url %>");
