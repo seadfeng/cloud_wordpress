@@ -1,8 +1,18 @@
 zh-CN:
+  enumerize:
+    defaults:
+      state:
+        installed: "已安装"
+        pending: "等待"
+        processing: "受理中"
+        done: "完成"
+        published: "已发布"
   active_admin:
     import: "导入"
     do_import: "导入"
     scopes:
+      support: "支持"
+      staff: "员工"
       archived: "归档"
       non_archived: "未归档"
       installed: "已安装"
@@ -58,7 +68,24 @@ zh-CN:
        long: "%Y-%m-%d %H:%M:%S" 
   activerecord:
     attributes:
+      base: &base
+        id: ID
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      active_admin/permission:
+        <<: *base
+        name: "名字"
+        class_name: "类名"
+        role: "权限"
+        state: "状态"
+        action: "动作"
+      wordpress/locale:
+        <<: *base
+        name: "名字"
+        code: "地区代码"
+        position: "位置" 
       wordpress/proxy:
+        <<: *base
         name: "名字"
         host: "主机地址"
         connection_type: "连接类型"
@@ -66,17 +93,35 @@ zh-CN:
         user: "账户名"
         password: "密码"
         connection_type: "连接类型"
-        description: "摘要"
+        description: "摘要" 
+      wordpress/server:
+        <<: *base
+        cname: "别名（CNAME）"
+        domain: "域名"
+        name: "服务名字"
+        host: "主机地址"
+        install: "安装状态"
+        host_status: "主机状态"
+        mysql_status: "Mysql状态"
+        description: "摘要" 
+        mysql_host_user: "Mysql用户地址"
+        mysql_host: "Mysql主机地址"
+        host_port: "主机端口"
+        host_user: "主机账户名"
+        host_password: "主机账户密码"
+        mysql_port: "Mysql端口"
+        mysql_user: "Mysql账户"
+        mysql_password: "Mysql密码"
       wordpress/domain:
+        <<: *base
         name: "名字"
         blogs: "博客"
         description: "摘要"
         state: "状况"
         installed_at: "安装时间"
-        published_at: "发布时间"
-        created_at: "创建时间"
-        updated_at: "更新时间"
+        published_at: "发布时间" 
       wordpress/template:
+        <<: *base
         tar: "打包"
         installed: "已安装"
         status: "状态"
@@ -94,10 +139,9 @@ zh-CN:
         locale: "地区"
         admin_user: "管理员"
         installed_at: "安装时间"
-        published_at: "发布时间"
-        created_at: "创建时间"
-        updated_at: "更新时间"
+        published_at: "发布时间" 
       wordpress/blog:
+        <<: *base
         status: "状态"
         origin: "预览"
         name: "名字"
@@ -109,15 +153,12 @@ zh-CN:
         locale: "地区"
         admin_user: "管理员"
         installed_at: "安装时间"
-        published_at: "发布时间"
-        created_at: "创建时间"
-        updated_at: "更新时间"
+        published_at: "发布时间" 
       wordpress/api_token:
+        <<: *base
         download: "下载"
         name: "名字"
-        key:  "Token"
-        created_at: "创建时间"
-        updated_at: "更新时间"
+        key:  "Token" 
     errors:
       models:
         wordpress/server:
