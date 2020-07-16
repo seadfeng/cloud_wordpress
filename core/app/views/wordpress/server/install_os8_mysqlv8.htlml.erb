@@ -1,3 +1,5 @@
+cat /etc/DIR_COLORS | sed 's/01;34/01;36/' > ~/.dir_colors
+
 rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm 
 
 yum update -y
@@ -5,12 +7,17 @@ yum groupinstall "Development Tools" -y
 yum install ncurses-devel -y 
 yum -y install mysql mysql-server mysql-devel
 
+
 service mysqld start
 systemctl enable mysqld.service
 
 
 # Set you localehost root password
 mysql_secure_installation
+
+
+# Time zone support
+mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
 
 #create mysql root user for your private network host
 CREATE USER 'root'@'10.10.10.%' IDENTIFIED BY 'password';
