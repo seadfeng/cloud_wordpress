@@ -24,8 +24,11 @@ module Wordpress
                   ch.exec ssh_exec do |ch, success| 
                     if success 
                       ch.on_data do |c, data|
-                        $stdout.print data   
-                        # Todo
+                        $stdout.print data    
+                        if /Install OK/.match(data)
+                          server.installed = 1
+                          server.save
+                        end
                       end 
                     end
                   end   
