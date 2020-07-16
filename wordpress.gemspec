@@ -3,6 +3,7 @@ require "./core/lib/wordpress/core/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
+  spec.platform    = Gem::Platform::RUBY
   spec.name        = "wordpress"
   spec.version     = Wordpress::VERSION
   spec.authors     = ["Sead Feng"]
@@ -11,6 +12,8 @@ Gem::Specification.new do |spec|
   spec.summary     = "Cloud Wordpress"
   spec.description = "Wordpress"
   spec.license     = "MIT"
+
+  spec.required_ruby_version = '>= 2.5.0'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
