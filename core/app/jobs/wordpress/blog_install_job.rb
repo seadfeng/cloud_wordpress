@@ -76,16 +76,51 @@ module Wordpress
                   logger.info("Create database and user") 
                   ch.on_data do |c, data|
                     $stdout.print data  
-                    logger.info("Database checked: #{mysql_info[:database]}") if /^#{mysql_info[:database]}$/.match(data)
+                     if /^#{mysql_info[:database]}$/.match(data)
+                        logger.info("Database checked: #{mysql_info[:database]}") 
+                     end
                   end 
                 end
               end  
             end 
             channelc.wait 
-            import_mysql = "#{mysql.import_mysql("#{apache_info[:directory]}/#{template.mysql_user}.sql")}" 
-            ssh.exec import_mysql
-            ssh.exec mysql.only_update_siteurl(blog.cloudflare_origin)
+             
 
+            #import data
+            channeld = ssh.open_channel do |ch|  
+              import_mysql = "#{mysql.import_mysql("#{apache_info[:directory]}/#{template.mysql_user}.sql")}"  
+              ch.exec import_mysql do |ch, success| 
+                if success
+                  logger.info("import mysql: #{import_mysql}") 
+                  ch.on_data do |c, data|
+                    $stdout.print data  
+                     if /^#{mysql_info[:database]}$/.match(data)
+                        logger.info("Database checked: #{mysql_info[:database]}") 
+                     end
+                  end 
+                end
+              end  
+            end 
+            channeld.wait 
+
+            #update siteurl 
+            channele = ssh.open_channel do |ch|  
+              sql = mysql.only_update_siteurl(blog.cloudflare_origin)  
+              ch.exec sql do |ch, success| 
+                if success
+                  logger.info("update siteurl: #{sql}") 
+                  ch.on_data do |c, data|
+                    $stdout.print data  
+                     if /^#{mysql_info[:database]}$/.match(data)
+                        logger.info("Database checked: #{mysql_info[:database]}") 
+                        blog.processed
+                     end
+                  end 
+                end
+              end  
+            end 
+            channele.wait  
+            
             Wordpress::BlogResetPasswordJob.perform_later(blog)
           end
             
