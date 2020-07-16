@@ -24,13 +24,14 @@ module Wordpress
                 def down_load_and_install(options) 
                     wordpress_config = "wordpress/wp-config.php"
                     " 
-                    if [ ! -f \"#{directory}/#{options[:template][:file_name]}\" ];then
+                    #{mkdir_directory}
+                    if [ ! -f \"#{virtual[:directory]}/#{options[:template][:file_name]}\" ];then
                         cd #{virtual[:directory]} && wget #{virtual[:wordpress_down_url]} && tar xf #{options[:template][:file_name]} && chown apache:apache ./ -R 
                         sed -i \"s/#{ options[:template][:mysql_user]}/#{options[:blog][:mysql_user]}/g\" #{wordpress_config} 
                         sed -i \"s/#{ options[:template][:mysql_password]}/#{options[:blog][:mysql_password]}/g\" #{wordpress_config} 
                         sed -i \"s/#{ options[:template][:mysql_host] }/#{options[:blog][:mysql_host]}/g\" #{wordpress_config} 
-                        sed -i \"/define(WP_DEBUG, false);/a\if (\$_SERVER[\"HTTP_X_FORWARDED_HOST\"]) { \$scheme = \"http://\"; if (\$_SERVER[\"HTTPS\"]==\"on\") { \$scheme = \"https://\" ;} \$home = \$scheme.\$_SERVER[\"HTTP_X_FORWARDED_HOST\"]; \$siteurl = \$scheme.\$_SERVER[\"HTTP_X_FORWARDED_HOST\"]; define(\"WP_HOME\", \$home); define(\"WP_SITEURL\", \$siteurl); }\" #{wordpress_config}
-                        sed -i \"/define(WP_DEBUG, false);/a\if (\$_SERVER[\"HTTP_X_FORWARDED_PROTO\"]==\"https\") { \$_SERVER[\"HTTPS\"] = \"on\"; }\" #{wordpress_config}
+                        sed -i \"/'WP_DEBUG'/a\\\if (\\\$_SERVER['HTTP_X_FORWARDED_HOST']) { \\\$scheme = 'http://'; if (\\\$_SERVER['HTTPS']=='on') { \\\$scheme = 'https://' ;} \\\$home = \\\$scheme.\\\$_SERVER['HTTP_X_FORWARDED_HOST']; \\\$siteurl = \\\$scheme.\\\$_SERVER['HTTP_X_FORWARDED_HOST']; define('WP_HOME', \\\$home); define('WP_SITEURL', \\\$siteurl); }\" #{wordpress_config}
+                        sed -i \"/'WP_DEBUG'/a\\\if (\\\$_SERVER['HTTP_X_FORWARDED_PROTO']=='https') { \\\$_SERVER['HTTPS'] = 'on'; }\" #{wordpress_config}
                     fi
                     "
                 end

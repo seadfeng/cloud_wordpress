@@ -110,7 +110,7 @@ module Wordpress
 
     def random_password
       random = SecureRandom.urlsafe_base64(nil, false) 
-      "0O*#{random}"
+      "i-#{random}"
     end
 
     
