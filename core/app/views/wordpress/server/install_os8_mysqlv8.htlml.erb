@@ -1,0 +1,23 @@
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm 
+
+yum update -y
+yum groupinstall "Development Tools" -y
+yum install ncurses-devel -y 
+yum -y install mysql mysql-server mysql-devel
+
+service mysqld start
+systemctl enable mysqld.service
+
+
+# Set you localehost root password
+mysql_secure_installation
+
+#create mysql root user for your private network host
+CREATE USER 'root'@'10.10.10.%' IDENTIFIED BY 'password';
+
+
+
+systemctl start firewalld
+systemctl enable firewalld.service
+firewall-cmd --permanent --add-port=3306/tcp 
+firewall-cmd --reload
