@@ -22,6 +22,7 @@ module Wordpress
           }
           down_load_options = {
             template: {
+              id: template.id,
               file_name: template.template_tar_file,
               mysql_user: template.mysql_user,
               mysql_password: template.mysql_password,

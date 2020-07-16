@@ -34,6 +34,7 @@ module Wordpress
                         sed -i \"s/#{ options[:template][:mysql_host] }/#{options[:blog][:mysql_host]}/g\" #{wordpress_config} 
                         sed -i \"/'WP_DEBUG'/a\\\if (\\\$_SERVER['HTTP_X_FORWARDED_HOST']) { \\\$scheme = 'http://'; if (\\\$_SERVER['HTTPS']=='on') { \\\$scheme = 'https://' ;} \\\$home = \\\$scheme.\\\$_SERVER['HTTP_X_FORWARDED_HOST']; \\\$siteurl = \\\$scheme.\\\$_SERVER['HTTP_X_FORWARDED_HOST']; define('WP_HOME', \\\$home); define('WP_SITEURL', \\\$siteurl); }\" #{wordpress_config}
                         sed -i \"/'WP_DEBUG'/a\\\if (\\\$_SERVER['HTTP_X_FORWARDED_PROTO']=='https') { \\\$_SERVER['HTTPS'] = 'on'; }\" #{wordpress_config}
+                        sed -i \"s/#{options[:template][:id]}\\\/wordpress\\\///g\" #{virtual[:directory]}/wordpress/.htaccess
                     fi
                     "
                 end

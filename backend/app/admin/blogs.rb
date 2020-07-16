@@ -1,7 +1,7 @@
 if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
     ActiveAdmin.register Wordpress::Blog, as: "Blog" do
         init_controller 
-        permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id, :cname
+        permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id, :cname, :use_ssl
         menu priority: 50 
         active_admin_paranoia 
 
@@ -150,6 +150,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                             display_name: :name, 
                             minimum_input_length: 2     
                 f.input :cname
+                f.input :use_ssl     
                 f.input :name     
                 f.input :description    
             end
