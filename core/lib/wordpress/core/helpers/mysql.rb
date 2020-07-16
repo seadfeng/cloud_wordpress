@@ -39,11 +39,11 @@ module Wordpress
                     collection_mysql
                 end
 
-                private  
-
                 def import_mysql_sql(file_path) 
-                    "use #{mysql[:database]}; source #{file_path};"
+                    "show databases; use #{mysql[:database]}; source #{file_path};"
                 end
+
+                private   
 
                 def update_password(wp_password)
                     "update wp_users set user_pass=md5(\"#{wp_password}\") where id=1;"

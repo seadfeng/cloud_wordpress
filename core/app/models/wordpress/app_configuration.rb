@@ -1,7 +1,7 @@
  module Wordpress
     class AppConfiguration < Preferences::Configuration
 
-        preference :server_directory, :string, default: '/home/deploy/wwwrooot/'
+        preference :server_directory, :string, default: '/home/deploy/wwwroot/'
         
         preference :template_origin, :string, default: 'http://localhost/'
         preference :template_host, :string, default: '127.0.0.1'

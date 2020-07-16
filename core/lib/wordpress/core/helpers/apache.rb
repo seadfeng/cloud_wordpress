@@ -10,9 +10,11 @@ module Wordpress
 
                 def create_virtual_host 
                     vhost_file = "/etc/httpd/conf.d/vhost/#{conf_file_name}"
-                    ssh = "if [ ! -f \"#{vhost_file}\" ];then
-                        echo \"#{virtual_host}\" > #{vhost_file}
-                        service httpd restart
+                    ssh = "
+                        mkdir /etc/httpd/conf.d/vhost -p
+                        if [ ! -f \"#{vhost_file}\" ];then
+                            echo \"#{virtual_host}\" > #{vhost_file}
+                            service httpd restart
                         fi
                         "
                 end 
@@ -21,7 +23,7 @@ module Wordpress
                     "mkdir #{virtual[:directory]} -p" 
                 end
 
-                def down_load_and_install(options) 
+                def download_and_install(options) 
                     wordpress_config = "wordpress/wp-config.php"
                     " 
                     #{mkdir_directory}

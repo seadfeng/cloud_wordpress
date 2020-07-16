@@ -17,7 +17,7 @@ module Wordpress
           apache_info ={
             directory:  "#{Wordpress::Config.server_directory}/#{blog.locale.code}/#{blog.number}",
             wordpress_down_url: template.down_url ,
-            server_name: blog.origin,
+            server_name: blog.cloudflare_domain,
             port: 80,  
           }
           down_load_options = {
@@ -36,20 +36,54 @@ module Wordpress
           mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
           apache = Wordpress::Core::Helpers::Apache.new(apache_info)
           logger.info("Blog Id:#{blog.id} ================") 
-          down_load_and_install = apache.down_load_and_install(down_load_options)
+          download_and_install = apache.download_and_install(down_load_options)
           create_virtual_host = apache.create_virtual_host 
-          # puts down_load_and_install
+          create_db_and_user = mysql.create_db_and_user 
+          puts create_virtual_host
           Net::SSH.start( server.host,  server.host_user, :password => server.host_password) do |ssh| 
             logger.info("ssh connected") 
-            # ssh.exec "#{down_load_and_install}"
-            channel = ssh.open_channel do |ch|    
-              ch.exec down_load_and_install do |ch, success| 
-                ch.on_data do |c, data|
-                  $stdout.print data  
-                end 
+
+            #download_and_install
+            channela = ssh.open_channel do |ch|    
+              ch.exec download_and_install do |ch, success| 
+                if success
+                  logger.info("download & insntall") 
+                  ch.on_data do |c, data|
+                    $stdout.print data  
+                  end 
+                end
+              end   
+            end 
+            channela.wait
+
+            #create_virtual_host
+            channelb = ssh.open_channel do |ch|   
+              ch.exec create_virtual_host do |ch, success| 
+                if success
+                  logger.info("Create Virtual Host") 
+                  ch.on_data do |c, data|
+                    $stdout.print data  
+                  end 
+                end
               end  
             end 
             channel.wait
+
+            #create db & user & import data
+            channelc = ssh.open_channel do |ch|   
+              ch.exec "#{create_db_and_user} 
+                #{mysql.import_mysql_sql("#{apache_info[:directory]}/#{template.mysql_user}.sql")}" do |ch, success| 
+                if success
+                  logger.info("Create database and user") 
+                  ch.on_data do |c, data|
+                    $stdout.print data  
+                    logger.info("Database checked: #{mysql_info[:database]}") if /^#{mysql_info[:database]}$/.match(data)
+                  end 
+                end
+              end  
+            end 
+            channelc.wait
+
           end
             
         rescue Exception, ActiveJob::DeserializationError => e 
