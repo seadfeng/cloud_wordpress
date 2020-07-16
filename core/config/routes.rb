@@ -6,7 +6,7 @@ Wordpress::Core::Engine.add_routes do
         end
     end
     get '/api/v1', to: 'api#show'
-    get '/server/install', to: 'server#install'
+    get '/server/install/*os', to: 'server#index' 
     root to: 'home#index'
 
 end

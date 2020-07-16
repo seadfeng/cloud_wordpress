@@ -1,0 +1,48 @@
+cat /etc/DIR_COLORS | sed 's/01;34/01;36/' > ~/.dir_colors
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
+yum -y install epel-release
+#yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+yum -y install yum-utils
+yum-config-manager --enable remi-php74
+
+yum update -y
+yum groupinstall "Development Tools" -y
+yum install ncurses-devel -y
+yum install wget telnet -y
+yum install -y libxslt libxslt-devel libxml2 libxml2-devel libicu-devel
+yum -y install expect
+yum install ImageMagick -y
+yum install ImageMagick-devel -y
+yum -y install mysql mysql-devel
+yum -y install php-mysql php-pear php-xml php-cli php-imap php-gd php-pdo php-devel php-mbstring php-common php-ldap php php-imagick
+yum -y install libmcrypt libmcrypt-devel readline-devel php-mcrypt php-gd php-xml php-mbstring php-ldap php-pear php-xmlrpc php-curl php-memcache  php-sockets php-ioncube-loader php-bcmath
+yum -y install httpd httpd-manual mod_ssl mod_perl mod_fcgid mod_evasive httpd-devel mod_rewrite mod_gnutls mod_remoteip
+
+sed -i 's/AllowOverride None/AllowOverride All/g' /etc/httpd/conf/httpd.conf 
+sed -i 's/enforcing/disabled/g' /etc/selinux/config
+setenforce 0
+
+systemctl start httpd.service
+systemctl enable httpd.service
+
+systemctl start firewalld
+systemctl enable firewalld.service
+
+firewall-cmd --permanent --zone=public --add-service=http
+firewall-cmd --permanent --zone=public --add-service=https
+firewall-cmd --permanent --add-port=443/tcp
+firewall-cmd --permanent --add-port=80/tcp
+firewall-cmd --reload
+
+
+mkdir /etc/httpd/conf.d/vhost/ -p
+
+echo 'IncludeOptional conf.d/vhost/*.conf' >> /etc/httpd/conf/httpd.conf
+echo 'SetEnvIf Ssl-Offloaded 1 HTTPS=on' >> /etc/httpd/conf/httpd.conf
+echo 'SetEnvIf Server-Https SSL HTTPS=on' >> /etc/httpd/conf/httpd.conf
+echo 'SetEnvIf X-Forwarded-Proto https HTTPS=on' >> /etc/httpd/conf/httpd.conf
+
+
+systemctl restart httpd.service
+ 
