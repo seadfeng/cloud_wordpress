@@ -16,6 +16,8 @@ module Wordpress
                 def create_db_and_user
                     "#{collection_mysql} << EOF
                         #{create_database} #{create_mysql_user} #{mysql_grant}
+                        show databases;
+                        quit;
                     EOF"          
                 end   
 
@@ -32,6 +34,7 @@ module Wordpress
                         show databases;
                         use #{mysql[:database]};
                         #{update_password(wp_password)} 
+                        quit;
                     EOF" 
                 end
 

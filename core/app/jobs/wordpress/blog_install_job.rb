@@ -39,7 +39,7 @@ module Wordpress
           download_and_install = apache.download_and_install(down_load_options)
           create_virtual_host = apache.create_virtual_host 
           create_db_and_user = mysql.create_db_and_user 
-          puts create_virtual_host
+          # puts create_virtual_host
           Net::SSH.start( server.host,  server.host_user, :password => server.host_password) do |ssh| 
             logger.info("ssh connected") 
 
@@ -67,12 +67,11 @@ module Wordpress
                 end
               end  
             end 
-            channel.wait
+            channelb.wait
 
-            #create db & user & import data
+            #create db & user & import data 
             channelc = ssh.open_channel do |ch|   
-              ch.exec "#{create_db_and_user} 
-                #{mysql.import_mysql_sql("#{apache_info[:directory]}/#{template.mysql_user}.sql")}" do |ch, success| 
+              ch.exec create_db_and_user do |ch, success| 
                 if success
                   logger.info("Create database and user") 
                   ch.on_data do |c, data|
@@ -82,8 +81,11 @@ module Wordpress
                 end
               end  
             end 
-            channelc.wait
+            channelc.wait 
+            import_mysql = "#{mysql.import_mysql("#{apache_info[:directory]}/#{template.mysql_user}.sql")}" 
+            ssh.exec import_mysql
 
+            Wordpress::BlogResetPasswordJob.perform_now(blog)
           end
             
         rescue Exception, ActiveJob::DeserializationError => e 
