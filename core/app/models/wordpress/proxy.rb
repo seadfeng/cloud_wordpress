@@ -9,18 +9,7 @@ module Wordpress
     end  
 
     def test
-      begin   
-        if connection_type == "SSH"
-          Net::SSH.start(self.host, self.user, :password => self.password, :port => self.port  ) do |ssh|  
-            self.status = 1
-            self.save 
-          end 
-        end
-      rescue Exception  => e   
-        self.status = 0
-        self.save 
-        nil
-      end  
+      Wordpress::ProxyCheckJob.perform_now(self) 
     end
     
   end

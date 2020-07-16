@@ -1,5 +1,5 @@
 module Wordpress
-    class BlogJob < ApplicationJob
+    class ProxyCheckJob < ApplicationJob
       queue_as :wordpress
       sidekiq_options retry: 3
       attr_reader :proxy
@@ -14,15 +14,17 @@ module Wordpress
             else
                 proxy.status = 0
                 proxy.save 
+                nil
             end
           rescue Exception  => e 
             proxy.status = 0
             proxy.save 
             logger = Logger.new(log_file)  
-            logger.error("Proxy Id:#{server.id} ================") 
+            logger.error("Proxy Id:#{proxy.id} ================") 
             logger.error(I18n.t('active_admin.active_job', message: e.message, default: "ActiveJob: #{e.message}"))
             logger.error(e.backtrace.join("\n"))
-          end  
+            nil
+        end  
       end
 
       private
