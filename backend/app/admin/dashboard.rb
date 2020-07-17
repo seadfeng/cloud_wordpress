@@ -16,7 +16,7 @@ ActiveAdmin.register_page "Dashboard" do
             end 
             column do  
                 panel "博客主机分布" do 
-                    div pie_chart Wordpress::Blog.all.joins(:server).group("#{Wordpress::Server.table_name}.domain").order("count_all desc").count 
+                    div pie_chart Wordpress::Blog.all.joins(:server).group("#{Wordpress::Server.table_name}.name").order("count_all desc").count 
                 end 
             end 
         end #columns 

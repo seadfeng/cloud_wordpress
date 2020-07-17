@@ -19,7 +19,12 @@ module Wordpress
     end  
 
     before_validation :check_host,  if: :host_password_changed?
-    before_validation :check_blogs, if: :host_changed?
+    before_validation :check_blogs, if: :host_changed? 
+    before_validation :check_blogs, if: :cloudflare_id_changed? 
+
+    def cname
+     "server#{self.id}.#{cloudflare.domain}"
+    end
 
     def check_blogs 
         errors.add(:host, :cannot_change_if_has_blogs) if blogs.any? 

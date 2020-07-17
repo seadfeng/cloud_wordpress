@@ -62,7 +62,7 @@ end
         selectable_column
         id_column
         column :cname do |source|
-            source.domain
+            source.cname
         end
         column :cloudflare 
         column :max_size do |source|
@@ -97,16 +97,14 @@ end
         actions
     end
 
-    filter :name 
-    filter :domain 
+    filter :name  
     filter :host 
     filter :created_at
     filter :updated_at  
 
     form do |f|
         f.inputs I18n.t("active_admin.php_service.form" , default: "服务器")  do  
-          f.input :cloudflare, label: "Cloudflare"  
-          f.input :domain, placeholder: "host1.demo.com" , hint: "用处:博客cloudflare二级域名指向此地址"  
+          f.input :cloudflare, label: "Cloudflare"    
           f.input :name, label: "服务器名字"  
           f.input :description 
           f.input :max_size, label: I18n.t("active_admin.php_service.max_size" , default: "博客最大数量") 

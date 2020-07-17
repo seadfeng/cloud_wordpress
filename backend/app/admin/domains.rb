@@ -5,6 +5,9 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
         menu priority: 6 
         active_admin_paranoia 
 
+        scope :active
+        scope :not_use
+
         active_admin_import validate: true,   
                             template_object: ActiveAdminImport::Model.new(
                                 hint: I18n.t("active_admin_import.domain.import.hint" , default: "CSV: ,\"Name\",\"Description\"<br/>示例:<br/> <a href=\"/admin/domains/import_csv\">下载CSV文件</a>"),
