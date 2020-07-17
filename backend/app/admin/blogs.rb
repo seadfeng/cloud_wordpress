@@ -34,6 +34,14 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                 params[:blog][:admin_user_id] = current_admin_user.id
                 super 
             end
+
+            def scoped_collection
+                if current_admin_user.admin?
+                    super
+                else
+                    end_of_association_chain.where(admin_user_id: current_admin_user.id) 
+                end
+            end
         end 
 
         member_action :reset_password, method: :put do   
@@ -162,13 +170,15 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                 f.input :locale if  current_admin_user.admin? || f.object.pending?
                 # f.input :server_id , as: :select, collection: Wordpress::Server.all    
                 # f.input :cloudflare_id , as: :select, collection: Wordpress::Cloudflare.all    
-                f.input :domain_id,  as: :search_select, 
-                            url:  admin_domains_path, 
-                            fields: [:name], 
-                            display_name: :name, 
-                            minimum_input_length: 2     
-                f.input :cname, hint: "Demo: www"
-                f.input :use_ssl     
+                if authorized?(:update, Wordpress::Domain)
+                    f.input :domain_id,  as: :search_select, 
+                                url:  admin_domains_path, 
+                                fields: [:name], 
+                                display_name: :name, 
+                                minimum_input_length: 2     
+                    f.input :cname, hint: "Demo: www"
+                    f.input :use_ssl    
+                end 
                 f.input :name     
                 f.input :description    
             end

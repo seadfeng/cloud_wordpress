@@ -7,18 +7,21 @@ ActiveAdmin.register_page "Dashboard" do
         Groupdate.day_start = 0
 
         columns do 
-            blogs = Wordpress::Blog.published
+            blogs = Wordpress::Blog.published 
+            blogs = blogs.where(admin_user_id: current_admin_user.id) unless current_admin_user.admin?
             days_90 = blogs.where( "published_at >= ?", 3.months.ago  )
             column do 
               panel "90天发布 - #{days_90.count}个" do  
                 div line_chart days_90.group_by_day(:published_at ).count 
               end
             end 
-            column do  
-                panel "博客主机分布" do 
-                    div pie_chart Wordpress::Blog.all.joins(:server).group("#{Wordpress::Server.table_name}.name").order("count_all desc").count 
+            if current_admin_user.admin?
+                column do  
+                    panel "博客主机分布" do 
+                        div pie_chart Wordpress::Blog.all.joins(:server).group("#{Wordpress::Server.table_name}.name").order("count_all desc").count 
+                    end 
                 end 
-            end 
+            end
         end #columns 
     end # content
 end
