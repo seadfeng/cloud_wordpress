@@ -18,11 +18,13 @@ mysql_secure_installation
 
 
 # Time zone support
-mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
+mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -uroot -p mysql
 
 ## create mysql root user for your private network host
 # CREATE USER 'root'@'10.10.10.%' IDENTIFIED BY 'password';
 # GRANT ALL PRIVILEGES ON * .* TO 'root'@'10.10.10.%';
+# Change to your host 10.10.10.% and password
+echo "CREATE USER 'root'@'10.10.10.%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON * .* TO 'root'@'10.10.10.%';" | mysql -uroot -p 
 
 
 systemctl start firewalld
