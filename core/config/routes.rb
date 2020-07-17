@@ -8,6 +8,7 @@ Wordpress::Core::Engine.add_routes do
     get '/api/v1', to: 'api#show', as: :api
     get '/api/v1/code', to: 'api#code', as: :api_code
     get '/server/install/*os', to: 'server#index' , as: :server
+    get '/server/mysql/install/*os', to: 'server#mysql' , as: :server_mysql
     root to: 'home#index'
 
 end
