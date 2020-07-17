@@ -28,6 +28,8 @@ zh-CN:
     import: "导入"
     do_import: "导入"
     scopes:
+      not_use: "未使用"
+      active: "活跃"
       support: "支持"
       staff: "员工"
       archived: "归档"

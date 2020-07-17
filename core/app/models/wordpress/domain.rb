@@ -10,6 +10,9 @@ module Wordpress
     end
 
     validates  :name, domain: true
+
+    scope :active, ->{ joins(:blogs)  } 
+    scope :not_use, -> {  where("#{Domain.quoted_table_name}.id not in (?)",  active.ids)  }  
     
   end
 end

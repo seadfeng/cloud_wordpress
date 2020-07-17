@@ -14,8 +14,8 @@ module Wordpress
 
     with_options presence: true do 
       validates_uniqueness_of :host, case_sensitive: true, allow_blank: false   
-      validates :domain, domain: true 
-      validates :cloudflare,  :host , :domain , :host_user, :host_password, :mysql_host, :mysql_host_user, :mysql_password, :mysql_user
+      # validates :domain, domain: true 
+      validates :cloudflare,  :host, :host_user, :host_password, :mysql_host, :mysql_host_user, :mysql_password, :mysql_user
     end  
 
     before_validation :check_host,  if: :host_password_changed?
