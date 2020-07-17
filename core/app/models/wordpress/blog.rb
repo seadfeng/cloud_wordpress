@@ -23,6 +23,10 @@ module Wordpress
     after_create :set_mysql_user_and_password 
     before_destroy :can_destroy? 
 
+    def can_login?
+      !self.pending? && !self.processing? 
+    end
+
     def directory
        "#{Wordpress::Config.server_directory}/#{locale.code}/#{self.number}"
     end

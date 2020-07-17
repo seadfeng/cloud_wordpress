@@ -85,6 +85,12 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
         actions
     end
 
+    sidebar :tips do 
+      div do
+        "博客更新后需要手工打包操作，确保克隆最新版本"
+      end
+    end
+
     filter :name 
     filter :description  
     filter :created_at

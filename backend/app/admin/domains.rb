@@ -5,6 +5,16 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
         menu priority: 6 
         active_admin_paranoia 
 
+        active_admin_import validate: true,   
+                            template_object: ActiveAdminImport::Model.new(
+                                hint: I18n.t("active_admin_import.domain.import.hint" , default: "CSV: ,\"Name\",\"Description\"<br/>示例:<br/> <a href=\"/admin/domains/import_csv\">下载CSV文件</a>"),
+                            ), 
+                            headers_rewrites: { :'Description' => :description,  :'Name' => :name }
+
+
+        collection_action :import_csv, method: :get do   
+            send_data "Name,Description\r\n,", :disposition => "attachment; filename=domains.csv" 
+        end
 
         index do
             selectable_column
@@ -23,7 +33,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
 
         form do |f|
             f.inputs I18n.t("active_admin.domains.form" , default: "域名")  do          
-                f.input :name     
+                f.input :name, hint: "根域名"   
                 f.input :description    
             end
             f.actions

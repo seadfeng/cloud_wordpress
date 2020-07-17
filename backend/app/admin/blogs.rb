@@ -90,7 +90,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         end
 
         action_item :install, only: :show  do
-            unless resource.installed?
+            if resource.pending?
                 link_to(
                     I18n.t('active_admin.install', default: "安装"),
                     install_admin_blog_path(resource),  
@@ -130,16 +130,16 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                 column :cloudflare
             end
             column :website_url do |source|
-                link_to  source.online_origin , source.online_origin, target: "_blank" if source.online_origin
+                link_to  source.online_origin , source.online_origin, target: "_blank" if source.online_origin 
             end    
             column :reset_password do |source|
-                link_to  I18n.t('active_admin.reset',  default: "Reset") , reset_password_admin_blog_path(source), method: :put    
+                link_to  I18n.t('active_admin.reset',  default: "Reset") , reset_password_admin_blog_path(source), method: :put  if source.can_login?   
             end  
             column :origin do |source|
-                link_to image_tag("icons/interface.svg", width: "20", height: "20"), source.cloudflare_origin, target: "_blank" 
+                link_to image_tag("icons/interface.svg", width: "20", height: "20"), source.cloudflare_origin, target: "_blank" if source.can_login? 
             end  
             column :login do |source|
-                link_to image_tag("icons/arrows.svg", width: "20", height: "20")  , login_admin_blog_path(source) , target: "_blank" , method: :put , class: "" if source.installed?  
+                link_to image_tag("icons/arrows.svg", width: "20", height: "20")  , login_admin_blog_path(source) , target: "_blank" , method: :put , class: "" if source.can_login?  
             end 
             column :name
             # column :description    

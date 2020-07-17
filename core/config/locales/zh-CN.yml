@@ -1,4 +1,20 @@
 zh-CN:
+  active_admin_import:
+    file: '文件'
+    file_error: "错误: %{message}"
+    file_format_error: "只支持 csv 文件"
+    file_empty_error: "不能导入空文件"
+    no_file_error: "请选择文件CSV导入"
+    details: "请选择文件CSV导入"
+    imported:
+      one: "成功导入1个%{model} "
+      other: "成功导入%{count}个%{plural_model}"
+    failed:
+      one:   "导入失败 1 %{model}: %{message}"
+      other: "导入失败 %{count} %{plural_model}: %{message}"
+    import_model: "导入%{plural_model}"
+    import_btn: "导入"
+    import_btn_disabled: "等待..."
   enumerize:
     defaults:
       state:
