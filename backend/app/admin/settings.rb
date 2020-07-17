@@ -2,7 +2,7 @@ ActiveAdmin.register_page "Settings" do
     menu priority: 160, label: "系统设置" 
 
     content do
-        panel "模版主机设置" do   
+        panel "模版主机设置，设置后除非主机迁移，请勿随意变动！信息不正确会导致博客不能正常创建,添加/修改信息记得对连接进行测试" do   
             form method: "post", action: admin_settings_update_path do
                 input name: "authenticity_token" , value: form_authenticity_token , type: "hidden" 
                 fieldset class: "inputs" do

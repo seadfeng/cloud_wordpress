@@ -167,7 +167,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                             fields: [:name], 
                             display_name: :name, 
                             minimum_input_length: 2     
-                f.input :cname
+                f.input :cname, hint: "Demo: www"
                 f.input :use_ssl     
                 f.input :name     
                 f.input :description    

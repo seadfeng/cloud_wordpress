@@ -75,6 +75,9 @@ zh-CN:
         updated_at: "更新时间"
         name: "名字"
         description: "摘要" 
+        domain: "域名"
+        domain_id: "域名"
+        cname: "别名（CNAME）"
       wordpress/cloudflare:
         <<: *base
         domain: "域名"
@@ -113,10 +116,8 @@ zh-CN:
         connection_type: "连接类型"
       wordpress/server:
         <<: *base
-        cname: "别名（CNAME）"
         remaining: "剩余数"
         max_size: "博客上限"
-        domain: "域名"
         name: "服务名字"
         host: "主机地址"
         install: "安装状态"

@@ -6,7 +6,7 @@ module Wordpress
       
       def perform(proxy)  
         begin   
-            if connection_type == "SSH"
+            if proxy.connection_type == "SSH"
               Net::SSH.start(proxy.host, proxy.user, :password => proxy.password, :port => proxy.port  ) do |ssh|  
                 proxy.status = 1
                 proxy.save 
