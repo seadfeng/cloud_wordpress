@@ -1,5 +1,6 @@
 if defined?(ActiveAdmin) && defined?(AdminUser)
     ActiveAdmin.register AdminUser do
+      config.comments = false
       menu priority: 100
       init_controller
       begin
