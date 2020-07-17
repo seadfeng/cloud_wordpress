@@ -16,7 +16,8 @@ module Wordpress
                     } 
                 end     
 
-                def create_dns_cname(name,content)
+                # #name = www , content = demo.com
+                def create_dns_cname(name, content, proxied = false)
                     if can_create?
                         data =  {
                             :type => "CNAME" ,
@@ -24,7 +25,7 @@ module Wordpress
                             :content => content , 
                             :ttl => 120, 
                             :priority => 10 , 
-                            :proxied => true 
+                            :proxied => proxied 
                         }
                         @client = rest_client(dns_url, "post", data, @headers )
                     else
@@ -32,14 +33,15 @@ module Wordpress
                     end 
                 end
 
-                def create_dns_a(name,content)
+                #name = www , content = 127.0.0.1
+                def create_dns_a(name, content, proxied = false)
                     if can_create?
                         data =  {
                             :type => "A" ,
                             :name => name , 
                             :content => content , 
                             :ttl => 120,  
-                            :proxied => true 
+                            :proxied => proxied 
                         }
                         @client = rest_client(dns_url, "post", data, @headers )
                     else

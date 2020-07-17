@@ -43,8 +43,10 @@ module Wordpress
       end 
     end 
 
-    def set_dns
-      
+    def set_dns 
+      rootdomain = cloudflare.domain
+      cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare, rootdomain)
+      cloudflare_api.create_dns_a( self.cname, self.host )
     end
 
     def check_mysql

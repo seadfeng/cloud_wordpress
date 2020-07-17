@@ -34,8 +34,12 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
     end
 
     member_action :set_dns, method: :put do   
-        resource.set_dns 
-        options = { notice: I18n.t('active_admin.set_dns',  default: "设置DNS") }
+        begin
+            resource.set_dns 
+            options = { notice: I18n.t('active_admin.set_dns',  default: "设置成功") }
+        rescue Exception  => e   
+            options = { alert: e.message }
+        end 
         redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
     end
 
@@ -67,6 +71,7 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
     index do
         selectable_column
         id_column
+        column :host 
         column :cname do |source|
             source.cname
         end
@@ -75,8 +80,7 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
             "#{source.blogs.size}/#{source.max_size}"
         end
         column :name
-        column :description  
-        column :host 
+        column :description   
         column :install do |source|
             if source.installed
                 span "已安装", class: "status_tag published"
