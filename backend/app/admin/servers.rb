@@ -31,7 +31,13 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
             check_mysql_admin_server_path(resource),  
             method: "put"
           )  
-end
+    end
+
+    member_action :set_dns, method: :put do   
+        resource.set_dns 
+        options = { notice: I18n.t('active_admin.set_dns',  default: "设置DNS") }
+        redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+    end
 
     member_action :install, method: :put do   
         resource.install 

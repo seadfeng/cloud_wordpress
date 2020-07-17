@@ -43,8 +43,12 @@ module Wordpress
       end 
     end 
 
+    def set_dns
+      
+    end
+
     def check_mysql
-      require "wordpress/core/helpers/mysql"
+      
       mysql_info = { 
         collection_user: self.mysql_user, 
         collection_password: self.mysql_password, 
@@ -55,9 +59,7 @@ module Wordpress
         ok_status = false
         Net::SSH.start(self.host, self.host_user, :password => self.host_password) do |ssh|  
           channel = ssh.open_channel do |ch|    
-            ch.exec "#{mysql.collection} << EOF
-            show databases;
-            EOF" do |ch, success| 
+            ch.exec "echo 'show databases;' | #{mysql.collection}" do |ch, success| 
               ch.on_data do |c, data|
                 # $stdout.print data
                 ok_status = true if /^mysql$/.match(data) 
@@ -73,8 +75,7 @@ module Wordpress
           self.save
           ok_status
         end 
-      rescue Exception  => e  
-        puts "#{e.message}"
+      rescue Exception  => e   
         self.mysql_status = 0
         self.save 
         nil

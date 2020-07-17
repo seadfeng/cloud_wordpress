@@ -7,6 +7,10 @@ require 'state_machine'
 require 'net/ssh'
 require 'wordpress/auth/devish'
 
+#helpers
+require 'wordpress/core/helpers/cloudflare_api'
+require "wordpress/core/helpers/mysql"
+
 module Wordpress
   ROOT_PATH = Pathname.new(File.join(__dir__, "../../")) 
 

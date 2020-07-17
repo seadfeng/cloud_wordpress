@@ -14,11 +14,7 @@ module Wordpress
                 end     
 
                 def create_db_and_user
-                    "#{collection_mysql} << EOF
-                        #{create_database} #{create_mysql_user} #{mysql_grant}
-                        show databases;
-                        quit;
-                    EOF"          
+                    "echo '#{create_database} #{create_mysql_user} #{mysql_grant} show databases;' | #{collection_mysql}"          
                 end   
 
                 def import_mysql(file_path) 
@@ -30,21 +26,11 @@ module Wordpress
                 end
 
                 def only_update_password(wp_password)
-                    "#{collection_mysql} << EOF
-                        show databases;
-                        use #{mysql[:database]};
-                        #{update_password(wp_password)} 
-                        quit;
-                    EOF" 
+                    "echo 'show databases; use #{mysql[:database]}; #{update_password(wp_password)}' | #{collection_mysql} " 
                 end
 
                 def only_update_siteurl(new_url)
-                    "#{collection_mysql} << EOF
-                        show databases;
-                        use #{mysql[:database]};
-                        #{update_siteurl(new_url)} 
-                        quit;
-                    EOF" 
+                    "echo 'show databases; use #{mysql[:database]}; #{update_siteurl(new_url)}' | #{collection_mysql}" 
                 end
 
                 def collection 

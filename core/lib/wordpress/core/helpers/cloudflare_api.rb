@@ -69,9 +69,11 @@ module Wordpress
                             else
                                 false
                             end 
+                        else
+                            raise "List zone failure"
                         end
                     else
-                        false
+                        raise "Http status: #{zone.code} -> check_total_count"
                     end 
                 end
 
@@ -79,9 +81,13 @@ module Wordpress
                     zone = rest_client(list_zone_url, "get",  @headers )
                     if zone && zone.code == 200
                         body = JSON.parse(zone.body)  
-                        @cdn_zone_id = obj["result"][0]["id"] if body["success"] 
+                       if body["success"] 
+                            @cdn_zone_id = obj["result"][0]["id"] 
+                       else
+                        raise "Get cdn zone id failure"
+                       end
                     else
-                        @cdn_zone_id = nil
+                        raise "Http status: #{zone.code} -> get_cdn_zone_id"
                     end
                 end
 
