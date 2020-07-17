@@ -13,4 +13,3 @@ gemspec
 
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
-gem "active_admin_role", github: "seadfeng/active_admin_role"
