@@ -1,11 +1,11 @@
 if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
     ActiveAdmin.register Wordpress::Blog, as: "Blog" do
         init_controller 
+        
         permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id, :cname, :use_ssl
         menu priority: 5
         active_admin_paranoia 
-
-        # state_action :install
+         
         # state_action :processed
         state_action :has_done
         state_action :publish  
@@ -133,10 +133,10 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             column :locale do |source|
                 source.locale.code
             end
-            if current_admin_user.admin? 
-                column :server  
-                column :cloudflare
-            end
+            
+            column :server  if  authorized?(:read, Wordpress::Server)
+            column :cloudflare if  authorized?(:read, Wordpress::Cloudflare)
+
             column :website_url do |source|
                 link_to  source.online_origin , source.online_origin, target: "_blank" if source.online_origin 
             end    
@@ -158,15 +158,18 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             actions
         end
 
+        filter :name  
+        filter :description  
         filter :state, as: :check_boxes  
-        filter :use_ssl 
-        filter :server
-        filter :cloudflare
-        filter :domain_name
+        filter :use_ssl , if: proc { authorized?(:read, Wordpress::Domain) }
+        filter :server, if: proc { authorized?(:read, Wordpress::Server) }
+        filter :cloudflare, if: proc { authorized?(:read, Wordpress::Cloudflare) }
+        filter :domain_name, as: :string,  if: proc { authorized?(:read, Wordpress::Domain) }
         
 
         form do |f|
             f.inputs I18n.t("active_admin.blogs.form" , default: "Blog")  do  
+                f.input :admin_user if authorized?(:update, AdminUser)
                 f.input :locale if  current_admin_user.admin? || f.object.pending?
                 # f.input :server_id , as: :select, collection: Wordpress::Server.all    
                 # f.input :cloudflare_id , as: :select, collection: Wordpress::Cloudflare.all    
@@ -208,6 +211,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                     row :created_at   
                 end
             end
+            active_admin_comments
         end
     end
 end
