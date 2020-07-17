@@ -78,6 +78,9 @@ zh-CN:
         domain: "域名"
         domain_id: "域名"
         cname: "别名（CNAME）"
+        deleted_at: "删除时间"
+        installed_at: "安装时间"
+        published_at: "发布时间" 
       wordpress/cloudflare:
         <<: *base
         domain: "域名"
@@ -107,13 +110,14 @@ zh-CN:
         position: "位置" 
       wordpress/proxy:
         <<: *base
+        directory: "项目路径"
         name: "名字"
         host: "主机地址"
         connection_type: "连接类型"
         port: "端口"
         user: "账户名"
         password: "密码"
-        connection_type: "连接类型"
+        uploaded_at: "上传时间" 
       wordpress/server:
         <<: *base
         remaining: "剩余数"
@@ -154,8 +158,6 @@ zh-CN:
         state: "进度"
         locale: "地区"
         admin_user: "管理员"
-        installed_at: "安装时间"
-        published_at: "发布时间" 
       wordpress/blog:
         <<: *base
         status: "状态"
@@ -167,8 +169,6 @@ zh-CN:
         state: "进度"
         locale: "地区"
         admin_user: "管理员"
-        installed_at: "安装时间"
-        published_at: "发布时间" 
       wordpress/api_token:
         <<: *base
         download: "下载"

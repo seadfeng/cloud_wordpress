@@ -19,7 +19,7 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
         column :user
         column :name  
         column :status  
-		column :description
+		column :directory
 		# column :install do |post|
 		# 	if post.installed
 		# 		 span "已安装" , style: "background-color: #5cb85c;display:block;min-width:35px;text-align:center"
@@ -65,7 +65,8 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
             f.input :connection_type, as: :select,  collection: Wordpress::Proxy::CONNECTION_TYPES     
             f.input :port        
             f.input :user       
-            f.input :password       
+            f.input :password   
+            f.input :directory, hint: "SSH默认:/var/www/html/"   
             f.input :description    
         end
         f.actions

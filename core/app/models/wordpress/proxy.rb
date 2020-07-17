@@ -1,7 +1,7 @@
 module Wordpress
   class Proxy < Wordpress::Base
     acts_as_paranoid 
-    CONNECTION_TYPES = %W( SSH SFTP FTP )
+    CONNECTION_TYPES = %W( SSH SFTP )
 
     with_options presence: true do 
       validates_uniqueness_of :host, allow_blank: false, scope: :user      

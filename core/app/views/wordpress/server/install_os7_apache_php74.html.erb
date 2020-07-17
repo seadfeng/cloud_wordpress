@@ -35,13 +35,13 @@ firewall-cmd --permanent --add-port=443/tcp
 firewall-cmd --permanent --add-port=80/tcp
 firewall-cmd --reload
 
-
+if [ ! -d /etc/httpd/conf.d/vhost/ ];then
 mkdir /etc/httpd/conf.d/vhost/ -p
-
 echo 'IncludeOptional conf.d/vhost/*.conf' >> /etc/httpd/conf/httpd.conf
 echo 'SetEnvIf Ssl-Offloaded 1 HTTPS=on' >> /etc/httpd/conf/httpd.conf
 echo 'SetEnvIf Server-Https SSL HTTPS=on' >> /etc/httpd/conf/httpd.conf
 echo 'SetEnvIf X-Forwarded-Proto https HTTPS=on' >> /etc/httpd/conf/httpd.conf
+fi
 
 systemctl restart httpd.service
 
