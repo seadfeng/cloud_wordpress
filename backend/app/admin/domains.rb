@@ -26,8 +26,8 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
             column :name   
             column :description   
             column :state   
-            column :installed_at
-            column :published_at
+            column :created_at
+            column :updated_at
             actions
         end
 
