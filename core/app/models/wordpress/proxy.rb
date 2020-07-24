@@ -8,8 +8,20 @@ module Wordpress
       validates  :host, :user , :connection_type, :port , :password
     end  
 
-    def test
+    def rootpath
+      directory.blank? ? "/var/www/html/" : directory
+    end
+
+    def test_connection
       Wordpress::ProxyCheckJob.perform_now(self) 
+    end
+
+    def install
+      Wordpress::ProxyInstallJob.perform_later(self) 
+    end
+
+    def installed?
+      !!installed_at
     end
     
   end

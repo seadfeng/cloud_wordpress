@@ -1,5 +1,5 @@
 ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do 
-    permit_params  :host, :port, :user, :password,  :name, :description ,:connection_type
+    permit_params  :host, :port, :user, :password,  :name, :description ,:connection_type, :installed_at
     batch_action :destroy, false
     actions :all, except: [:destroy] 
     menu priority: 80   
@@ -27,22 +27,31 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
 		# 		link_to I18n.t("active_admin.proxy.dns" , default: "安装") , install_admin_proxy_path(post) , method: :put , class: "status_tag yes" ,style: "color:#FFF"
 		# 	end
 		# end   
+		column :installed_at
 		column :created_at
 		column :updated_at
 		actions
 	end
 
 
+    action_item :install, only: :show  do 
+        unless resource.installed?
+        link_to(
+            I18n.t('active_admin.install', default: "安装Apache+PHP"),
+            install_admin_proxy_path(resource),  
+            method: "put"
+          )  
+        end
+    end
+
+
     member_action :install, method: :put do 
-        if resource.install 
-	        redirect_back(fallback_location: admin_proxies_path, notice: "#{resource.id} - 安装成功!"  ) 
-	        else
-	        redirect_back(fallback_location: admin_proxies_path, notice: "#{resource.id} - 安装失败!"  ) 
-	    end
+        resource.install 
+        redirect_back(fallback_location: admin_proxies_path, notice: "#{resource.id} - 已推送安装指令!"  )   
     end
 
     member_action :test, method: :put do 
-        if resource.test
+        if resource.test_connection
             options = { notice: I18n.t('active_admin.connection_succeeded',  default: "连接成功") } 
         else
             options = { alert: I18n.t('active_admin.connection_failed',  default: "连接失败") } 
@@ -66,8 +75,9 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
             f.input :port        
             f.input :user       
             f.input :password   
-            f.input :directory, hint: "SSH默认:/var/www/html/"   
-            f.input :description    
+            f.input :directory, hint: "不设置默认:/var/www/html/"   
+            f.input :description  
+            f.input :installed_at, as: :date_time_picker    
         end
         f.actions
     end 

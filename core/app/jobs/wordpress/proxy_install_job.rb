@@ -27,7 +27,7 @@ module Wordpress
                       ch.on_data do |c, data|
                         $stdout.print data    
                         if /Install OK/.match(data)
-                          proxy.installed = 1
+                          proxy.installed_at = Time.now
                           proxy.save
                         end
                       end 
