@@ -23,6 +23,16 @@ module Wordpress
     after_create :set_mysql_user_and_password 
     before_destroy :can_destroy? 
 
+    attr_accessor :migration
+
+    def migration
+      ''
+    end
+
+    def migration=(data)
+      return nil unless data.present?
+    end
+
     def set_dns 
       rootdomain = cloudflare.domain
       cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare, rootdomain)

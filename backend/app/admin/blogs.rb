@@ -2,7 +2,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
     ActiveAdmin.register Wordpress::Blog, as: "Blog" do
         init_controller 
         
-        permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id, :cname, :use_ssl
+        permit_params  :locale_id,  :name , :description , :cloudflare_id, :domain_id, :admin_user_id, :cname, :use_ssl, :migration
         menu priority: 5
         active_admin_paranoia 
          
@@ -107,6 +107,12 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
              end 
         end
 
+        collection_action :migration, method: :get do 
+            @blog = Blog.new
+            # render template: 'admin/blogs/migration' 
+        end
+  
+
         action_item :install, only: :show  do
             if resource.pending?
                 link_to(
@@ -116,6 +122,14 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                   ) 
             end  
         end
+
+        action_item :migration, only: :index  do 
+                link_to(
+                    I18n.t('active_admin.migration', default: "网站迁移"),
+                    action: :migration 
+                  )  
+        end
+
         action_item :update_wp_config, only: :show  do
             if resource.installed?
                 link_to(

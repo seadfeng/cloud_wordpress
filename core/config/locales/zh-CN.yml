@@ -18,12 +18,14 @@ zh-CN:
   enumerize:
     defaults:
       state:
+        pending_migration: "等待迁移"
         installed: "已安装"
         pending: "等待"
         processing: "受理中"
         done: "完成"
         published: "已发布"
   active_admin:
+    submit: "提交"
     sidekiq: "队列"
     import: "导入"
     do_import: "导入"

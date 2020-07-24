@@ -1,0 +1,8 @@
+<%=  semantic_form_for @blog , url: {action: :migration}  do |f| %>
+    <%= f.inputs name: t("active_admin.blog.migration", default: "批量迁移设置") do  %>
+        <%=  f.input :migration, as: :text, hint: raw("一行一条记录, DEMO:<br />number,www.demo.com,https://www.demo.com/download_url.tar.bz2")  %> 
+    <% end  %>
+    <%= f.actions do  %>
+        <%= f.action :submit, label: t("active_admin.submit", default: "Submit")  %>
+    <% end %> 
+<% end %>
