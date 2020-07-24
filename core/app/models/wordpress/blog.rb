@@ -23,6 +23,13 @@ module Wordpress
     after_create :set_mysql_user_and_password 
     before_destroy :can_destroy? 
 
+    def set_dns 
+      rootdomain = cloudflare.domain
+      cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare, rootdomain)
+      proxied = true
+      update_attribute(:dns_status, 1) if cloudflare_api.create_or_update_dns_cname( self.number, self.server.cname, proxied )  
+    end
+
     def can_login?
       !self.pending? && !self.processing? 
     end

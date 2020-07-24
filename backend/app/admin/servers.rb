@@ -73,7 +73,7 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
         id_column
         column :host 
         column :cname do |source|
-            source.cname
+            source.display_cname
         end
         column :cloudflare 
         column :max_size do |source|

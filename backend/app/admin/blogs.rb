@@ -44,6 +44,16 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             end
         end 
 
+        member_action :set_dns, method: :put do   
+            begin
+                resource.set_dns 
+                options = { notice: I18n.t('active_admin.set_dns',  default: "设置成功") }
+            rescue Exception  => e   
+                options = { alert: e.message }
+            end 
+            redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+        end
+
         member_action :reset_password, method: :put do   
             resource.reset_password 
             options = { notice: I18n.t('active_admin.reset_password',  default: "Reset Password: Processing") }
@@ -136,7 +146,10 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             
             column :server  if  authorized?(:read, Wordpress::Server)
             column :cloudflare if  authorized?(:read, Wordpress::Cloudflare)
-
+            column :dns_status 
+            column :set_dns do |source|
+                 link_to I18n.t('active_admin.set_dns',  default: "设置DNS"), set_dns_admin_blog_path(source), method: :put  
+            end
             column :website_url do |source|
                 link_to  source.online_origin , source.online_origin, target: "_blank" if source.online_origin 
             end    

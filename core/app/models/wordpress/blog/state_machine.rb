@@ -58,6 +58,7 @@ module Wordpress
 
                 def touch_installed_at
                     update_attribute(:installed_at, Time.current)
+                    self.set_dns
                 end
 
                 def touch_published_at
