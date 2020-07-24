@@ -8,7 +8,7 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "wordpress_cloud", git: "git@gitlabonline.seadapp.com:wordpress/cloud.git"
+gem "wordpress", git: "git@gitlabonline.seadapp.com:wordpress/cloud.git"
 gem "active_admin_role", github: "seadfeng/active_admin_role"
 ```
 
