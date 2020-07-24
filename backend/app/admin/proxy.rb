@@ -11,7 +11,7 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
         end
     end
 
-	index do
+	index download_links: false do
 		selectable_column
 		id_column     
         column :host  

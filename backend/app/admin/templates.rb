@@ -59,7 +59,7 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
       redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options))  
     end
 
-    index do
+    index download_links: false do
         selectable_column
         id_column
         column :locale

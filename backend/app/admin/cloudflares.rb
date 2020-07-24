@@ -14,7 +14,7 @@ ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
         end
     end
 
-    index do
+    index download_links: false do
         selectable_column
         id_column
         column :name

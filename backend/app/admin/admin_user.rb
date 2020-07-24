@@ -19,7 +19,7 @@ if defined?(ActiveAdmin) && defined?(AdminUser)
         end
       end
 
-      index do
+      index download_links: false do
         selectable_column
         id_column
         column :full_name

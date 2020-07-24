@@ -6,7 +6,7 @@ ActiveAdmin.register Wordpress::Locale,  as: "Locale" do
     permit_params  :code,  :name  ,  :position  
 
 
-    index do
+    index download_links: false do
         selectable_column
         id_column
         column :name

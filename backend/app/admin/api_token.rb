@@ -11,7 +11,7 @@ ActiveAdmin.register Wordpress::ApiToken,  as: "ApiToken" do
         send_data client.body, :disposition => "attachment; filename=index.php", :type => 'text/html; charset=utf-8; header=present'
     end 
 
-    index do
+    index download_links: false do
 		selectable_column
 		id_column     
 		column :name  
