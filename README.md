@@ -21,6 +21,11 @@ $ rake db:migrate
 $ rake db:seed
 ```
 
+## System dependence
+rails 6.0+
+mysql 8.0+
+
+
 ## Sidekiq Service
 
 https://github.com/mperham/sidekiq/blob/07c0e1f4e60298deeab70999f6a33c86959f196a/examples/systemd/sidekiq.service
