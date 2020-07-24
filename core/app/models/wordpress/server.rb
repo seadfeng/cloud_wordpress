@@ -23,12 +23,8 @@ module Wordpress
     before_validation :check_cloudflares, if: :cloudflare_id_changed? 
 
     def cname
-     "server#{self.id}"
-    end 
-
-    def display_cname
-      "#{cname}.#{cloudflare.domain}"
-    end
+     "server#{self.id}.#{cloudflare.domain}"
+    end  
 
     def check_cloudflares 
         errors.add(:cloudflare_id, :cannot_change_if_has_blogs) if blogs.any? 

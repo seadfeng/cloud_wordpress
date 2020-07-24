@@ -45,12 +45,12 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         end 
 
         member_action :set_dns, method: :put do   
-            begin
+            # begin
                 resource.set_dns 
                 options = { notice: I18n.t('active_admin.set_dns',  default: "设置成功") }
-            rescue Exception  => e   
-                options = { alert: e.message }
-            end 
+            # rescue Exception  => e   
+            #     options = { alert: e.message }
+            # end 
             redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
         end
 
@@ -138,15 +138,15 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                 end
             end
             selectable_column
-            id_column   
-            column :admin_user  
+            id_column    
+            column :admin_user 
+            column :number 
             column :locale do |source|
                 source.locale.code
             end
             
             column :server  if  authorized?(:read, Wordpress::Server)
-            column :cloudflare if  authorized?(:read, Wordpress::Cloudflare)
-            column :dns_status 
+            column :cloudflare if  authorized?(:read, Wordpress::Cloudflare) 
             column :set_dns do |source|
                  link_to I18n.t('active_admin.set_dns',  default: "设置DNS"), set_dns_admin_blog_path(source), method: :put  
             end
