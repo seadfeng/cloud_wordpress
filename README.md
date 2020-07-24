@@ -15,6 +15,7 @@ gem "active_admin_role", github: "seadfeng/active_admin_role"
 And then execute:
 ```bash
 $ bundle install 
+$ rails webpacker:install
 $ rails g active_admin:install
 $ rails g wordpress:install
 $ rake db:migrate
