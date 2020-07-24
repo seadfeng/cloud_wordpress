@@ -95,12 +95,9 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
                 span "连接失败", class: "status_tag processing"
             end
         end
-        column :dns_status do |source|
-            if source.dns_status
-               span "OK", class: "status_tag published"
-            else
-                link_to I18n.t('active_admin.set_dns',  default: "设置DNS"), set_dns_admin_server_path(source), method: :put 
-            end
+        column :dns_status 
+        column :set_dns do |source|
+             link_to I18n.t('active_admin.set_dns',  default: "设置DNS"), set_dns_admin_server_path(source), method: :put  
         end
         column :mysql_status do |source|
             if source.mysql_status

@@ -19,14 +19,18 @@ module Wordpress
     end  
 
     before_validation :check_host,  if: :host_password_changed?
-    before_validation :check_blogs, if: :host_changed? 
-    before_validation :check_blogs, if: :cloudflare_id_changed? 
+    before_validation :check_hosts, if: :host_changed? 
+    before_validation :check_cloudflares, if: :cloudflare_id_changed? 
 
     def cname
      "server#{self.id}.#{cloudflare.domain}"
+    end 
+
+    def check_cloudflares 
+        errors.add(:cloudflare_id, :cannot_change_if_has_blogs) if blogs.any? 
     end
 
-    def check_blogs 
+    def check_hosts 
         errors.add(:host, :cannot_change_if_has_blogs) if blogs.any? 
     end
 
@@ -46,7 +50,7 @@ module Wordpress
     def set_dns 
       rootdomain = cloudflare.domain
       cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare, rootdomain)
-      cloudflare_api.create_dns_a( self.cname, self.host )
+      update_attribute(:dns_status, 1)  if cloudflare_api.create_or_update_dns_a( self.cname, self.host )  
     end
 
     def check_mysql

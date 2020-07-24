@@ -138,6 +138,7 @@ zh-CN:
         uploaded_at: "上传时间" 
       wordpress/server:
         <<: *base
+        dns_status: "DNS已设置？"
         remaining: "剩余数"
         max_size: "博客上限"
         name: "服务名字"
@@ -195,8 +196,12 @@ zh-CN:
       models:
         wordpress/server:
           attributes:
+            base: &base
+              cannot_change_if_has_blogs:  "服务器上已有博客，禁止修改" 
             host:
-              cannot_change_if_has_blogs: "服务器上已有博客，禁止修改IP地址" 
+              <<: *base 
+            cloudflare_id:
+              <<: *base
     models:
       admin_user:
         one: "管理员"
