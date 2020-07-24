@@ -45,12 +45,12 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         end 
 
         member_action :set_dns, method: :put do   
-            # begin
+            begin
                 resource.set_dns 
                 options = { notice: I18n.t('active_admin.set_dns',  default: "设置成功") }
-            # rescue Exception  => e   
-            #     options = { alert: e.message }
-            # end 
+            rescue Exception  => e   
+                options = { alert: e.message }
+            end 
             redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
         end
 
@@ -139,7 +139,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             end
             selectable_column
             id_column    
-            column :admin_user 
+            column :admin_user if authorized?(:read, AdminUser)
             column :number 
             column :locale do |source|
                 source.locale.code
@@ -173,7 +173,8 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
 
         filter :name  
         filter :description  
-        filter :state, as: :check_boxes  
+        filter :admin_user , if: proc { authorized?(:read, AdminUser) }
+        filter :state, as: :check_boxes 
         filter :use_ssl , if: proc { authorized?(:read, Wordpress::Domain) }
         filter :server, if: proc { authorized?(:read, Wordpress::Server) }
         filter :cloudflare, if: proc { authorized?(:read, Wordpress::Cloudflare) }
