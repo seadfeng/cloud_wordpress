@@ -84,7 +84,7 @@ module Wordpress
                     if zone && zone.code == 200
                         body = JSON.parse(zone.body)  
                        if body["success"] 
-                            @cdn_zone_id = obj["result"][0]["id"] 
+                            @cdn_zone_id = body["result"][0]["id"] 
                        else
                         raise "Get cdn zone id failure"
                        end
@@ -114,9 +114,9 @@ module Wordpress
                         RestClient.post url, options 
                       end
                     rescue RestClient::ExceptionWithResponse  => e
-                        case err.http_code 
+                        case e.http_code 
                         when 301, 302, 307 
-                          err.response.follow_redirection
+                          e.response.follow_redirection
                         else 
                           raise
                         end
