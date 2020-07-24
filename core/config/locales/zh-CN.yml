@@ -104,6 +104,7 @@ zh-CN:
         domain: "域名"
         remaining: "DNS解析剩余量"
         api_user: "Api账户名"
+        api_token:  "Global API Key"
       admin_user:
         <<: *base
         email: "邮箱"
