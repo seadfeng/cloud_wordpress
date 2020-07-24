@@ -15,6 +15,7 @@ module Wordpress
                         end
                     end
                     config.default_per_page = [20, 50, 100] 
+                    config.download_links = [:csv]
                 end
             end 
             

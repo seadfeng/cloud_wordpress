@@ -2,7 +2,7 @@
     module Backend
         module Controller
             module Base   
-                def init_controller
+                def init_controller 
                     controller do
                         before_action :set_time_zone, if: :current_admin_user 
                         private
