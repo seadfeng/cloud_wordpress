@@ -140,6 +140,22 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             end  
         end
 
+        csv do
+            column :id
+            column :number
+            column :status
+            column :name
+            if current_admin_user.admin?
+                column :user 
+                column :password 
+                column :mysql_user 
+                column :mysql_password 
+                column(:server)  { |source| source.server.host } 
+            end  
+            column(:locale)  { |source| source.locale.code } 
+            column :origin
+        end
+
         index do
             if Server.active.size.blank? 
                 div class: "flash flash_error" do  
