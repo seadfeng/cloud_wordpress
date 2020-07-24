@@ -4,14 +4,14 @@ module Wordpress
             extend ActiveSupport::Concern  
             included do  
                 extend Enumerize
-                enumerize :state, in: [:pending, :processing, :installed, :done, :published], default: :pending    
+                enumerize :state, in: [:pending, :pending_migration, :processing, :installed, :done, :published], default: :pending    
                 state_machine :state, initial: :pending do
                     # before_transition [:pending ] => :processing, :do => :send_job
                     before_transition [:processing ] => :installed, :do => :touch_installed_at
                     before_transition [:done ] => :published, :do => :touch_published_at
 
                     event :install do 
-                        transition [:pending]  => :processing
+                        transition [:pending, :pending_migration]  => :processing
                     end 
                     
                     event :processed do 
@@ -31,6 +31,8 @@ module Wordpress
                     end 
 
                     state :pending
+                    state :pending_migration 
+                    
                     state :processing do 
                         validate :validate_server_and_cloudflare
                     end
