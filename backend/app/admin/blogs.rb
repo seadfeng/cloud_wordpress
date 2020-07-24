@@ -111,6 +111,11 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             @blog = Blog.new
             # render template: 'admin/blogs/migration' 
         end
+
+        collection_action :do_migration, method: :post do  
+            options = { notice:  t('active_admin.updated', default: "Updated!") }
+            redirect_to admin_blogs_path , options 
+        end
   
 
         action_item :install, only: :show  do
@@ -124,10 +129,13 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         end
 
         action_item :migration, only: :index  do 
+            if current_admin_user.admin?
                 link_to(
                     I18n.t('active_admin.migration', default: "网站迁移"),
-                    action: :migration 
+                    action: :migration,
+                    method: :get
                   )  
+            end
         end
 
         action_item :update_wp_config, only: :show  do
