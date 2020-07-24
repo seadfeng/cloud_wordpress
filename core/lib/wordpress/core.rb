@@ -5,6 +5,7 @@ require 'sidekiq'
 require 'rest-client'
 require 'state_machine'
 require 'net/ssh'
+require 'net/sftp'
 require 'wordpress/auth/devish'
 
 #helpers
