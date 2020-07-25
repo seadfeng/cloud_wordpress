@@ -122,6 +122,9 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
             row :description  
             row :wordpress_user  
             row :wordpress_password  
+            row :mysql_host do 
+              Wordpress::Config.template_host
+            end
             row :mysql_user
             row :mysql_password 
             row :installed  
