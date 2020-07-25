@@ -140,17 +140,22 @@ ActiveAdmin.register_page "Settings" do
         check_ok = false
         Net::SSH.start(Wordpress::Config.template_host, Wordpress::Config.template_host_user, :password => Wordpress::Config.template_host_password) do |ssh|  
             channel = ssh.open_channel do |ch|
+                puts create_virtual_host
                 ch.exec create_virtual_host do |ch, success| 
                     ch.on_data do |c, data|
                         $stdout.print data
-                        check_ok = true if /restart httpd.service/.match(data)
+                        check_ok = true if /Restart OK/.match(data)
                     end
                 end
             end
-            channel.wait 
+            channel.wait  
         end
-        check_ok
-
+        if check_ok
+            options = {notice: "已设置" } 
+        else
+            options = {alert: "设置失败" }
+        end
+        redirect_to admin_settings_path, options
     end
 
     page_action :update, method: :post do 
