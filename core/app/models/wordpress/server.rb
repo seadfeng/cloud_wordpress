@@ -63,7 +63,7 @@ module Wordpress
       mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
       begin  
         ok_status = false
-        Net::SSH.start(self.host, self.host_user, :password => self.host_password) do |ssh|  
+        Net::SSH.start(self.host, self.host_user, :password => self.host_password, :port => self.host_port) do |ssh|  
           channel = ssh.open_channel do |ch|    
             ch.exec "echo 'show databases;' | #{mysql.collection}" do |ch, success| 
               ch.on_data do |c, data|
