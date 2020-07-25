@@ -1,5 +1,5 @@
 $(function() {  
-    $('.row-mysql_password td, .row-wordpress_password td').each(function(){
+    $('.row-mysql_password td, .row-wordpress_password td, .row-mysql_host td, .row-mysql_user td').each(function(){
         $(this).attr('title', "可复制");
         $(this).click(function(){
             $('.row td.active').removeClass('active');
