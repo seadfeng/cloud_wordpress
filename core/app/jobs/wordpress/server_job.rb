@@ -22,8 +22,8 @@ module Wordpress
                   end
                 end
               end
-              logger.info("Centos #{centos_ver}") 
-              channela.wait  
+              channela.wait
+              logger.info("Centos #{centos_ver}")  
               ssh_exec = ""
               if centos_ver == 7
                 ssh_exec = "curl -o- -L #{wordpress.server_url("v7")}  | sh" 
