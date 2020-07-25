@@ -12,7 +12,7 @@ module Wordpress
             Net::SSH.start(server.host, server.host_user, :password => server.host_password, :port => server.host_port) do |ssh|  
               logger.info("SSH connected")  
               centos_ver = 0
-              channel = ssh.open_channel do |ch| 
+              channela = ssh.open_channel do |ch| 
                 ch.exec! "rpm --eval '%{centos_ver}'"  do |ch, success|
                   if success   
                     ch.on_data do |c, data|
@@ -21,7 +21,10 @@ module Wordpress
                     end
                   end
                 end
-                logger.info("Centos #{centos_ver}") 
+              end
+              logger.info("Centos #{centos_ver}") 
+              channela.wait  
+              channel = ssh.open_channel do |ch|   
                 ssh_exec = ""
                 if centos_ver == 7
                   ssh_exec = "curl -o- -L #{wordpress.server_url("v7")}  | sh" 
