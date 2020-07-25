@@ -111,7 +111,10 @@ ActiveAdmin.register_page "Settings" do
                     redirect_to admin_settings_path, alert: "Mysql连接失败"
                 end   
             end
-        rescue   
+        rescue  Exception  => e 
+            if /fingerprint/.match(e.message)
+              system("sed -i \"/#{Wordpress::Config.template_host}/d\" .ssh/known_hosts")
+            end
             redirect_to admin_settings_path, alert: "Mysql连接失败"
         end  
     end

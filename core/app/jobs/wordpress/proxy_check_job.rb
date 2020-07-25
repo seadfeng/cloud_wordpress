@@ -23,6 +23,9 @@ module Wordpress
             logger.error("Proxy Id:#{proxy.id} ================") 
             logger.error(I18n.t('active_admin.active_job', message: e.message, default: "ActiveJob: #{e.message}"))
             logger.error(e.backtrace.join("\n"))
+            if /fingerprint/.match(e.message)
+              system("sed -i \"/#{proxy.host}/d\" .ssh/known_hosts")
+            end
             nil
         end  
       end

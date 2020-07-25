@@ -39,7 +39,10 @@ module Wordpress
         Net::SSH.start(self.host, self.host_user, :password => self.host_password, :port => self.host_port)   do |ssh|   
           update_attribute(:host_status, 1) 
         end 
-      rescue
+      rescue Exception  => e 
+        if /fingerprint/.match(e.message)
+          system("sed -i \"/#{self.host}/d\" .ssh/known_hosts")
+        end
         update_attribute(:host_status, 0) 
         nil
       end 
