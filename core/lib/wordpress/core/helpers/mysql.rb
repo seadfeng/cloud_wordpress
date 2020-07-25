@@ -43,8 +43,8 @@ module Wordpress
 
                 private   
 
-                def update_password(wp_password)
-                    "update wp_users set user_pass=md5(\"#{wp_password}\") where id=1;"
+                def update_password(wp_password, wp_user= 'admin')
+                    "update wp_users set user_pass=md5(\"#{wp_password}\"), user_login=\"#{wp_user}\", user_nicename=\"#{wp_user}\" where id=1;"
                 end
                 
                 def update_siteurl(new_url)

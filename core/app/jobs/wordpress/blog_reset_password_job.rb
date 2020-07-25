@@ -18,7 +18,7 @@ module Wordpress
            Net::SSH.start( server.host,  server.host_user, :password => server.host_password) do |ssh| 
             logger.info("ssh connected") 
             channel = ssh.open_channel do |ch|    
-              ch.exec "#{mysql.only_update_password(blog.password)}"  do |ch, success|  
+              ch.exec "#{mysql.only_update_password(blog.password, blog.user)}"  do |ch, success|  
                 ch.on_data do |c, data|
                   $stdout.print data 
                   if /^#{mysql_info[:database]}$/.match(data)
