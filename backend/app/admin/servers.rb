@@ -119,10 +119,10 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
     form do |f|
         f.inputs I18n.t("active_admin.php_service.form" , default: "服务器")  do  
           f.input :cloudflare, label: "Cloudflare"    
-          f.input :name, label: "服务器名字"  
+          f.input :name     
           f.input :description 
           f.input :max_size, label: I18n.t("active_admin.php_service.max_size" , default: "博客最大数量") 
-          f.input :host, placeholder: "127.0.0.1"  
+          f.input :host, placeholder: "127.0.0.1" , hint: "安装脚本只支持:Centos 7/8"  
           f.input :host_port, placeholder: "22" 
 	      f.input :host_user, placeholder: "root"  
           f.input :host_password , placeholder: "password"  , hint: "密码保存后不显示"    

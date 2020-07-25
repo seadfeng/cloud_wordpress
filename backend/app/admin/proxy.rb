@@ -69,7 +69,7 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
 
     form do |f|
         f.inputs I18n.t("active_admin.proxy.form" , default: "代理")  do   
-            f.input :host   
+            f.input :host , hint: "安装脚本只支持:Centos 7/8"  
             f.input :name    
             f.input :connection_type, as: :select,  collection: Wordpress::Proxy::CONNECTION_TYPES     
             f.input :port        
