@@ -16,9 +16,16 @@ module Wordpress
             mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
             Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password, :port => config.template_host_port ) do |ssh|
                 logger.info("ssh connected")  
-                ssh_exec = "cd #{directory} && #{mysql.dump_mysql} && tar cjf #{template.template_tar_file} #{mysql_info[:database]}.sql wordpress"
-                logger.info("#{ssh_exec}") 
-                ssh.exec ssh_exec
+                channel = ssh.open_channel do |ch|  
+                  ssh_exec = "cd #{directory} && #{mysql.dump_mysql} && tar cjf #{template.template_tar_file} #{mysql_info[:database]}.sql wordpress"
+                  logger.info("#{ssh_exec}") 
+                  ch.exec ssh_exec do |ch, success|
+                    ch.on_data do |c, data|
+                      $stdout.print data  
+                    end 
+                  end
+                end
+                channel.wait
             end
         rescue Exception, ActiveJob::DeserializationError => e 
             logger.error("Template Id:#{template.id} ================") 

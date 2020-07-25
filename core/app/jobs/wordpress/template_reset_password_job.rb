@@ -17,10 +17,10 @@ module Wordpress
             logger = Logger.new(log_file)
             logger.info("Template Id:#{template.id} --------") 
 
-            Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password) do |ssh|  
+            Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password, :port => config.template_host_port) do |ssh|  
              
               logger.info("ssh connected")  
-              
+
               channel = ssh.open_channel do |ch|    
                 ch.exec "#{mysql.only_update_password(template.wordpress_password, template.wordpress_user)}"  do |ch, success|  
                   ch.on_data do |c, data|
