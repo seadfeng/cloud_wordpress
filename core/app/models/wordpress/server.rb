@@ -36,13 +36,11 @@ module Wordpress
 
     def check_host 
       begin  
-        Net::SSH.start(self.host, self.host_user, :password => self.host_password, :port => self.host_port)   do |ssh|  
-          self.host_status = 1 
-          self.save
+        Net::SSH.start(self.host, self.host_user, :password => self.host_password, :port => self.host_port)   do |ssh|   
+          update_attribute(:host_status, 1) 
         end 
       rescue
-        self.host_status = 0
-        self.save
+        update_attribute(:host_status, 0) 
         nil
       end 
     end 
