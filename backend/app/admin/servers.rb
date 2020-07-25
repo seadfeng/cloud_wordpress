@@ -45,7 +45,7 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
 
     member_action :install, method: :put do   
         resource.install 
-        options = { notice: I18n.t('active_admin.installing',  default: "正在安装") }
+        options = { notice: I18n.t('active_admin.installing',  default: "已推送安装指令,预计3～7分钟安装完成") }
         redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
     end
 

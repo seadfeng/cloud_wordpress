@@ -47,7 +47,7 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
 
     member_action :install, method: :put do 
         resource.install 
-        redirect_back(fallback_location: admin_proxies_path, notice: "#{resource.id} - 已推送安装指令!"  )   
+        redirect_back(fallback_location: admin_proxies_path, notice: "已推送安装指令，预计3～7分钟安装完成"  )   
     end
 
     member_action :test, method: :put do 
