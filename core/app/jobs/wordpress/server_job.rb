@@ -1,14 +1,14 @@
 
 module Wordpress
     class ServerJob < ApplicationJob
+      include Wordpress::Routeable
       queue_as :wordpress
       sidekiq_options retry: 3
       attr_reader :server
       
       def perform(server) 
         logger = Logger.new(log_file)  
-        begin  
-            logger.info("Sever Id:#{server.id} ***********************/") 
+        begin   
             Net::SSH.start(server.host, server.host_user, :password => server.host_password, :port => server.host_port) do |ssh|  
               logger.info("SSH connected")  
               centos_ver = 0
@@ -25,9 +25,9 @@ module Wordpress
               channela.wait
               logger.info("Centos #{centos_ver}")  
               ssh_exec = ""
-              if centos_ver == 7
+              if centos_ver.to_i == 7
                 ssh_exec = "curl -o- -L #{wordpress.server_url("v7")}  | sh" 
-              elsif centos_ver == 8
+              elsif centos_ver.t_i == 8
                 ssh_exec =  "curl -o- -L #{wordpress.server_url("v8")}  | sh" 
               end    
               unless ssh_exec.blank?
@@ -59,7 +59,13 @@ module Wordpress
         end 
       end
 
-      private
+      protected
+
+      def default_url_options
+        Rails.application.config.active_job.default_url_options
+      end 
+      
+      private 
 
       def log_file
         # To create new (and to remove old) logfile, add File::CREAT like;
