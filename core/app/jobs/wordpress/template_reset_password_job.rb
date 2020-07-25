@@ -13,10 +13,14 @@ module Wordpress
                 collection_password: template.mysql_password, 
                 collection_host: config.template_mysql_connection_host   }
             mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
+
             logger = Logger.new(log_file)
+            logger.info("Template Id:#{template.id} --------") 
+
             Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password) do |ssh|  
-              logger.info("Template Id:#{template.id} --------") 
+             
               logger.info("ssh connected")  
+              
               channel = ssh.open_channel do |ch|    
                 ch.exec "#{mysql.only_update_password(template.wordpress_password, template.wordpress_user)}"  do |ch, success|  
                   ch.on_data do |c, data|
@@ -26,7 +30,9 @@ module Wordpress
                 end  
               end 
               channel.wait 
+
             end
+
         rescue Exception, ActiveJob::DeserializationError => e
             logger = Logger.new(log_file)
             logger.error("Template Id:#{template.id} ================") 

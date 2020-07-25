@@ -14,8 +14,10 @@ module Wordpress
                 collection_password: config.template_mysql_host_password, 
                 collection_host: config.template_mysql_connection_host   }
             mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
-            Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password) do |ssh| 
-                ssh.exec "cd #{directory} && #{mysql.dump_mysql} && tar cjf #{template.template_tar_file} #{mysql_info[:database]}.sql wordpress"
+            Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password, , :port => config.template_host_port ) do |ssh| 
+                ssh_exec = "cd #{directory} && #{mysql.dump_mysql} && tar cjf #{template.template_tar_file} #{mysql_info[:database]}.sql wordpress"
+                puts ssh_exec
+                ssh.exec ssh_exec
             end
         rescue Exception, ActiveJob::DeserializationError => e
             logger = Logger.new(log_file)
