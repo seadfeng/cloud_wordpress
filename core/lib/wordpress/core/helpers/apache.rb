@@ -56,7 +56,12 @@ module Wordpress
                                         AllowOverride All
                                         Require all granted
                             </Directory>
-                            php_admin_value open_basedir #{virtual[:directory]}/wordpress/:/tmp/
+                            <IfModule  mod_php5.c>
+                                php_admin_value open_basedir #{virtual[:directory]}/wordpress/:/tmp/
+                            </IfModule>
+                            <IfModule  mod_php7.c>
+                                php_value open_basedir #{virtual[:directory]}/wordpress/:/tmp/
+                            </IfModule>
                     </VirtualHost> 
                     "
                 end
