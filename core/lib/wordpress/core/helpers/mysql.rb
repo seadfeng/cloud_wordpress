@@ -25,8 +25,8 @@ module Wordpress
                     "mysqldump -u#{mysql[:collection_user]} -p#{mysql[:collection_password]} -h#{mysql[:collection_host]} #{mysql[:database]} > #{mysql[:database]}.sql"
                 end
 
-                def only_update_password(wp_password)
-                    "echo 'show databases; use #{mysql[:database]}; #{update_password(wp_password)}' | #{collection_mysql} " 
+                def only_update_password(wp_password, wp_user)
+                    "echo 'show databases; use #{mysql[:database]}; #{update_password(wp_password, wp_user)}' | #{collection_mysql} " 
                 end
 
                 def only_update_siteurl(new_url)
