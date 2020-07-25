@@ -8,8 +8,11 @@ dnf module install php:remi-7.4  -y
  
 dnf install php php-cli php-common -y
 
-dnf update -y
+yum update -y
 yum groupinstall "Development Tools" -y
+yum install ncurses-devel -y
+yum install wget telnet -y
+yum install -y libxslt libxslt-devel libxml2 libxml2-devel libicu-devel
 yum -y install expect
 yum install ImageMagick -y
 yum install ImageMagick-devel -y
