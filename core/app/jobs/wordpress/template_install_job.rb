@@ -20,7 +20,7 @@ module Wordpress
                       collection_host: config.template_mysql_connection_host   }
             mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
             begin
-                Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password) do |ssh| 
+                Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password, :port => config.template_host_port ) do |ssh| 
                     mkdir_path = "mkdir #{directory} -p"
 
                     ssh.exec mkdir_path
