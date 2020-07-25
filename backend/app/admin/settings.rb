@@ -138,7 +138,7 @@ ActiveAdmin.register_page "Settings" do
         apache = Wordpress::Core::Helpers::Apache.new(apache_info)
         create_virtual_host = apache.create_virtual_host(wordpress = '')
         check_ok = false
-        Net::SSH.start(Wordpress::Config.template_host, Wordpress::Config.template_host_user, :password => Wordpress::Config.template_host_password) do |ssh|  
+        Net::SSH.start(Wordpress::Config.template_host, Wordpress::Config.template_host_user, :password => Wordpress::Config.template_host_password, :port => Wordpress::Config.template_host_port) do |ssh|  
             channel = ssh.open_channel do |ch|
                 puts create_virtual_host
                 ch.exec create_virtual_host do |ch, success| 
