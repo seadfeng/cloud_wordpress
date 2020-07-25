@@ -19,6 +19,10 @@ ActiveAdmin.register_page "Settings" do
                             input name: "setting[template_host]", value: Wordpress::Config.template_host , type: "text"
                         end
                         li class: "string input stringish" do
+                            label "主机SSH端口", class: "label"  
+                            input name: "setting[template_host_port]", value: Wordpress::Config.template_host_port , type: "text"
+                        end
+                        li class: "string input stringish" do
                             label "主机User", class: "label"  
                             input name: "setting[template_host_user]", value: Wordpress::Config.template_host_user , type: "text"
                         end
@@ -162,6 +166,7 @@ ActiveAdmin.register_page "Settings" do
         if params[:setting] 
             Wordpress::Config.template_origin = params[:setting][:template_origin]
             Wordpress::Config.template_host= params[:setting][:template_host]
+            Wordpress::Config.template_host_port= params[:setting][:template_host_port]
             Wordpress::Config.template_host_user= params[:setting][:template_host_user]
             Wordpress::Config.template_host_password= params[:setting][:template_host_password] unless params[:setting][:template_host_password].blank?
             Wordpress::Config.template_directory= params[:setting][:template_directory]
