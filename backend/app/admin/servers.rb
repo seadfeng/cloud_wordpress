@@ -132,7 +132,7 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
           f.input :mysql_port, placeholder: "3306"   
 	      f.input :mysql_user, placeholder: "root" 
           f.input :mysql_password , placeholder: "password"  , hint: "密码保存后不显示"     
-          f.input :installed   
+        #   f.input :installed   
         end
         f.actions
     end 
