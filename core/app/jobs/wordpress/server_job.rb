@@ -9,6 +9,7 @@ module Wordpress
       def perform(server,host = nil) 
         @host = host
         logger = Logger.new(log_file)  
+        logger.info("Sever Id:#{server.id} ================") 
         begin   
             Net::SSH.start(server.host, server.host_user, :password => server.host_password, :port => server.host_port) do |ssh|  
               logger.info("SSH connected")  
@@ -32,9 +33,9 @@ module Wordpress
                 ssh_exec =  "curl -o- -L #{server_url("v8")}  | sh" 
               end    
               unless ssh_exec.blank?
-                channel = ssh.open_channel do |ch|   
-                  ch.exec ssh_exec do |ch, success| 
-                    logger.info("SSH Exec:#{ssh_exec}") 
+                channel = ssh.open_channel do |ch|  
+                  logger.info("SSH Exec:#{ssh_exec}")  
+                  ch.exec ssh_exec do |ch, success|  
                     if success 
                       ch.on_data do |c, data|
                         $stdout.print data    

@@ -24,6 +24,12 @@ $ rake wordpress:init
 $ rake assets:precompile
 ```
 
+## Application Config
+
+```ruby
+config.active_job.default_url_options = { host: "demo.cloudwp.xyz" }
+```
+
 ## Sidekiq Config
 ```ruby
 # config/initializers/sidekiq.rb
