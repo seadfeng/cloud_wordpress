@@ -13,7 +13,7 @@ module Wordpress
               logger.info("SSH connected")  
               centos_ver = 0
               channela = ssh.open_channel do |ch| 
-                ch.exec! "rpm --eval '%{centos_ver}'"  do |ch, success|
+                ch.exec "rpm --eval '%{centos_ver}'"  do |ch, success|
                   if success   
                     ch.on_data do |c, data|
                       $stdout.print data 
