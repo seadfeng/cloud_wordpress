@@ -3,6 +3,11 @@
         color: #ff0000; 
     } 
 }
+.attributes_table {
+  td.active {
+    background: #57ab6a63;
+  }
+}
 .lds-ellipsis {
   display: block;
   position: relative;

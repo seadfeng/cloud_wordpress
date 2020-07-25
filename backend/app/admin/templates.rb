@@ -64,7 +64,7 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
         id_column
         column :locale
         column :url do |soruce|
-          link_to "#{soruce.origin_wordpress}", "#{soruce.origin_wordpress}/wp-admin/setup-config.php", target: "_blank" 
+          link_to image_tag("icons/interface.svg", width: "20", height: "20"), "#{soruce.origin_wordpress}", target: "_blank" 
         end
         column :name  
         column :wordpress_user 
@@ -109,6 +109,27 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
         end
         f.actions
     end 
+
+    show do
+      panel t('active_admin.details', model: resource_class.to_s.titleize) do
+        attributes_table_for resource do 
+            row :locale  
+            row :install_url  
+            row :step_url do |source|
+             link_to "#{source.origin_wordpress}/wp-admin/setup-config.php", "#{source.origin_wordpress}/wp-admin/setup-config.php", target: "_blank"
+            end
+            row :name  
+            row :description  
+            row :wordpress_user  
+            row :wordpress_password  
+            row :mysql_user
+            row :mysql_password 
+            row :installed  
+            row :created_at 
+            row :updated_at 
+        end
+      end 
+    end
 
 
 end 
