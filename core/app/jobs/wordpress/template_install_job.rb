@@ -62,6 +62,7 @@ module Wordpress
                         ch.exec "#{mysql.create_db_and_user}"  do |ch, success| 
                             if success   
                                 logger.info("Create db and user")  
+                                logger.info("#{mysql.create_db_and_user}")  
                                 ch.on_data do |c, data|
                                     $stdout.print data 
                                 end  

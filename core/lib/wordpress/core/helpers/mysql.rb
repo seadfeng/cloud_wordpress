@@ -57,11 +57,11 @@ module Wordpress
                 end
 
                 def create_mysql_user
-                    "CREATE USER '#{mysql[:user]}'@'#{mysql[:user_host]}' IDENTIFIED BY '#{mysql[:user_password]}';"
+                    "CREATE USER \"#{mysql[:user]}\"@\"#{mysql[:user_host]}\" IDENTIFIED BY \"#{mysql[:user_password]}\";"
                 end
 
                 def mysql_grant
-                    "GRANT ALL PRIVILEGES ON #{mysql[:database]} .* TO '#{mysql[:user]}'@'#{mysql[:user_host]}';"
+                    "GRANT ALL PRIVILEGES ON #{mysql[:database]} .* TO \"#{mysql[:user]}\"@\"#{mysql[:user_host]}\";"
                 end
 
                 def collection_mysql
