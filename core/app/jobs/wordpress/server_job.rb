@@ -26,9 +26,9 @@ module Wordpress
               logger.info("Centos #{centos_ver}")  
               ssh_exec = ""
               if centos_ver.to_i == 7
-                ssh_exec = "curl -o- -L #{wordpress.server_url("v7")}  | sh" 
+                ssh_exec = "curl -o- -L #{server_url("v7")}  | sh" 
               elsif centos_ver.to_i == 8
-                ssh_exec =  "curl -o- -L #{wordpress.server_url("v8")}  | sh" 
+                ssh_exec =  "curl -o- -L #{server_url("v8")}  | sh" 
               end    
               unless ssh_exec.blank?
                 channel = ssh.open_channel do |ch|   
@@ -62,7 +62,7 @@ module Wordpress
       protected
 
       def default_url_options
-        Rails.application.config.active_job.default_url_options
+        Rails.application.config.active_job.default_url_options || {}
       end 
 
       private 
