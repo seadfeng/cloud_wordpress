@@ -22,7 +22,7 @@ module Wordpress
                 end    
                 unless ssh_exec.blank?
                   ch.exec ssh_exec do |ch, success| 
-                    logger.info("SSH Exec") 
+                    logger.info("SSH Exec:#{ssh_exec}") 
                     if success 
                       ch.on_data do |c, data|
                         $stdout.print data    
