@@ -41,10 +41,10 @@ module Wordpress
                     down_install = " cd #{directory} && wget #{template.install_url} && tar xf #{file_name} && chown apache:apache ./ -R "
 
                     down_and_tar =  "if [ ! -f '#{directory}/#{file_name}' ];then 
+                                        #{down_install}
                                         echo 'User-agent: *' >> #{directory}/wordpress/robots.txt
-									    echo 'Disallow: /' >> #{directory}/wordpress/robots.txt
-                                       #{down_install}  
-                              fi"
+									    echo 'Disallow: /' >> #{directory}/wordpress/robots.txt 
+                                    fi"
 
                     channelb = ssh.open_channel do |ch|    
                         ch.exec "#{down_and_tar}"  do |ch, success| 
