@@ -41,8 +41,8 @@ module Wordpress
                       $stdout.print data    
                       if /Install OK/.match(data)
                         logger.info("Install OK") 
-                        server.installed_at = Time.now
-                        server.save
+                        proxy.installed_at = Time.now
+                        proxy.save
                       end
                     end 
                   end
@@ -54,7 +54,7 @@ module Wordpress
             end
           end 
       rescue Exception, ActiveJob::DeserializationError => e 
-          logger.error("Proxy Id:#{server.id} ================") 
+          logger.error("Proxy Id:#{proxy.id} ================") 
           logger.error(I18n.t('active_admin.active_job', message: e.message, default: "ActiveJob: #{e.message}"))
           logger.error(e.backtrace.join("\n"))
           nil
