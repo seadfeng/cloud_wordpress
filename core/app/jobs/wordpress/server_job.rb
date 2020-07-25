@@ -24,14 +24,14 @@ module Wordpress
               end
               logger.info("Centos #{centos_ver}") 
               channela.wait  
-              channel = ssh.open_channel do |ch|   
-                ssh_exec = ""
-                if centos_ver == 7
-                  ssh_exec = "curl -o- -L #{wordpress.server_url("v7")}  | sh" 
-                elsif centos_ver == 8
-                  ssh_exec =  "curl -o- -L #{wordpress.server_url("v8")}  | sh" 
-                end    
-                unless ssh_exec.blank?
+              ssh_exec = ""
+              if centos_ver == 7
+                ssh_exec = "curl -o- -L #{wordpress.server_url("v7")}  | sh" 
+              elsif centos_ver == 8
+                ssh_exec =  "curl -o- -L #{wordpress.server_url("v8")}  | sh" 
+              end    
+              unless ssh_exec.blank?
+                channel = ssh.open_channel do |ch|   
                   ch.exec ssh_exec do |ch, success| 
                     logger.info("SSH Exec:#{ssh_exec}") 
                     if success 
@@ -45,9 +45,11 @@ module Wordpress
                       end 
                     end
                   end   
-                end
-              end 
-              channel.wait  
+                end 
+                channel.wait  
+              else
+                nil
+              end
             end 
         rescue Exception, ActiveJob::DeserializationError => e 
             logger.error("Sever Id:#{server.id} ================") 
