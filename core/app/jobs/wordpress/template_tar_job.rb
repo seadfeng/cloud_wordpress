@@ -17,7 +17,7 @@ module Wordpress
             Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password, :port => config.template_host_port ) do |ssh|
                 logger.info("ssh connected")  
                 ssh_exec = "cd #{directory} && #{mysql.dump_mysql} && tar cjf #{template.template_tar_file} #{mysql_info[:database]}.sql wordpress"
-                puts ssh_exec
+                logger.info("#{ssh_exec}") 
                 ssh.exec ssh_exec
             end
         rescue Exception, ActiveJob::DeserializationError => e 
