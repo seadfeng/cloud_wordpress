@@ -26,7 +26,7 @@ module Wordpress
                     logger.info("ssh connected")  
                     mkdir_path = "mkdir #{directory} -p" 
                     channela = ssh.open_channel do |ch|    
-                        ch.exec "#{mmkdir_path}"  do |ch, success| 
+                        ch.exec "#{mkdir_path}"  do |ch, success| 
                             if success 
                                 puts mkdir_path
                                 logger.info("#{mkdir_path}")  
