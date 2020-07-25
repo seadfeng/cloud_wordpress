@@ -52,6 +52,7 @@ module Wordpress
                 logger.error("Install Url:#{template.install_url} ================")
                 logger.error(I18n.t('active_admin.active_job', message: e.message, default: "ActiveJob: #{e.message}"))
                 logger.error(e.backtrace.join("\n"))
+                nil
             end
         end
 

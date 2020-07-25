@@ -22,6 +22,7 @@ module Wordpress
             logger.error("Template Id:#{template.id} ================") 
             logger.error(I18n.t('active_admin.active_job', message: e.message, default: "ActiveJob: #{e.message}"))
             logger.error(e.backtrace.join("\n"))
+            nil
         end
 
       end
