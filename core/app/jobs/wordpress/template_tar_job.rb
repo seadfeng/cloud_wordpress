@@ -2,8 +2,9 @@ module Wordpress
     class TemplateTarJob < Wordpress::TemplateJob 
       
       def perform(template) 
-
+        logger = Logger.new(log_file)
         begin
+          logger.info("Template Id:#{template.id} ================") 
             config = Wordpress::Config
             directory = "#{config.template_directory}/#{template.id}"
             mysql_info = { user: template.mysql_user, 
@@ -14,13 +15,13 @@ module Wordpress
                 collection_password: config.template_mysql_host_password, 
                 collection_host: config.template_mysql_connection_host   }
             mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
-            Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password, , :port => config.template_host_port ) do |ssh| 
+            Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password, , :port => config.template_host_port ) do |ssh|
+                logger.info("ssh connected")  
                 ssh_exec = "cd #{directory} && #{mysql.dump_mysql} && tar cjf #{template.template_tar_file} #{mysql_info[:database]}.sql wordpress"
                 puts ssh_exec
                 ssh.exec ssh_exec
             end
-        rescue Exception, ActiveJob::DeserializationError => e
-            logger = Logger.new(log_file)
+        rescue Exception, ActiveJob::DeserializationError => e 
             logger.error("Template Id:#{template.id} ================") 
             logger.error(I18n.t('active_admin.active_job', message: e.message, default: "ActiveJob: #{e.message}"))
             logger.error(e.backtrace.join("\n"))
