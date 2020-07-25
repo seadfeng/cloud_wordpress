@@ -21,7 +21,7 @@ module Wordpress
     
     before_validation :set_mysql_password 
     before_validation :set_wordpress_admin_user
-    before_validation :tar_later, if: :installed_changed? , only: :update
+    before_validation :tar_later, if: :installed_changed? , on: :update
     after_create :set_mysql_user
     after_create :send_install_job
   

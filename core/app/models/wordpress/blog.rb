@@ -19,7 +19,7 @@ module Wordpress
 
     before_validation :check_server_and_cloudflare
 
-    before_validation :set_wordpress_user_and_password, only: :create
+    before_validation :set_wordpress_user_and_password, on: :create
     after_create :set_mysql_user_and_password 
     before_destroy :can_destroy? 
 

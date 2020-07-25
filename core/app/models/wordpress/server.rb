@@ -18,9 +18,9 @@ module Wordpress
       validates :cloudflare,  :host, :host_user, :host_password, :mysql_host, :mysql_host_user, :mysql_password, :mysql_user
     end  
 
-    before_validation :check_host,  if: :host_password_changed?, only: :update
-    before_validation :check_hosts, if: :host_changed? , only: :update
-    before_validation :check_cloudflares, if: :cloudflare_id_changed? , only: :update
+    before_validation :check_host,  if: :host_password_changed?, on: :update
+    before_validation :check_hosts, if: :host_changed? , on: :update
+    before_validation :check_cloudflares, if: :cloudflare_id_changed? , on: :update
 
     def cname
      "server#{self.id}.#{cloudflare.domain}"
