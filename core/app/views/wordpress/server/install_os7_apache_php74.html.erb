@@ -17,7 +17,8 @@ yum install ImageMagick-devel -y
 yum -y install mysql mysql-devel
 yum -y install php-mysql php-pear php-xml php-cli php-imap php-gd php-pdo php-devel php-mbstring php-common php-ldap php php-imagick
 yum -y install libmcrypt libmcrypt-devel readline-devel php-mcrypt php-gd php-xml php-mbstring php-ldap php-pear php-xmlrpc php-curl php-memcache  php-sockets php-ioncube-loader php-bcmath
-yum -y install httpd httpd-manual mod_ssl mod_perl mod_fcgid mod_evasive httpd-devel mod_rewrite mod_gnutls mod_remoteip
+yum -y install httpd httpd-manual httpd-devel 
+yum -y mod_ssl mod_perl mod_fcgid   
 
 sed -i 's/AllowOverride None/AllowOverride All/g' /etc/httpd/conf/httpd.conf 
 sed -i 's/enforcing/disabled/g' /etc/selinux/config
