@@ -22,10 +22,12 @@ module Wordpress
                 end    
                 unless ssh_exec.blank?
                   ch.exec ssh_exec do |ch, success| 
+                    logger.info("SSH Exec") 
                     if success 
                       ch.on_data do |c, data|
                         $stdout.print data    
                         if /Install OK/.match(data)
+                          logger.info("Install OK") 
                           server.installed = 1
                           server.save
                         end
