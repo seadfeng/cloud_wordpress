@@ -41,8 +41,8 @@ module Wordpress
                     down_install = " cd #{directory} && wget #{template.install_url} && tar xf #{file_name} && chown apache:apache ./ -R "
 
                     down_and_tar =  "if [ ! -f '#{directory}/#{file_name}' ];then 
-                                        echo 'User-agent: *' >> robots.txt
-									    echo 'Disallow: /' >> robots.txt
+                                        echo 'User-agent: *' >> #{directory}/wordpress/robots.txt
+									    echo 'Disallow: /' >> #{directory}/wordpress/robots.txt
                                        #{down_install}  
                               fi"
 
