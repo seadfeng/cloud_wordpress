@@ -142,7 +142,17 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
            li "博客服务器节点: 创建的博客网站文件所在处"
            li  "Mysql主机信息相对当前服务器填写"
            li  "添加新服务器后可一键安装Apache + PHP环境"
-           li  "Mysql服务器需要手工安装"
+           li  "Mysql服务器需要手工安装" 
+        end
+        div do
+            raw("
+            服务器安装完再进行<b>Mysql</b>连接测试<br />
+            <br />
+            Linode 私有IP设置DEMO:<br />
+            vi /etc/sysconfig/network-scripts/ifcfg-eth0:1<br />
+            DEVICE=eth0:1 <br />
+            IPADDR=192.168.0.0<br />
+            PREFIX=17")
         end
     end
 
