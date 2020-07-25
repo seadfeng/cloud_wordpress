@@ -52,9 +52,9 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
     member_action :tar, method: :put do     
       begin
         resource.tar_now 
-        options = { notice: I18n.t('active_admin.tar.done',  default: "打包完成") } 
+        options = { notice: I18n.t('active_admin.tar.done', id: resource.id , default: "#%{id} - 打包完成") } 
       rescue => exception 
-        options = { alert: I18n.t('active_admin.tar.failure',  default: "打包失败") } 
+        options = { alert: I18n.t('active_admin.tar.failure', id: resource.id ,  default: "#%{id} - 打包失败") } 
       end
       redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options))  
     end
