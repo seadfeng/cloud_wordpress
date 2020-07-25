@@ -8,11 +8,11 @@ module Wordpress
                     @virtual = virtual
                 end   
 
-                def create_virtual_host 
+                def create_virtual_host(wordpress = '/wordpress/')
                     vhost_file = "/etc/httpd/conf.d/vhost/#{conf_file_name}"
                     ssh = "
                         mkdir /etc/httpd/conf.d/vhost -p 
-                        echo \"#{virtual_host}\" > #{vhost_file}
+                        echo \"#{virtual_host(wordpress)}\" > #{vhost_file}
                         service httpd restart 
                         echo 'Restart OK'
                         "
@@ -44,22 +44,22 @@ module Wordpress
                 def conf_file_name
                     "#{virtual[:server_name]}.conf" 
                 end
-
-                def virtual_host 
+ 
+                def virtual_host(wordpress)
                     "
                     <VirtualHost *:#{virtual[:port]}>
                             ServerName #{virtual[:server_name]}
-                            DocumentRoot #{virtual[:directory]}/wordpress/
-                            <Directory #{virtual[:directory]}/wordpress/>
+                            DocumentRoot #{virtual[:directory]}#{wordpress}
+                            <Directory #{virtual[:directory]}#{wordpress}>
                                         Options All
                                         AllowOverride All
                                         Require all granted
                             </Directory>
                             <IfModule  mod_php5.c>
-                                php_admin_value open_basedir #{virtual[:directory]}/wordpress/:/tmp/
+                                php_admin_value open_basedir #{virtual[:directory]}#{wordpress}:/tmp/
                             </IfModule>
                             <IfModule  mod_php7.c>
-                                php_value open_basedir #{virtual[:directory]}/wordpress/:/tmp/
+                                php_value open_basedir #{virtual[:directory]}#{wordpress}:/tmp/
                             </IfModule>
                     </VirtualHost> 
                     "
