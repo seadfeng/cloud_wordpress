@@ -2,6 +2,9 @@ ActiveAdmin.register_page "Settings" do
     menu priority: 160, label: "系统设置" 
 
     content do
+        h3 do 
+            "模版主机可添加到PHP代理进行安装，安装完后再设置"
+        end
         panel "模版主机设置，设置后除非主机迁移，请勿随意变动！信息不正确会导致博客不能正常创建,添加/修改信息记得对连接进行测试" do   
             form method: "post", action: admin_settings_update_path do
                 input name: "authenticity_token" , value: form_authenticity_token , type: "hidden" 
@@ -68,6 +71,13 @@ ActiveAdmin.register_page "Settings" do
         link_to(
             I18n.t('active_admin.check_mysql', default: "Mysql连接测试"),
             admin_settings_check_mysql_path, 
+            method: "put" 
+            )  
+    end
+    action_item :set_vhost  do 
+        link_to(
+            I18n.t('active_admin.set_vhost', default: "设置vhost"),
+            admin_settings_set_vhost_path, 
             method: "put" 
             )  
     end
