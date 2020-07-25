@@ -16,7 +16,7 @@ module Wordpress
       validates :domain, domain: true 
     end  
 
-    def self.cloudflare_cache(cloudflare_id = nil)
+    def self.cloudflare_cache(cloudflare_id)
       return nil if cloudflare_id.nil?
       Rails.cache.fetch("cloudflare_key_#{cloudflare_id}") do
         self

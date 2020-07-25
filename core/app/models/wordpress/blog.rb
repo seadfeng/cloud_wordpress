@@ -25,6 +25,8 @@ module Wordpress
 
     attr_accessor :migration
 
+    after_commit :clear_cache 
+
     def migration
       ''
     end
@@ -150,6 +152,10 @@ module Wordpress
         nil
       end
       
+    end
+
+    def clear_cache
+      Rails.cache.delete( "blog_key_#{self.id}" ) 
     end
 
     private
