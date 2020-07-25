@@ -6,16 +6,16 @@ module Wordpress
         begin
           server = blog.server
           mysql_info = { 
-            user: blog.mysql_user, 
-            user_host: server.mysql_host_user , 
-            user_password: blog.mysql_password, 
-            database: blog.mysql_user, 
+            # user: blog.mysql_user, 
+            # user_host: server.mysql_host_user , 
+            # user_password: blog.mysql_password, 
+            database: blog.mysql_db, 
             collection_user: server.mysql_user, 
             collection_password: server.mysql_password, 
             collection_host: server.mysql_host  
            }
            mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
-           Net::SSH.start( server.host,  server.host_user, :password => server.host_password) do |ssh| 
+           Net::SSH.start( server.host,  server.host_user, :password => server.host_password, :port => server.host_port) do |ssh| 
             logger.info("ssh connected") 
             channel = ssh.open_channel do |ch|    
               ch.exec "#{mysql.only_update_password(blog.password, blog.user)}"  do |ch, success|  
