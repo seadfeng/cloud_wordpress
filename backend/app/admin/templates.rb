@@ -64,7 +64,7 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
         id_column
         column :locale
         column :url do |soruce|
-          link_to "#{soruce.origin_wordpress}", "#{soruce.origin_wordpress}", target: "_blank" 
+          link_to "#{soruce.origin_wordpress}/wp-admin/setup-config.php", "#{soruce.origin_wordpress}", target: "_blank" 
         end
         column :name  
         column :wordpress_user 
