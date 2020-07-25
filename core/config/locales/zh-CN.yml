@@ -182,6 +182,7 @@ zh-CN:
         admin_user: "管理员"
       wordpress/blog:
         <<: *base
+        cname: "二级域名"
         status: "状态"
         origin: "预览"
         server: "服务器"

@@ -20,6 +20,8 @@ $ rails g active_admin:install
 $ rails g wordpress:install
 $ rake db:migrate
 $ rake db:seed
+$ rake wordpress:init
+$ rake assets:precompile
 ```
 
 ## Sidekiq Config
