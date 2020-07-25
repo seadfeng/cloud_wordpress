@@ -85,7 +85,7 @@ ActiveAdmin.register Wordpress::Server,  as: "Server" do
             if source.installed
                 span "已安装", class: "status_tag published"
             else
-                link_to I18n.t('active_admin.install',  default: "安装Apahce+php"), install_admin_server_path(source), method: :put  
+                link_to I18n.t('active_admin.install',  default: "安装Apahce+php"), install_admin_server_path(source), method: :put  if source.host_status
             end
         end
         column :host_status do |source|
