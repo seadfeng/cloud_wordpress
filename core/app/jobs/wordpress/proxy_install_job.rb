@@ -12,7 +12,19 @@ module Wordpress
             logger.info("Proxy Id:#{proxy.id} ***********************/") 
             Net::SSH.start(proxy.host, proxy.user, :password => proxy.password, :port => proxy.port) do |ssh|  
               logger.info("SSH connected") 
-              centos_ver = ssh.exec! "rpm --eval '%{centos_ver}'"   
+              centos_ver = 0
+              channela = ssh.open_channel do |ch| 
+                ch.exec! "rpm --eval '%{centos_ver}'"  do |ch, success|
+                  if success   
+                    ch.on_data do |c, data|
+                      $stdout.print data 
+                      centos_ver = data
+                    end
+                  end
+                end
+              end
+              logger.info("Centos #{centos_ver}") 
+              channela.wait  
 
               channel = ssh.open_channel do |ch| 
                 ssh_exec = ""
