@@ -27,6 +27,8 @@ $ rake assets:precompile
 ## Application Config
 
 ```ruby
+# config/application.rb
+config.i18n.default_locale = :"zh-CN"
 config.active_job.default_url_options = { host: "demo.cloudwp.xyz" }
 ```
 
