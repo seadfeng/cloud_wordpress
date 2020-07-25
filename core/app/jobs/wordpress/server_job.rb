@@ -4,9 +4,10 @@ module Wordpress
       include Wordpress::Routeable
       queue_as :wordpress
       sidekiq_options retry: 3
-      attr_reader :server
+      attr_reader :server, :host
       
-      def perform(server) 
+      def perform(server,host = nil) 
+        @host = host
         logger = Logger.new(log_file)  
         begin   
             Net::SSH.start(server.host, server.host_user, :password => server.host_password, :port => server.host_port) do |ssh|  
@@ -62,7 +63,7 @@ module Wordpress
       protected
 
       def default_url_options
-        Rails.application.config.active_job.default_url_options || {}
+        host || Rails.application.config.active_job.default_url_options || {}
       end 
 
       private 
