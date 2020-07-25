@@ -24,6 +24,11 @@ module Wordpress
     before_validation :tar_later, if: :installed_changed? , on: :update
     after_create :set_mysql_user
     after_create :send_install_job
+    
+
+    def database
+      self.mysql_user
+    end
   
     def set_mysql_user 
       update_attribute(:mysql_user, "wp_template_#{self.id}")

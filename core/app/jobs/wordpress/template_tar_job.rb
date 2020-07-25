@@ -7,13 +7,12 @@ module Wordpress
           logger.info("Template Id:#{template.id} ================") 
             config = Wordpress::Config
             directory = "#{config.template_directory}/#{template.id}"
-            mysql_info = { user: template.mysql_user, 
-                user_host: config.template_mysql_host , 
-                user_password: template.mysql_password, 
-                database: template.mysql_user, 
-                collection_user: config.template_mysql_host_user, 
-                collection_password: config.template_mysql_host_password, 
-                collection_host: config.template_mysql_connection_host   }
+            mysql_info = {  
+                database: template.database, 
+                collection_user: template.mysql_user, 
+                collection_password: template.mysql_password, 
+                collection_host: config.template_mysql_connection_host 
+                }
             mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
             Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password, , :port => config.template_host_port ) do |ssh|
                 logger.info("ssh connected")  
