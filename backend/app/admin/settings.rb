@@ -119,6 +119,30 @@ ActiveAdmin.register_page "Settings" do
         end  
     end
 
+    page_action :set_vhost, method: :put do 
+        apache_info = {
+            directory:  Wordpress::Config.template_directory, 
+            server_name: "#{Wordpress::Config.template_origin}".gsub!(/https?:\/\/(.*)\/?/,'\1'),
+            port: 80,  
+        }
+        apache = Wordpress::Core::Helpers::Apache.new(apache_info)
+        create_virtual_host = apache.create_virtual_host
+        check_ok = false
+        Net::SSH.start(Wordpress::Config.template_host, Wordpress::Config.template_host_user, :password => Wordpress::Config.template_host_password) do |ssh|  
+            channel = ssh.open_channel do |ch|
+                ch.exec create_virtual_host do |ch, success| 
+                    ch.on_data do |c, data|
+                        $stdout.print data
+                        check_ok = true if /restart httpd.service/.match(data)
+                    end
+                end
+            end
+            channel.wait 
+        end
+        check_ok
+
+    end
+
     page_action :update, method: :post do 
         if params[:setting] 
             Wordpress::Config.template_origin = params[:setting][:template_origin]

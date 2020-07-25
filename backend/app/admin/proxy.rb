@@ -34,8 +34,8 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
 	end
 
 
-    action_item :install, only: :show  do 
-        unless resource.installed? && !resource.host_status
+    action_item :install, only: [:show]  do 
+        unless resource.installed? && !resource.status
             link_to(
                 I18n.t('active_admin.install', default: "安装Apache+PHP"),
                 install_admin_proxy_path(resource),  
@@ -59,7 +59,7 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
         redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
     end
 
-    action_item :test, only: :show  do 
+    action_item :test, only: [:show , :edit] do 
         link_to(
             I18n.t('active_admin.test_connection', default: "连接测试"),
             test_admin_proxy_path(resource),  
