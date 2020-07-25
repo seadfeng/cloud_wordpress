@@ -25,31 +25,69 @@ module Wordpress
                 Net::SSH.start( config.template_host,  config.template_host_user, :password => config.template_host_password, :port => config.template_host_port ) do |ssh| 
                     logger.info("ssh connected")  
                     mkdir_path = "mkdir #{directory} -p" 
-                    ssh.exec mkdir_path
-                    logger.info("#{mkdir_path}")  
-                    puts mkdir_path
+                    channela = ssh.open_channel do |ch|    
+                        ch.exec "#{mmkdir_path}"  do |ch, success| 
+                            if success 
+                                puts mkdir_path
+                                logger.info("#{mkdir_path}")  
+                                ch.on_data do |c, data|
+                                    $stdout.print data 
+                                end  
+                            end
+                        end  
+                      end 
+                    channela.wait 
 
                     down_install = " cd #{directory} && wget #{template.install_url} && tar xf #{file_name} && chown apache:apache ./ -R "
 
-                    ssh.exec "if [ ! -f '#{directory}/#{file_name}' ];then 
+                    down_and_tar =  "if [ ! -f '#{directory}/#{file_name}' ];then 
                                         echo 'User-agent: *' >> robots.txt
 									    echo 'Disallow: /' >> robots.txt
                                        #{down_install}  
                               fi"
-                    ssh.exec mysql.create_db_and_user  
 
-                    puts mysql.create_db_and_user
+                    channelb = ssh.open_channel do |ch|    
+                        ch.exec "#{down_and_tar}"  do |ch, success| 
+                            if success  
+                                logger.info("#{down_and_tar}")  
+                                ch.on_data do |c, data|
+                                    $stdout.print data 
+                                end  
+                            end
+                        end  
+                    end 
+                    channelb.wait 
 
-                    check_ok = ssh.exec! "if [  -d '#{directory}/wordpress' ];then
+                    channelc = ssh.open_channel do |ch|    
+                        ch.exec "#{mysql.create_db_and_user}"  do |ch, success| 
+                            if success   
+                                logger.info("Create db and user")  
+                                ch.on_data do |c, data|
+                                    $stdout.print data 
+                                end  
+                            end
+                        end  
+                    end 
+                    channelc.wait  
+
+
+                    check_ok = "if [  -d '#{directory}/wordpress' ];then
                                 echo 'OK'
-                               fi"  
-                    if /OK/.match(check_ok) 
-                        template.update_attribute(:installed , 1) 
-                        logger.info("Install OK") 
-                    else
-                        logger.error("Failure") 
-                        raise "Downloading..."
-                    end
+                            fi" 
+                    channeld = ssh.open_channel do |ch|    
+                        ch.exec "#{check_ok}"  do |ch, success| 
+                            if success    
+                                ch.on_data do |c, data|
+                                    $stdout.print data 
+                                    if /OK/.match(check_ok) 
+                                        template.update_attribute(:installed , 1)
+                                        logger.info("Install OK")  
+                                    end
+                                end  
+                            end
+                        end  
+                    end 
+                    channeld.wait   
                 end
             rescue Exception, ActiveJob::DeserializationError => e 
                 logger.error("Template Id:#{template.id} ================")
