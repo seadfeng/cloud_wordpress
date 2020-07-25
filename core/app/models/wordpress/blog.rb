@@ -39,7 +39,7 @@ module Wordpress
       rootdomain = cloudflare.domain
       cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare, rootdomain)
       proxied = true
-      update_attribute(:dns_status, 1) if cloudflare_api.create_or_update_dns_cname( self.cloudflare_domain, self.server.name, proxied )  
+      update_attribute(:dns_status, 1) if cloudflare_api.create_or_update_dns_cname( self.cloudflare_domain, self.server.cname, proxied )  
     end
 
     def can_login?
