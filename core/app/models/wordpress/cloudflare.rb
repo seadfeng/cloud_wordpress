@@ -11,7 +11,7 @@ module Wordpress
     after_commit :clear_cache 
 
     with_options presence: true do 
-      validates_uniqueness_of :api_user, case_sensitive: true, allow_blank: false     
+      validates_uniqueness_of :api_user, case_sensitive: true, allow_blank: false, scope: :domain           
       validates :api_user,  :api_token, :name , :domain
       validates :domain, domain: true 
     end  
