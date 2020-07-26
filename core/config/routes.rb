@@ -5,7 +5,7 @@ Wordpress::Core::Engine.add_routes do
             mount Sidekiq::Web => '/sidekiq' 
         end
     end
-    get '/api/v1', to: 'api#show', as: :api
+    match '/api/v1', to: 'api#show', as: :api, via: [:get, :post]
     get '/api/v1/code', to: 'api#code', as: :api_code
     get '/server/install/*os', to: 'server#index' , as: :server
     get '/server/mysql/install/*os', to: 'server#mysql' , as: :server_mysql

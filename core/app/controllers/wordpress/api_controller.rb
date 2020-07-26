@@ -7,7 +7,6 @@ module Wordpress
         request_uri    = request.headers["Request-Uri"]
         forwarded_proto    = request.headers["X-Forwarded-Proto"]  
         subdomain = "#{auth_domain}".gsub!(/(.*)\.[^\.]*\.[^\.]*/,'\1') 
-        headers = request.headers
         
         if subdomain.nil?
           root_domain = auth_domain 
@@ -18,11 +17,17 @@ module Wordpress
         domain = Wordpress::Domain.cache_by_name(root_domain)
 
         if @api && domain && blog = domain.blog_cache_by_subname(subdomain)
-          uri = "#{blog.cloudflare_origin}#{request_uri}" 
-          @headers = headers.merge({ 'X-Forwarded-Host' => blog.origin })
-
+          uri = "#{blog.cloudflare_origin}#{request_uri}"  
+            
           if blog.published?
-            client = rest_client(uri,request.method, params)
+            @headers = { 
+              'X-Forwarded-Host' => blog.origin,
+              'X-Forwarded-Proto' => forwarded_proto, 
+              'User-Agent' => request.headers["User-Agent"], 
+              'Cache-Control'=> request.headers["Cache-Control"], 
+            }
+             
+            client = rest_client(uri, request.method, request.query_parameters.to_json)
             if client
               response.status = client.code
               body = client.body
