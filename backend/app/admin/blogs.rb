@@ -209,6 +209,8 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             actions
         end
 
+        filter :id  
+        filter :number  
         filter :name  
         filter :description  
         filter :admin_user , if: proc { authorized?(:read, AdminUser) }

@@ -56,7 +56,7 @@ module Wordpress
     end
 
     def display_name
-      "ID ( #{id} ):  #{online_origin}"
+      "ID ( #{id} ) - ##{number}"
     end
 
     def can_destroy? 
