@@ -10,8 +10,8 @@ module Wordpress
             # user_host: server.mysql_host_user , 
             # user_password: blog.mysql_password, 
             database: blog.mysql_db, 
-            collection_user: server.mysql_user, 
-            collection_password: server.mysql_password, 
+            collection_user: blog.mysql_user, 
+            collection_password: blog.mysql_password, 
             collection_host: server.mysql_host  
            }
            mysql = Wordpress::Core::Helpers::Mysql.new(mysql_info)
