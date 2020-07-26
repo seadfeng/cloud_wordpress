@@ -1,6 +1,7 @@
 class AdminUserDecorator
     if defined?(AdminUser)
         AdminUser.class_eval do
+            devise :trackable
             validates :first_name, presence: true
             validates :last_name, presence: true
 
