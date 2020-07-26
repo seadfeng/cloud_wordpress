@@ -19,6 +19,7 @@ module Wordpress
             logger.info("ssh connected") 
             channel = ssh.open_channel do |ch|    
               ch.exec "#{mysql.only_update_password(blog.password, blog.user)}"  do |ch, success|  
+                logger.info("#{mysql.only_update_password(blog.password, blog.user)}") 
                 ch.on_data do |c, data|
                   $stdout.print data 
                   if /^#{mysql_info[:database]}$/.match(data)
