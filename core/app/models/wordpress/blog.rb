@@ -157,7 +157,7 @@ module Wordpress
     end
 
     def clear_cache
-      Rails.cache.delete( "blog_key_#{domain.name}_#{cname}" ) 
+      Rails.cache.delete( "blog_key_#{domain.name}_#{cname}" ) if domain
     end
 
     private
