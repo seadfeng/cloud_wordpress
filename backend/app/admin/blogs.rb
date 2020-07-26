@@ -181,13 +181,10 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             column :number 
             column :locale do |source|
                 source.locale.code
-            end
-            
+            end 
             column :server  if  authorized?(:read, Wordpress::Server)
             column :cloudflare if  authorized?(:read, Wordpress::Cloudflare) 
-            column :set_dns do |source|
-                 link_to I18n.t('active_admin.set_dns',  default: "设置DNS"), set_dns_admin_blog_path(source), method: :put  
-            end
+            
             column :website_url do |source|
                 link_to  source.online_origin , source.online_origin, target: "_blank" if source.online_origin 
             end    
@@ -206,6 +203,9 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             column :status    
             column :installed_at
             column :published_at
+            column :set_dns do |source|
+                link_to I18n.t('active_admin.set_dns',  default: "设置DNS"), set_dns_admin_blog_path(source), method: :put  
+           end
             actions
         end
 
