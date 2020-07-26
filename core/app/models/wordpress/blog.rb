@@ -84,7 +84,7 @@ module Wordpress
     end
 
     def cloudflare_origin 
-      "https://#{cloudflare_domain}/"
+      "https://#{cloudflare_domain}"
     end 
 
     def origin
