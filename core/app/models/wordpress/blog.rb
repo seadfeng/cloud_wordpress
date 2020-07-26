@@ -98,12 +98,14 @@ module Wordpress
         nil
       end
     end
+
+    def scheme 
+      self.use_ssl ? "https://"  : "http://"
+    end
     
-    def online_origin
-      proto = "http://"
-      proto = "https://" if use_ssl
+    def online_origin 
       if domain  
-        "#{proto}#{origin}/" 
+        "#{scheme}#{origin}/" 
       else
         nil
       end
@@ -155,7 +157,7 @@ module Wordpress
     end
 
     def clear_cache
-      Rails.cache.delete( "blog_key_#{self.id}" ) 
+      Rails.cache.delete( "blog_key_#{domain.name}_#{cname}" ) 
     end
 
     private

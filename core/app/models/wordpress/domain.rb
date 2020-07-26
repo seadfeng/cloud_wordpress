@@ -17,35 +17,44 @@ module Wordpress
     after_commit :clear_cache 
 
 
-    def self.domain_cache(domain)
-      find_domain = Domain.find_by_name(domain)
-      return nil if find_domain.blank?
-      Rails.cache.fetch("domain_key_#{find_domain.id}") do
+    def self.cache_by_name(domain) 
+      find_domain = Rails.cache.fetch("domain_key_#{domain}") do
+        Domain.find_by_name(domain)
+      end
+
+      if find_domain.blank?
+        Rails.cache.delete( "domain_key_#{domain}" ) 
+      else
         find_domain
       end
     end 
 
 
-    def blog_cache(subdomain)
-      cnames = []
-      find_blog = nil
+    def blog_cache_by_subname(subdomain)
+      cnames = [] 
+
       if subdomain.blank?
         cnames.push(nil) 
         cnames.push('') 
         cnames.push('@') 
       else
         cnames.push(subdomain) 
-      end 
-      find_blogs = blogs.where(cname: cnames )
-      find_blog = find_blogs.last if find_blogs.any? 
-      return nil if find_blog.blank?
-      Rails.cache.fetch("blog_key_#{find_blog.id}") do
+      end  
+
+      find_blog = Rails.cache.fetch("blog_key_#{self.name}_#{subdomain}") do
+        find_blogs = blogs.where(cname: cnames )
+        find_blogs.last if find_blogs.any? 
+      end
+
+      if find_blog.blank?
+        Rails.cache.delete( "blog_key_#{self.name}_#{subdomain}" ) 
+      else
         find_blog
       end
     end
 
     def clear_cache
-      Rails.cache.delete( "domain_key_#{self.id}" ) 
+      Rails.cache.delete( "domain_key_#{self.name}" ) 
     end
     
   end

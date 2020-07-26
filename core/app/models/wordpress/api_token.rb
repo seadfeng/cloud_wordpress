@@ -14,15 +14,22 @@ module Wordpress
 
 
     def self.api_token_cache(token)
-      find_api_token = ApiToken.find_by_key(token)
-      return nil if find_api_token.blank?
-      Rails.cache.fetch("api_token_key_#{find_api_token.id}") do
+      # find_api_token = ApiToken.find_by_key(token)
+      # return nil if find_api_token.blank? 
+      find_api_token = Rails.cache.fetch("api_token_key_#{token}") do
+        ApiToken.find_by_key(token)
+      end 
+      
+      if find_api_token.blank?
+        Rails.cache.delete( "api_token_key_#{token}" ) 
+      else
         find_api_token
       end
+      
     end 
 
     def clear_cache
-      Rails.cache.delete( "api_token_key_#{self.id}" ) 
+      Rails.cache.delete( "api_token_key_#{self.key}" ) 
     end
 
     private
