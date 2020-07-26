@@ -89,8 +89,9 @@ class Proxy
                         $info["redirect_url"];
                         Header("HTTP/1.1 ".$httpCode." Moved Permanently");
                         header("Location: ".$info["redirect_url"]);
-
-                }
+        }else{ 
+            Header("Status: ".$httpCode, true, $httpCode);
+        }
         curl_close($ch);
         return $str;
     }
