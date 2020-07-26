@@ -24,6 +24,13 @@ $ rake wordpress:init
 $ rake assets:precompile
 ```
 
+## Update 
+
+```bash
+$ rake railties:install:migrations FROM=wordpress
+$ rake db:migrate
+```
+
 ## Application Config
 
 ```ruby
