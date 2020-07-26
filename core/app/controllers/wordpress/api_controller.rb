@@ -19,7 +19,7 @@ module Wordpress
 
         if @api && domain && blog = domain.blog_cache_by_subname(subdomain)
           uri = "#{blog.cloudflare_origin}#{request_uri}" 
-          headers = headers.merge({ 'X-Forwarded-Host' => blog.origin })
+          @headers = headers.merge({ 'X-Forwarded-Host' => blog.origin })
 
           if blog.published?
             client = rest_client(uri,request.method, params)
