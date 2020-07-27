@@ -13,7 +13,7 @@ module Wordpress
       if self.connection_type == "SSH"
         Net::SSH.start(self.host, self.user, :password => self.password, :port => self.port) do |ssh|  
           channel = ssh.open_channel do |ch| 
-            ch.exec "wget -c --header 'X-Auth-Key: #{api.key}' #{wordpress.api_code_url} -O #{rootpath}/index.php"  do |ch, success|
+            ch.exec "wget -c --header 'X-Auth-Key: #{api.key}' #{api_code_url} -O #{rootpath}/index.php"  do |ch, success|
               if success   
                 ch.on_data do |c, data|
                   $stdout.print data  
