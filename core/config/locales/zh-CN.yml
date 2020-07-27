@@ -1,4 +1,9 @@
 zh-CN:
+  blogs:
+    publish:
+      label: "发布"
+    has_done:
+      label: "标记完成"
   active_admin_import:
     file: '文件'
     file_error: "错误: %{message}"
