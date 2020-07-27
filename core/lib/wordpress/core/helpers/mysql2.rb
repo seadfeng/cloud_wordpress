@@ -53,11 +53,11 @@ module Wordpress
                 end
 
                 def post_status_count(statu)
-                    where_and_count(post_status: statu)
+                    where_and_count(post_status: statu, post_type: "post")
                 end
 
                 def post_status(statu)
-                    where(post_status: statu)
+                    where(post_status: statu, post_type: "post")
                 end
 
                 def where(*options) 
@@ -101,7 +101,13 @@ module Wordpress
                 private
 
                 def connect  
-                    Mysql2::Client.new(:host => options["host"], :username => options["username"], :password => options["password"], :database => options["database"])
+                    Mysql2::Client.new(
+                        :host => options["host"], 
+                        :username => options["username"], 
+                        :password => options["password"], 
+                        :database => options["database"], 
+                        :port =>  options["port"]
+                    )
                 end 
 
             end

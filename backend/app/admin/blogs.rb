@@ -44,6 +44,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             end
         end 
 
+        ## Member actions
         member_action :set_dns, method: :put do   
             begin
                 resource.set_dns 
@@ -105,7 +106,8 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                 options = { alert: I18n.t('active_admin.none_template', lang:  resource.locale.name ,  default: "%{lang}:无可用博客模版") }
                 redirect_to admin_blog_path(resource) , options 
              end 
-        end
+        end 
+        # End member actions
 
         collection_action :migration, method: :get do 
             @blog = Blog.new
@@ -118,6 +120,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         end
   
 
+        # Action items
         action_item :install, only: :show  do
             if resource.pending?
                 link_to(
@@ -147,6 +150,8 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                   ) 
             end  
         end
+
+        # End Action items
 
         csv do
             column :id

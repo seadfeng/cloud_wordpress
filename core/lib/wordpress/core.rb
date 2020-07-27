@@ -11,6 +11,7 @@ require 'wordpress/auth/devish'
 #helpers
 require 'wordpress/core/helpers/cloudflare_api'
 require "wordpress/core/helpers/mysql"
+require "wordpress/core/helpers/mysql2"
 require "wordpress/core/helpers/apache"
 
 module Wordpress
