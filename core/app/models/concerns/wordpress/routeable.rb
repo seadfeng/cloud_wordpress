@@ -9,7 +9,7 @@ module Wordpress
         protected
     
         def default_url_options
-            Rails.application.routes.default_url_options || {}
+            request.env['SERVER_NAME'] || Rails.application.routes.default_url_options || {}
         end
     end
 end
