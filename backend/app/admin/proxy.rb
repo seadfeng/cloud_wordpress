@@ -60,7 +60,7 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
     member_action :do_upload, method: :put do  
         api_id = params["api_id"]
         api = ApiToken.find( api_id )
-        if api && api.push_code(api)
+        if api && resource.push_code(api)
             redirect_to admin_proxy_path(resource),  notice: "已推送"   
         else
             redirect_to admin_proxy_path(resource),  notice: "推送失败"  
