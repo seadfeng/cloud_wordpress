@@ -97,7 +97,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                 if resource.pending?
                     template = Template.find params[:template_id]
                     resource.install_with_template(template)
-                    options = { notice: I18n.t('active_admin.installing',  default: "正在安装") }
+                    options = { notice: I18n.t('active_admin.installing',  default: "安装正在受理,10秒左右刷新页面，查看是否安装完成") }
                 else
                     options = { alert: I18n.t('active_admin.processing',  default: "安装正在受理,请耐心等待") }
                 end
@@ -128,6 +128,15 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                     install_admin_blog_path(resource),  
                     method: "put"
                   ) 
+            end  
+        end
+        action_item :login, only: :show  do
+            if resource.can_login?
+                link_to(
+                    I18n.t('active_admin.login', default: "登陆"),
+                    login_admin_blog_path(resource),  
+                    method: "put"
+                ) 
             end  
         end
 
@@ -271,6 +280,18 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                 end
             end
             active_admin_comments
+        end
+
+        sidebar :tips  do 
+            h3 "操作指南/工作流程"
+            ol do
+                li "安装/迁移博客"
+                li "博客达到上线标准【标记完成】"
+                li "【编辑博客】填写域名信息"
+                li "找到PHP代理节点IP，并解析"
+                li "最后点【发布】按钮"
+                li "网站正常访问"
+            end
         end
     end
 end
