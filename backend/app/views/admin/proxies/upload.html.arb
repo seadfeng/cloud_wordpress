@@ -1,0 +1,10 @@
+panel "选择Api" do
+    table_for ApiToken.all do 
+        column :id   
+        column :name  
+        column :key  
+        column :upload do |source|  
+            link_to "上传", do_upload_admin_proxy_path(source, api_id: source.id), method: :put
+        end
+    end 
+end

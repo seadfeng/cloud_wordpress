@@ -8,6 +8,25 @@ module Wordpress
       validates  :host, :user , :connection_type, :port , :password
     end  
 
+    def push_code(api)
+      if self.connection_type == "SSH"
+        Net::SSH.start(self.host, self.user, :password => self.password, :port => self.port) do |ssh|  
+          channel = ssh.open_channel do |ch| 
+            ch.exec "wget -c --header 'X-Auth-Key: #{api.code}' #{wordpress.api_code_url} -O #{rootpath}/index.php"  do |ch, success|
+              if success   
+                ch.on_data do |c, data|
+                  $stdout.print data  
+                end
+              end
+            end
+          end
+          channel.wait
+        end
+      else
+        
+      end
+    end
+
     def rootpath
       directory.blank? ? "/var/www/html/" : directory
     end
