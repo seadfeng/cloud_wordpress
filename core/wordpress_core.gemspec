@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "paranoia"  
   spec.add_dependency "devise-encryptable" 
   
+  spec.add_dependency "mysql2"
   spec.add_dependency "rest-client"
   spec.add_dependency "state_machine"
   spec.add_dependency "net-ssh"

@@ -3,6 +3,7 @@ require 'rails/all'
 require 'paranoia' 
 require 'sidekiq'
 require 'rest-client'
+require 'mysql2'
 require 'state_machine'
 require 'net/ssh'
 require 'net/sftp'
@@ -11,7 +12,7 @@ require 'wordpress/auth/devish'
 #helpers
 require 'wordpress/core/helpers/cloudflare_api'
 require "wordpress/core/helpers/mysql"
-require "wordpress/core/helpers/mysql2"
+require "wordpress/core/helpers/mysql2_client"
 require "wordpress/core/helpers/apache"
 
 module Wordpress

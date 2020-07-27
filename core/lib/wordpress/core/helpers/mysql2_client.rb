@@ -1,7 +1,7 @@
 module Wordpress
     module Core
         module Helpers
-            class Mysql2
+            class Mysql2Client
                 attr_reader :options , :connect
 
                 # Wordpress::Core::Helpers::Mysql2.new(:host => "localhost", :username => "root", :password => "password", :database => "database")
@@ -100,14 +100,19 @@ module Wordpress
 
                 private
 
-                def connect  
-                    Mysql2::Client.new(
-                        :host => options["host"], 
-                        :username => options["username"], 
-                        :password => options["password"], 
-                        :database => options["database"], 
-                        :port =>  options["port"]
-                    )
+                def connect 
+                    puts options
+                    # begin
+                        Mysql2::Client.new(
+                            :host => options["host"], 
+                            :username => options["username"], 
+                            :password => options["password"], 
+                            :database => options["database"], 
+                            :port =>  options["port"]
+                        )
+                    # rescue Exception, Mysql2::Error::ConnectionError => e
+                    #     raise
+                    # end  
                 end 
 
             end
