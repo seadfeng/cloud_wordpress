@@ -35,7 +35,7 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
 
 
     action_item :install, only: [:show]  do 
-        unless resource.installed? && !resource.status
+        unless resource.installed?  
             link_to(
                 I18n.t('active_admin.install', default: "安装Apache+PHP"),
                 install_admin_proxy_path(resource),  
@@ -44,12 +44,14 @@ ActiveAdmin.register Wordpress::Proxy,  as: "Proxy" do
         end
     end
 
-    action_item :upload, only: [:show]  do  
+    action_item :upload, only: [:show]  do
+        if resource.installed?    
             link_to(
                 I18n.t('active_admin.upload', default: "上传"),
                 upload_admin_proxy_path(resource),  
                 method: "put"
             )   
+        end
     end
 
 
