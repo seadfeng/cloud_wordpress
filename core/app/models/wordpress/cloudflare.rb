@@ -16,11 +16,18 @@ module Wordpress
       validates :domain, domain: true 
     end  
 
+    after_create :rsync_user_id 
+
+    def rsync_user_id 
+      cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(self)  
+      update_attribute(:user_id, cloudflare_api.get_user_id) if cloudflare_api.get_user_id
+    end
+
     def self.cloudflare_cache(cloudflare_id)
       return nil if cloudflare_id.nil?
       Rails.cache.fetch("cloudflare_key_#{cloudflare_id}") do
-        self
-      end
+        Cloudflare.find(cloudflare_id)
+      end 
     end 
 
     def clear_cache

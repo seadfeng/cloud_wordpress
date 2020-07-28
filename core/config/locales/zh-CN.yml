@@ -108,6 +108,7 @@ zh-CN:
         published_at: "发布时间" 
       wordpress/cloudflare:
         <<: *base
+        user_id: "User Id"
         domain: "域名"
         remaining: "DNS解析剩余量"
         api_user: "Api账户名"

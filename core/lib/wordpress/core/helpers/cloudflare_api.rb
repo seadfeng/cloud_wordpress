@@ -5,7 +5,7 @@ module Wordpress
             class CloudflareApi
                 attr_reader :cloudflare, :client, :rootdomain, :headers, :list_zone, :cdn_zone_id, :total_count, :remaining, :name, :type, :result_id
 
-                def initialize( cloudflare, rootdomain )
+                def initialize( cloudflare, rootdomain = nil )
                     @cloudflare = cloudflare 
                     @rootdomain = rootdomain
                     @headers = {
@@ -16,6 +16,16 @@ module Wordpress
                     } 
                 end     
 
+                def get_user_id
+                    @client = rest_client( user_url , 'get', @headers )  
+                    if @client && @client.body
+                        body = JSON.parse(@client.body)
+                        if body["success"] 
+                            user_id = body["result"]["id"]  
+                        end   
+                    end
+                end
+
                 # #name = www , content = demo.com
                 def create_or_update_dns_cname(name, content, proxied = false)
                     @type = "CNAME"
@@ -25,9 +35,7 @@ module Wordpress
                             update_dns(name, content, proxied )
                         else 
                             create_dns(name, content, proxied )
-                        end
-                    else
-                        nil
+                        end 
                     end 
                 end
 
@@ -40,9 +48,7 @@ module Wordpress
                             update_dns(name, content, proxied )
                         else 
                             create_dns(name, content, proxied )
-                        end
-                    else
-                        nil
+                        end 
                     end 
                 end
 
@@ -135,6 +141,10 @@ module Wordpress
                 def list_zone_url
                     "#{api_v4}/zones/?name=#{rootdomain}&status=active&page=1&per_page=20&order=status&direction=desc&match=all"
                 end 
+
+                def user_url
+                    "#{api_v4}/user"
+                end
  
                 def list_dns_url 
                     "#{dns_url}?type=#{type}&name=#{name}&match=all"
