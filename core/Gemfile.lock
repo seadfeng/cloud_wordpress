@@ -3,6 +3,7 @@ PATH
   specs:
     wordpress_core (0.1.0)
       devise-encryptable
+      mysql2
       net-sftp
       net-ssh
       paranoia
@@ -108,6 +109,7 @@ GEM
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.14.1)
+    mysql2 (0.5.3)
     net-sftp (3.0.0)
       net-ssh (>= 5.0.0, < 7.0.0)
     net-ssh (6.1.0)
