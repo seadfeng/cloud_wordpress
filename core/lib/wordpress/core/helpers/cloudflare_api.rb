@@ -8,7 +8,7 @@ module Wordpress
                 def initialize( cloudflare )
                     @cloudflare = cloudflare  
                     @zone_id =  cloudflare.zone_id
-                    
+
                     @headers = {
                         'X-Auth-Email' => cloudflare.api_user,
                         'X-Auth-Key' => cloudflare.api_token,
@@ -117,16 +117,12 @@ module Wordpress
 
                 def max_size
                     3500
-                end
+                end 
 
-                def can_update? 
-                    check_total_count   
-                end
-
-                def check_total_count 
+                def can_update?  
                     list_zone = rest_client(dns_url, "get", @headers )
                     if list_zone && list_zone.code == 200
-                        body = JSON.parse(@list_zone.body)  
+                        body = JSON.parse(list_zone.body)  
                         if body["success"]
                             @total_count = body["result_info"]["total_count"].to_i
                             @remaining = max_size - @total_count 
