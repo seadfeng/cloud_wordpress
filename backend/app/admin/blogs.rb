@@ -279,6 +279,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                     row :name
                     row :description
                     tag_row :state, machine: :state  
+                    row :dns_status 
                     row :installed_at  
                     row :published_at  
                     row :updated_at 
