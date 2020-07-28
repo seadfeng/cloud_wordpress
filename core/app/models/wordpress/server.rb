@@ -50,7 +50,7 @@ module Wordpress
 
     def set_dns 
       rootdomain = cloudflare.domain
-      cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare, rootdomain)
+      cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare)
       proxied = true
       update_attribute(:dns_status, 1)  if cloudflare_api.create_or_update_dns_a( self.cname, self.host , proxied)  
     end
