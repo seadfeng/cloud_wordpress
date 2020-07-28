@@ -33,9 +33,9 @@ module Wordpress
                     type = "CNAME" 
                     if can_update?
                         if get_dns_id(type, name)
-                            update_dns(name, content, proxied )
+                            update_dns(type, name, content, proxied )
                         else 
-                            create_dns(name, content, proxied )
+                            create_dns(type, name, content, proxied )
                         end 
                     end 
                 end
@@ -70,9 +70,9 @@ module Wordpress
                     # @name = name
                     if can_update? 
                         if get_dns_id(type, name)
-                            update_dns(name, content, proxied )
+                            update_dns(type, name, content, proxied )
                         else 
-                            create_dns(name, content, proxied )
+                            create_dns(type , name, content, proxied )
                         end 
                     end 
                 end
@@ -91,7 +91,7 @@ module Wordpress
                     end
                 end
 
-                def create_dns(name, content, proxied = false)
+                def create_dns(type, name, content, proxied = false)
                     data =  {
                         :type => type ,
                         :name => name , 
@@ -103,7 +103,7 @@ module Wordpress
                     @client = rest_client(dns_url, "post", data.to_json, @headers )
                 end
 
-                def update_dns(name, content, proxied = false)
+                def update_dns(type, name, content, proxied = false)
                     data =  {
                         :type => type ,
                         :name => name , 
