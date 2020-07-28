@@ -41,7 +41,7 @@ module Wordpress
     def set_dns 
       rootdomain = cloudflare.domain
       raise I18n.t('activerecord.errors.models.wordpress/cloudflare.attributes.zone_id.cannot_set_dns_if_zone_id_blank', domain: rootdomain, default: "先获取Cloudflare \"%{domain}\" Zone Id信息，确保域名有解析权限") if cloudflare.zone_id.blank?
-      cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare)
+      cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare) 
       proxied = true
       update_attribute(:dns_status, 1) if cloudflare_api.create_or_update_dns_cname( self.cloudflare_domain, self.server.cname, proxied )  
     end

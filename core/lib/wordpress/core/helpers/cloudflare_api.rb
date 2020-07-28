@@ -7,17 +7,15 @@ module Wordpress
 
                 def initialize( cloudflare )
                     @cloudflare = cloudflare  
+                    @zone_id =  cloudflare.zone_id
+                    
                     @headers = {
                         'X-Auth-Email' => cloudflare.api_user,
                         'X-Auth-Key' => cloudflare.api_token,
                         :content_type => :json, 
                         :accept => :json
                     } 
-                end     
-
-                def set_zone_id(id)
-                    @zone_id = id
-                end 
+                end      
 
                 def get_user_id
                     @client = rest_client( user_url , 'get', @headers )  
