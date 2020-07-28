@@ -1,4 +1,4 @@
-class AddZoneIdToCloudflares < ActiveRecord::Migration[6.0]
+class AddZoneIdToCloudflares < ActiveRecord::Migration[6.0] 
   def self.up
     add_column :wordpress_cloudflares, :zone_id, :string
   end
