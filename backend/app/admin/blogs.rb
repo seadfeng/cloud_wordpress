@@ -134,7 +134,9 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
         action_item :set_dns, only: :show  do
             unless resource.dns_status
                 link_to(
-                    I18n.t('active_admin.set_dns',  default: "设置DNS"), set_dns_admin_blog_path(source), method: :put  
+                    I18n.t('active_admin.set_dns',  default: "设置DNS"),
+                     set_dns_admin_blog_path(resource), 
+                     method: "put"
                   ) 
             end  
         end
