@@ -178,7 +178,7 @@ module Wordpress
                     "#{api_v4}/zones/#{zone_id}/dns_records"
                 end 
                 
-                def update_dns_url(dns_id)
+                def update_dns_url 
                     "#{dns_url}/#{dns_id}"
                 end
 
