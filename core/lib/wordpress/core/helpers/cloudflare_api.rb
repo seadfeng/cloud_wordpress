@@ -3,11 +3,10 @@ module Wordpress
     module Core
         module Helpers
             class CloudflareApi
-                attr_reader :cloudflare, :client, :rootdomain, :headers, :list_zone, :cdn_zone_id, :total_count, :remaining, :name, :type, :result_id
+                attr_reader :cloudflare, :client, :headers,  :zone_id, :total_count, :remaining, :dns_id
 
-                def initialize( cloudflare, rootdomain = nil )
-                    @cloudflare = cloudflare 
-                    @rootdomain = rootdomain
+                def initialize( cloudflare )
+                    @cloudflare = cloudflare  
                     @headers = {
                         'X-Auth-Email' => cloudflare.api_user,
                         'X-Auth-Key' => cloudflare.api_token,
@@ -15,6 +14,10 @@ module Wordpress
                         :accept => :json
                     } 
                 end     
+
+                def set_zone_id(id)
+                    @zone_id = id
+                end 
 
                 def get_user_id
                     @client = rest_client( user_url , 'get', @headers )  
@@ -28,23 +31,47 @@ module Wordpress
 
                 # #name = www , content = demo.com
                 def create_or_update_dns_cname(name, content, proxied = false)
-                    @type = "CNAME"
-                    @name = name
+                    raise I18n.t('active_admin.cloudflare.zone_id.blank', default: "Please set cloudflare domain's zone id. object.set_zone_id('7c5dae5552338874e5053f2534d2767a'). https://api.cloudflare.com/#zone-properties") if  zone_id.blank?
+                    type = "CNAME" 
                     if can_update?
-                        if get_result_id
+                        if get_dns_id(type, name)
                             update_dns(name, content, proxied )
                         else 
                             create_dns(name, content, proxied )
                         end 
                     end 
+                end
+
+                def find_or_create_zone(domain,account_id)
+                    zone =  find_zone(domain)
+                    return zone if zone 
+                    create_zone(domain,account_id)
+                end
+
+                def create_zone(domain,account_id)
+                    data = {
+                        :name => domain,
+                        :account => {
+                            :id => account_id
+                         },
+                        :jump_start => true,
+                        :type => "full"
+                    }
+                    @client = rest_client(zone_url, "post", data.to_json, @headers )
+                    if @client && @client.code == 200
+                        body = JSON.parse(@client.body)  
+                        if body["success"]
+                            @zone_id = body["result"]["id"]  
+                        end 
+                    end
                 end
 
                 #name = www , content = 127.0.0.1
                 def create_or_update_dns_a(name, content, proxied = false)
-                    @type = "A"
-                    @name = name
+                    type = "A"
+                    # @name = name
                     if can_update? 
-                        if get_result_id
+                        if get_dns_id(type, name)
                             update_dns(name, content, proxied )
                         else 
                             create_dns(name, content, proxied )
@@ -52,7 +79,19 @@ module Wordpress
                     end 
                 end
 
-                private
+                private 
+
+                def find_zone(rootdomain) 
+                    zone = rest_client(list_zone_url(rootdomain), "get" )
+                    if zone && zone.code == 200
+                        body = JSON.parse(zone.body)  
+                       if body["success"] &&  body["result"][0]
+                            @zone_id = body["result"][0]["id"]  
+                       end
+                    else
+                        raise "Http status: #{zone.code} -> find_zone"
+                    end
+                end
 
                 def create_dns(name, content, proxied = false)
                     data =  {
@@ -83,12 +122,12 @@ module Wordpress
                 end
 
                 def can_update? 
-                    get_cdn_zone_id && check_total_count   
+                    check_total_count   
                 end
 
                 def check_total_count 
-                    @list_zone = rest_client(dns_url, "get", @headers )
-                    if @list_zone && @list_zone.code == 200
+                    list_zone = rest_client(dns_url, "get", @headers )
+                    if list_zone && list_zone.code == 200
                         body = JSON.parse(@list_zone.body)  
                         if body["success"]
                             @total_count = body["result_info"]["total_count"].to_i
@@ -106,56 +145,47 @@ module Wordpress
                     end 
                 end
 
-                def get_result_id
-                    result = rest_client(list_dns_url, "get"  )
+                def get_dns_id(type, name)
+                    result = rest_client(list_dns_url(type, name), "get"  )
                     if result && result.code == 200
                         body = JSON.parse(result.body)  
                        if body["success"] &&  body["result"][0]
-                            @result_id = body["result"][0]["id"] 
+                            @dns_id = body["result"][0]["id"] 
                        else
                             nil
                        end
                     else
-                        raise "Http status: #{result.code} -> get_result_id"
+                        raise "Http status: #{result.code} -> get_dns_id"
                     end
-                end
-
-                def get_cdn_zone_id 
-                    zone = rest_client(list_zone_url, "get" )
-                    if zone && zone.code == 200
-                        body = JSON.parse(zone.body)  
-                       if body["success"] &&  body["result"][0]
-                            @cdn_zone_id = body["result"][0]["id"] 
-                       else
-                            nil
-                       end
-                    else
-                        raise "Http status: #{zone.code} -> get_cdn_zone_id"
-                    end
-                end
+                end 
+                
 
                 def api_v4
                     "https://api.cloudflare.com/client/v4"
                 end
 
-                def list_zone_url
-                    "#{api_v4}/zones/?name=#{rootdomain}&status=active&page=1&per_page=20&order=status&direction=desc&match=all"
+                def zone_url
+                    "#{api_v4}/zones"
+                end
+
+                def list_zone_url(rootdomain)
+                    "#{zone_url}/?name=#{rootdomain}&status=active&page=1&per_page=20&order=status&direction=desc&match=all"
                 end 
 
                 def user_url
                     "#{api_v4}/user"
                 end
  
-                def list_dns_url 
+                def list_dns_url(type,name) 
                     "#{dns_url}?type=#{type}&name=#{name}&match=all"
                 end 
 
                 def dns_url 
-                    "#{api_v4}/zones/#{cdn_zone_id}/dns_records"
+                    "#{api_v4}/zones/#{zone_id}/dns_records"
                 end 
                 
-                def update_dns_url
-                    "#{dns_url}/#{result_id}"
+                def update_dns_url(dns_id)
+                    "#{dns_url}/#{dns_id}"
                 end
 
                 def rest_client( url, method, *options )  

@@ -15,12 +15,24 @@ module Wordpress
       validates :api_user,  :api_token, :name , :domain
       validates :domain, domain: true 
     end  
+    before_validation :check_domain, if: :domain_changed? , on: :update
 
     after_create :rsync_user_id 
 
+    def rsynced?
+      user_id && zone_id
+    end
+
     def rsync_user_id 
       cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(self)  
-      update_attribute(:user_id, cloudflare_api.get_user_id) if cloudflare_api.get_user_id
+      get_user_id = cloudflare_api.get_user_id
+      update_attribute(:user_id, cloudflare_api.get_user_id) if get_user_id
+    end
+
+    def rsync_zone_id
+      cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(self)  
+      rsync_zone_id = cloudflare_api.find_or_create_zone(self.domain, self.user_id )
+      update_attribute(:zone_id, rsync_zone_id) if rsync_zone_id
     end
 
     def self.cloudflare_cache(cloudflare_id)
@@ -32,6 +44,12 @@ module Wordpress
 
     def clear_cache
       Rails.cache.delete( "cloudflare_key_#{self.id}" ) 
+    end
+
+    private
+
+    def check_domain
+      errors.add(:domain, :cannot_change_if_has_blogs) if blogs.any?
     end
 
 

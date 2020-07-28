@@ -1,6 +1,6 @@
 ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
     init_controller    
-    actions :all, except: [:show] 
+    actions :all 
     # batch_action :destroy, false
     menu priority: 60 , parent: "Settings"  
     permit_params  :api_user, :name, :api_token ,:description , :domain
@@ -14,8 +14,16 @@ ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
         end
     end
 
-    member_action :rsync_user_id, method: :put do   
-        if resource.rsync_user_id 
+    action_item :rsync, only: :show  do 
+        link_to(
+            resource.rsynced? ?  I18n.t('active_admin.rsync_info', default: "更新信息") : I18n.t('active_admin.get_info', default: "获取信息") ,
+            rsync_admin_cloudflare_path(resource),  
+            method: :put
+          )  
+    end 
+
+    member_action :rsync, method: :put do   
+        if (resource.rsync_user_id && resource.rsync_zone_id)
             options = { notice: I18n.t('active_admin.updated',  default: "更新成功") } 
         else 
             options = { notice: I18n.t('active_admin.update_failed',  default: "更新失败") } 
@@ -27,8 +35,8 @@ ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
         selectable_column
         id_column
         column :user_id do |source|
-            if source.user_id.blank?
-                link_to t("active_admin.cloudflare.get_user_id" , default: "手工获取")   , rsync_user_id_admin_cloudflare_path(source), method: :put  
+            if (source.user_id.blank? || source.zone_id.blank?)
+                link_to t("active_admin.cloudflare.get_user_id" , default: "手工获取")   , rsync_admin_cloudflare_path(source), method: :put  
             else
                 source.user_id  
             end

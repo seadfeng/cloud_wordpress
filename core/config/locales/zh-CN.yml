@@ -204,6 +204,12 @@ zh-CN:
         key:  "Token" 
     errors:
       models:
+        wordpress/cloudflare:
+          attributes:
+            base: &base
+              cannot_change_if_has_blogs:  "已关联博客，禁止修改"
+            domain:
+              <<: *base 
         wordpress/server:
           attributes:
             base: &base

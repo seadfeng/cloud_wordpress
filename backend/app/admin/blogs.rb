@@ -130,6 +130,15 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                   ) 
             end  
         end
+
+        action_item :set_dns, only: :show  do
+            unless resource.dns_status?
+                link_to(
+                    I18n.t('active_admin.set_dns',  default: "设置DNS"), set_dns_admin_blog_path(source), method: :put  
+                  ) 
+            end  
+        end
+
         action_item :login, only: :show  do
             if resource.can_login?
                 link_to(
@@ -216,10 +225,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
             tag_column :state, machine: :state   
             column :status    
             column :installed_at
-            column :published_at
-            column :set_dns do |source|
-                link_to I18n.t('active_admin.set_dns',  default: "设置DNS"), set_dns_admin_blog_path(source), method: :put  
-           end
+            column :published_at 
             actions
         end
 
