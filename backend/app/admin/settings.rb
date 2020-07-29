@@ -224,7 +224,7 @@ ActiveAdmin.register_page "Settings" do
             cfp_enable = params[:setting][:cfp_enable]
             cfp_all_in_one_cname = params[:setting][:cfp_all_in_one_cname]
             Wordpress::Config.cfp_user = cfp_user
-            Wordpress::Config.cfp_all_in_one_cname = cfp_all_in_one_cname unless cfp_token.blank?
+            Wordpress::Config.cfp_all_in_one_cname = cfp_all_in_one_cname unless cfp_all_in_one_cname.blank?
             Wordpress::Config.cfp_token = cfp_token unless cfp_token.blank?
             
             if cfp_user && Wordpress::Config.cfp_token && Wordpress::Config.cfp_all_in_one_cname 
