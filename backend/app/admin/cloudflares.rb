@@ -23,7 +23,7 @@ ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
     end 
 
     member_action :rsync, method: :put do   
-        if (resource.rsync_user_id && resource.rsync_zone_id)
+        if (resource.rsync_user_id && resource.rsync_zone_id &&  resource.rsync_account_id)
             options = { notice: I18n.t('active_admin.updated',  default: "更新成功") } 
         else 
             options = { notice: I18n.t('active_admin.update_failed',  default: "更新失败") } 

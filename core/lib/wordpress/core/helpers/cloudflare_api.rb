@@ -27,6 +27,16 @@ module Wordpress
                     end
                 end
 
+                def get_account_id
+                    @client = rest_client( accounts_url , 'get', @headers )  
+                    if @client && @client.body
+                        body = JSON.parse(@client.body)
+                        if body["success"] 
+                            account_id = body["result"][0]["id"]  
+                        end   
+                    end
+                end
+
                 # #name = www , content = demo.com
                 def create_or_update_dns_cname(name, content, proxied = false)
                     raise I18n.t('active_admin.cloudflare.zone_id.blank', default: "Please set cloudflare domain's zone id. object.set_zone_id('7c5dae5552338874e5053f2534d2767a'). https://api.cloudflare.com/#zone-properties") if  zone_id.blank?
@@ -168,6 +178,10 @@ module Wordpress
 
                 def user_url
                     "#{api_v4}/user"
+                end
+
+                def accounts_url
+                    "#{api_v4}/accounts"
                 end
  
                 def list_dns_url(type,name) 

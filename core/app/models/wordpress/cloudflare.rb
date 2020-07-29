@@ -18,15 +18,23 @@ module Wordpress
     before_validation :check_domain, if: :domain_changed? , on: :update
 
     after_create :rsync_user_id 
+    after_create :rsync_account_id 
+    after_create :rsync_zone_id 
 
     def rsynced?
-      user_id && zone_id
+      user_id && zone_id && account_id
     end
 
     def rsync_user_id 
       cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(self)  
       get_user_id = cloudflare_api.get_user_id
-      update_attribute(:user_id, cloudflare_api.get_user_id) if get_user_id
+      update_attribute(:user_id, get_user_id) if get_user_id
+    end
+
+    def rsync_account_id 
+      cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(self)  
+      get_account_id = cloudflare_api.get_account_id
+      update_attribute(:account_id, get_account_id) if get_account_id
     end
 
     def rsync_zone_id
