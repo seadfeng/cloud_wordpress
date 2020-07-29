@@ -8,6 +8,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
         scope :active
         scope :not_use
         scope :cloudflare
+        scope :unuse_cloudflare
 
         active_admin_import validate: true,   
                             template_object: ActiveAdminImport::Model.new(
@@ -50,10 +51,19 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
         index do
             selectable_column
             id_column   
-            column :blogs 
+            column :blogs do |source|
+                ul do
+                 source.blogs.each do |blog|
+                   li  auto_link blog
+                 end
+                end
+            end
             column :name   
             column :description   
             column :state   
+            column :cloudflare do |source|
+                status_tag !!source.zone_id ? "Yes" : "No"
+            end   
             column :created_at
             column :updated_at
             actions
