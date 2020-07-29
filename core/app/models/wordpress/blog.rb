@@ -54,11 +54,6 @@ module Wordpress
        "#{Wordpress::Config.server_directory}/#{locale.code}/#{self.number}"
     end
 
-    def reset_password
-      update_attribute(:password, random_password)
-      Wordpress::BlogResetPasswordJob.perform_later(self)
-    end
-
     def display_name
       "ID ( #{id} ) - ##{number}"
     end
@@ -67,13 +62,6 @@ module Wordpress
       errors.add(:state, :cannot_destroy_if_processing) if self.processing?
     end
 
-    def install_with_template(template = nil)
-      template = master_template if template.nil? 
-      if template
-        self.install
-        Wordpress::BlogInstallJob.perform_later(self, template ) 
-      end
-    end
 
     def master_template
       templates.first if templates.any?
@@ -124,7 +112,51 @@ module Wordpress
       update_attribute(:mysql_user, "wp_user_#{self.id}")
       update_attribute(:mysql_password, random_password)
     end
+ 
+    def reset_password
+      update_attribute(:password, random_password)
+      Wordpress::BlogResetPasswordJob.perform_later(self)
+    end
 
+    def cfp_enable? 
+      Wordpress::Config.cfp_enable && Wordpress::Config.cfp_account_id 
+    end
+
+    def create_online_virtual_host
+      if cfp_enable? 
+        apache_info ={
+          directory:  self.directory, 
+          server_name: self.origin,
+          port: 80,  
+        }
+        apache = Wordpress::Core::Helpers::Apache.new(apache_info)
+        create_virtual_host = apache.create_virtual_host 
+        done = false
+        Net::SSH.start( server.host,  server.host_user, :password => server.host_password, :port => server.host_port ) do |ssh|
+          #create_virtual_host
+          channel = ssh.open_channel do |ch|   
+            ch.exec create_virtual_host do |ch, success| 
+              if success 
+                ch.on_data do |c, data|
+                  $stdout.print data  
+                  done = true if /Restart OK/.match(data)
+                end 
+              end
+            end  
+          end 
+          channel.wait  
+        end
+        done
+      end
+    end
+    
+    def install_with_template(template = nil)
+      template = master_template if template.nil? 
+      if template
+        self.install
+        Wordpress::BlogInstallJob.perform_later(self, template ) 
+      end
+    end
 
     def clear_cache
       Rails.cache.delete( "blog_key_#{domain.name}_#{cname}" ) if domain

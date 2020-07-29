@@ -41,7 +41,7 @@ module Wordpress
           create_virtual_host = apache.create_virtual_host 
           create_db_and_user = mysql.create_db_and_user 
           # puts create_virtual_host
-          Net::SSH.start( server.host,  server.host_user, :password => server.host_password) do |ssh| 
+          Net::SSH.start( server.host,  server.host_user, :password => server.host_password, :port => server.host_port) do |ssh| 
             logger.info("ssh connected") 
 
             #download_and_install
