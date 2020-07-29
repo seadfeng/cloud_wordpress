@@ -19,6 +19,7 @@
 
         ## Cloudflare Partner User Api
 
+        preference :cfp_site, :string, default: 'https://dns.advertcn.com'
         preference :cfp_user, :string, default: ''
         preference :cfp_token, :string, default: ''
         preference :cfp_account_id, :string, default: ''
@@ -26,7 +27,7 @@
         preference :cfp_all_in_one_cname, :string, default: ''
         preference :cfp_enable, :boolean, default: 0
         
-
+        
         
         
     end

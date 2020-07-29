@@ -60,7 +60,8 @@ module Wordpress
     end 
 
     def rsync_cloudflare_zone
-      Wordpress::DomainJob.perform_later(self, { action: "find_or_create_zone" } )
+      Wordpress::DomainJob.perform_later(self, { action: "create_zone" } )
+      # Wordpress::DomainJob.perform_later(self, { action: "find_or_create_zone" } )
     end
     
   end

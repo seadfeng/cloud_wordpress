@@ -73,7 +73,11 @@ ActiveAdmin.register_page "Settings" do
                     form method: "post", action: admin_settings_update_cfp_path do
                         input name: "authenticity_token" , value: form_authenticity_token , type: "hidden" 
                         fieldset class: "inputs" do
-                            ol do  
+                            ol do 
+                                li class: "string input stringish" do
+                                    label "Site", class: "label" 
+                                    input name: "setting[cfp_site]", value: Wordpress::Config.cfp_site , type: "text"
+                                end 
                                 li class: "string input stringish" do
                                     label "用户", class: "label" 
                                     input name: "setting[cfp_user]", value: Wordpress::Config.cfp_user , type: "text"
@@ -223,10 +227,13 @@ ActiveAdmin.register_page "Settings" do
     page_action :update_cfp, method: :post do 
         options = { notice: "已更新" } 
         if params[:setting] 
+            cfp_site = params[:setting][:cfp_site]
             cfp_user = params[:setting][:cfp_user]
             cfp_token = params[:setting][:cfp_token]
             cfp_enable = params[:setting][:cfp_enable]
             cfp_all_in_one_cname = params[:setting][:cfp_all_in_one_cname]
+            
+            Wordpress::Config.cfp_site = cfp_site
             Wordpress::Config.cfp_user = cfp_user
             Wordpress::Config.cfp_all_in_one_cname = cfp_all_in_one_cname unless cfp_all_in_one_cname.blank?
             Wordpress::Config.cfp_token = cfp_token unless cfp_token.blank?

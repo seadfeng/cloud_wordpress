@@ -10,21 +10,37 @@ module Wordpress
         @options = options.first || {}  
         if (@options[:action] == "find_or_create_zone" || @options[:action] == :find_or_create_zone)
             find_or_create_zone
+        elsif ( @options[:action] == "find_zone" ||  @options[:action] == :find_zone)
+            find_zone
+        elsif ( @options[:action] == "create_zone" ||  @options[:action] == :create_zone)
+            create_zone
         end
       end
 
       private
 
-      def find_or_create_zone 
+      def find_zone
         if config.cfp_enable
-            cfp_cloudflare = {
-              api_user: config.cfp_user,
-              api_token: config.cfp_token
-            } 
-            cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cfp_cloudflare) 
-            zone_id = cloudflare_api.find_or_create_zone( domain.name, config.cfp_account_id ) 
+            api = cloudflare_api
+            zone_id = api.find_zone( domain.name, config.cfp_account_id ) 
             domain.update_attribute(:zone_id, zone_id) unless zone_id.blank?
         end
+      end
+
+      def create_zone
+        RestClient.post url, options
+      end
+
+      def find_or_create_zone 
+        
+      end
+
+      def cloudflare_api 
+        cfp_cloudflare = {
+            api_user: config.cfp_user,
+            api_token: config.cfp_token
+        } 
+        Wordpress::Core::Helpers::CloudflareApi.new(cfp_cloudflare) 
       end
 
       def log_file
