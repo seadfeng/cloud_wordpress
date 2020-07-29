@@ -7,6 +7,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
 
         scope :active
         scope :not_use
+        scope :cloudflare
 
         active_admin_import validate: true,   
                             template_object: ActiveAdminImport::Model.new(
@@ -19,19 +20,32 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
             send_data "Name,Description\r\n,", :disposition => "attachment; filename=domains.csv" 
         end
 
-        collection_action :import_cfp, method: :put do   
-             
-        end 
+         
+        member_action :rsync_cloudflare_zone, method: :put do  
+            resource.rsync_cloudflare_zone
+            options = { notice: I18n.t('active_admin.processing',  default: "正在受理") }
+            redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options))  
+        end
 
-        action_item :import_cfp, only: [:index]  do  
+        action_item :rsync_cloudflare_zone, only: :show do 
             if Wordpress::Config.cfp_enable
                 link_to(
-                    I18n.t('active_admin.import_cfp', default: "导入Cloudflare Partner域名"),
-                    import_cfp_admin_domains_path ,  
-                    method: "put"
+                    I18n.t('active_admin.rsync_cloudflare_zone', default: "同步Cloudflare Partner"),
+                    rsync_cloudflare_zone_admin_domain_path(resource) ,  
+                    method: :put
                 )    
             end
         end
+
+        # action_item :import_cfp, only: [:index]  do  
+        #     if Wordpress::Config.cfp_enable
+        #         link_to(
+        #             I18n.t('active_admin.import_cfp', default: "导入Cloudflare Partner域名"),
+        #             import_cfp_admin_domains_path ,  
+        #             method: "put"
+        #         )    
+        #     end
+        # end
 
         index do
             selectable_column

@@ -12,6 +12,7 @@ module Wordpress
     validates  :name, domain: true
 
     scope :active, ->{ joins(:blogs)  } 
+    scope :cloudflare, ->{  where("#{Domain.quoted_table_name}.zone_id is not null")  } 
     scope :not_use, -> {  where("#{Domain.quoted_table_name}.id not in (?)",  active.ids)  }  
 
     after_commit :clear_cache 
@@ -55,6 +56,10 @@ module Wordpress
 
     def clear_cache
       Rails.cache.delete( "domain_key_#{self.name}" ) 
+    end 
+
+    def rsync_cloudflare_zone
+      Wordpress::DomainJob.perform_later(self, { action: "find_or_create_zone" } )
     end
     
   end

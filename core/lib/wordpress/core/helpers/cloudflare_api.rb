@@ -188,7 +188,7 @@ module Wordpress
                 end
 
                 def list_zone_url(rootdomain)
-                    "#{zone_url}/?name=#{rootdomain}&status=active&page=1&per_page=20&order=status&direction=desc&match=all"
+                    "#{zone_url}/?name=#{rootdomain}&page=1&per_page=20&order=status&direction=desc&match=all"
                 end 
 
                 def user_url

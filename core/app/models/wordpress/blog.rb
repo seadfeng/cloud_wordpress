@@ -52,7 +52,7 @@ module Wordpress
           api_user: Wordpress::Config.cfp_user,
           api_token: Wordpress::Config.cfp_token
         } 
-        cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare) 
+        cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cfp_cloudflare) 
         proxied = true 
         if cloudflare_api.create_or_update_dns_cname( self.origin, Wordpress::Config.cfp_all_in_one_cname, proxied )  
           update_attribute(:dns_status, 1) 
