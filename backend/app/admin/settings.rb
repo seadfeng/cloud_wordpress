@@ -106,6 +106,10 @@ ActiveAdmin.register_page "Settings" do
                                     label "Account Id", class: "label" 
                                     div  Wordpress::Config.cfp_account_id
                                 end 
+                                li class: "string input stringish" do
+                                    label "User Id", class: "label" 
+                                    div  Wordpress::Config.cfp_user_id
+                                end 
                             end
                         end
                         div raw("获取API Token : <a href='https://dash.cloudflare.com/profile/api-tokens' target='_blank'>https://dash.cloudflare.com/profile/api-tokens</a>")
@@ -236,9 +240,12 @@ ActiveAdmin.register_page "Settings" do
                     }
                     cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare) 
                     get_account_id = cloudflare_api.get_account_id
+                    get_user_id = cloudflare_api.get_user_id
                     Wordpress::Config.cfp_account_id =  get_account_id 
-                    if get_account_id
-                        notice = "Account Id: #{get_account_id}"
+                    Wordpress::Config.cfp_user_id    =  get_user_id 
+                    
+                    if get_account_id && get_user_id
+                        notice = "Account Id: #{get_account_id}, User Id: #{get_user_id}"
                         options = { notice: notice } 
                     else
                         Wordpress::Config.cfp_enable = false
