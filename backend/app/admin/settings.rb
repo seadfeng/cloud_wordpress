@@ -85,9 +85,15 @@ ActiveAdmin.register_page "Settings" do
                                 li class: "string input stringish" do
                                     label "Token", class: "label"  
                                     input name: "setting[cfp_token]", value: '' , type: "text" 
-                                    div raw("<p class=\"inline-hints\">已设置</p>") if Wordpress::Config.cfp_token    
-                                    
+                                    div raw("<p class=\"inline-hints\">已设置</p>") if Wordpress::Config.cfp_token   
                                 end
+                                li class: "string input stringish" do
+                                    label "User key", class: "label"  
+                                    input name: "setting[cfp_user_key]", value: Wordpress::Config.cfp_user_key   , type: "text" 
+                                    div raw("<p class=\"inline-hints\">用开发员工具查找#{Wordpress::Config.cfp_site}登陆后[user_key]的Cookie值</p>")  
+                                end
+
+                                
                                 li class: "string input stringish" do
                                     label "二级域名", class: "label"  
                                     input name: "setting[cfp_all_in_one_cname]", value: Wordpress::Config.cfp_all_in_one_cname , type: "text"    
@@ -229,16 +235,18 @@ ActiveAdmin.register_page "Settings" do
         if params[:setting] 
             cfp_site = params[:setting][:cfp_site]
             cfp_user = params[:setting][:cfp_user]
+            cfp_user_key = params[:setting][:cfp_user_key]
             cfp_token = params[:setting][:cfp_token]
             cfp_enable = params[:setting][:cfp_enable]
             cfp_all_in_one_cname = params[:setting][:cfp_all_in_one_cname]
             
             Wordpress::Config.cfp_site = cfp_site
             Wordpress::Config.cfp_user = cfp_user
+            Wordpress::Config.cfp_user_key = cfp_user_key
             Wordpress::Config.cfp_all_in_one_cname = cfp_all_in_one_cname unless cfp_all_in_one_cname.blank?
             Wordpress::Config.cfp_token = cfp_token unless cfp_token.blank?
             
-            if cfp_user && Wordpress::Config.cfp_token && Wordpress::Config.cfp_all_in_one_cname 
+            if cfp_user && Wordpress::Config.cfp_token && Wordpress::Config.cfp_all_in_one_cname && Wordpress::Config.cfp_user_key
                 Wordpress::Config.cfp_enable = cfp_enable
                 if Wordpress::Config.cfp_enable 
                     cloudflare = {

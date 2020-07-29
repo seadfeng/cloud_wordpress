@@ -19,34 +19,41 @@ module Wordpress
 
       private
 
+      def find_or_create_zone
+        return find_zone  if find_zone  
+        if create_zone  
+            find_zone
+        end
+      end
+
       def find_zone
         if config.cfp_enable
             api = cloudflare_api
-            zone_id = api.find_zone( domain.name, config.cfp_account_id ) 
+            zone_id = api.find_zone( domain.name  ) 
             domain.update_attribute(:zone_id, zone_id) unless zone_id.blank?
         end
       end
 
-      def create_zone
-        headers = { 
-            :content_type => :json, 
-            :accept => :json
-        } 
+      def create_zone 
         data = {
-            domain: self.name
-        }.to_josn
+            :domain => domain.name,
+            :type => "ns",
+            :submit => ''
+        }
+
         url = "#{config.cfp_site}/?action=add"
+
         cookies =  { 
             :user_api_key => config.cfp_token,
-            :user_key => config.cfp_user_id,
+            :user_key => config.cfp_user_key,
             :cloudflare_email => config.cfp_user ,  
+            :tlo_cached_cloud => "1",
+            :tlo_cached_main => "1"
         }
-        RestClient.post url, data, headers, :cookies => cookies
+        client = RestClient::Request.execute url: url, method: :post, payload: data,  :cookies => cookies, :headers => {  :"Content-Type" => "application/x-www-form-urlencoded" }  
+        client && client.code == 200 &&  /Go to console/.match( client.body )  
       end
-
-      def find_or_create_zone 
-        
-      end
+ 
 
       def cloudflare_api 
         cfp_cloudflare = {
