@@ -30,7 +30,9 @@ ActiveAdmin.register_page "Settings" do
                                 end
                                 li class: "string input stringish" do
                                     label "主机密码", class: "label"  
-                                    input name: "setting[template_host_password]", value: Wordpress::Config.template_host_password , type: "password"
+                                    input name: "setting[template_host_password]", value: nil , type: "password"
+                                    div raw("<p class=\"inline-hints\">已设置</p>") if Wordpress::Config.template_host_password    
+
                                 end
                                 li class: "string input stringish" do
                                     label "模版项目路径", class: "label"  
@@ -56,7 +58,9 @@ ActiveAdmin.register_page "Settings" do
                                 end
                                 li class: "string input stringish" do
                                     label "Mysql 密码", class: "label"  
-                                    input name: "setting[template_mysql_host_password]", value: Wordpress::Config.template_mysql_host_password , type: "password"
+                                    input name: "setting[template_mysql_host_password]", value: nil , type: "password"
+                                    div raw("<p class=\"inline-hints\">已设置</p>") if Wordpress::Config.template_mysql_host_password    
+
                                 end 
                             end
                             input "更新", type: "submit"
