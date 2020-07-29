@@ -85,6 +85,11 @@ ActiveAdmin.register_page "Settings" do
                                     
                                 end
                                 li class: "string input stringish" do
+                                    label "二级域名", class: "label"  
+                                    input name: "setting[cfp_all_in_one_cname]", value: Wordpress::Config.cfp_all_in_one_cname , type: "text"    
+                                    div raw("<p class=\"inline-hints\">用于博客上线设置Cname记录</p>")
+                                end
+                                li class: "string input stringish" do
                                     label "开启", class: "label"  
                                     select  name: "setting[cfp_enable]" do 
                                         if Wordpress::Config.cfp_enable
@@ -109,12 +114,7 @@ ActiveAdmin.register_page "Settings" do
                     end 
                 end
             end
-        end
-
-    #    preference :cfp_user, :string, default: ''
-    #    preference :cfp_token, :string, default: ''
-    #    preference :cfp_account_id, :string, default: ''
-    #    preference :cfp_enable, :string, default: ''
+        end 
     end
 
 
@@ -222,10 +222,12 @@ ActiveAdmin.register_page "Settings" do
             cfp_user = params[:setting][:cfp_user]
             cfp_token = params[:setting][:cfp_token]
             cfp_enable = params[:setting][:cfp_enable]
+            cfp_all_in_one_cname = params[:setting][:cfp_all_in_one_cname]
             Wordpress::Config.cfp_user = cfp_user
+            Wordpress::Config.cfp_all_in_one_cname = cfp_all_in_one_cname unless cfp_token.blank?
             Wordpress::Config.cfp_token = cfp_token unless cfp_token.blank?
             
-            if cfp_user && Wordpress::Config.cfp_token  
+            if cfp_user && Wordpress::Config.cfp_token && Wordpress::Config.cfp_all_in_one_cname 
                 Wordpress::Config.cfp_enable = cfp_enable
                 if Wordpress::Config.cfp_enable 
                     cloudflare = {
