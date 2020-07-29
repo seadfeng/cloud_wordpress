@@ -8,7 +8,7 @@ module Wordpress
                     @virtual = virtual
                 end   
 
-                def create_virtual_host(wordpress = '/wordpress/')
+                def create_virtual_host(wordpress = '/wordpress/', server_alias = nil)
                     vhost_file = "/etc/httpd/conf.d/vhost/#{conf_file_name}"
                     ssh = "
                         mkdir /etc/httpd/conf.d/vhost -p 
@@ -45,10 +45,12 @@ module Wordpress
                     "#{virtual[:server_name]}.conf" 
                 end
  
-                def virtual_host(wordpress)
+                def virtual_host(wordpress, server_alias = nil)
+                    server_alias = "ServerAlias #{server_alias}" unless server_alias.blank?
                     "
                     <VirtualHost *:#{virtual[:port]}>
                             ServerName #{virtual[:server_name]}
+                            #{server_alias}
                             DocumentRoot #{virtual[:directory]}#{wordpress}
                             <Directory #{virtual[:directory]}#{wordpress}>
                                         Options All

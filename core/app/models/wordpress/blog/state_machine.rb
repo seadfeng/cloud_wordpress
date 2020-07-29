@@ -65,7 +65,7 @@ module Wordpress
 
                 def touch_published_at 
                     update_attribute(:published_at, Time.current)
-                    self.create_online_virtual_host
+                    # self.create_online_virtual_host
                 end
             end
         end

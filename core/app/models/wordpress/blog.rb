@@ -116,38 +116,32 @@ module Wordpress
     def reset_password
       update_attribute(:password, random_password)
       Wordpress::BlogResetPasswordJob.perform_later(self)
-    end
+    end 
 
-    def cfp_enable? 
-      Wordpress::Config.cfp_enable && Wordpress::Config.cfp_account_id 
-    end
-
-    def create_online_virtual_host
-      if cfp_enable? 
-        apache_info ={
-          directory:  self.directory, 
-          server_name: self.origin,
-          port: 80,  
-        }
-        apache = Wordpress::Core::Helpers::Apache.new(apache_info)
-        create_virtual_host = apache.create_virtual_host 
-        done = false
-        Net::SSH.start( server.host,  server.host_user, :password => server.host_password, :port => server.host_port ) do |ssh|
-          #create_virtual_host
-          channel = ssh.open_channel do |ch|   
-            ch.exec create_virtual_host do |ch, success| 
-              if success 
-                ch.on_data do |c, data|
-                  $stdout.print data  
-                  done = true if /Restart OK/.match(data)
-                end 
-              end
-            end  
-          end 
-          channel.wait  
-        end
-        done
+    def create_online_virtual_host 
+      apache_info ={
+        directory:  self.directory, 
+        server_name: self.origin,
+        port: 80,  
+      }
+      apache = Wordpress::Core::Helpers::Apache.new(apache_info)
+      create_virtual_host = apache.create_virtual_host 
+      done = false
+      Net::SSH.start( server.host,  server.host_user, :password => server.host_password, :port => server.host_port ) do |ssh|
+        #create_virtual_host
+        channel = ssh.open_channel do |ch|   
+          ch.exec create_virtual_host do |ch, success| 
+            if success 
+              ch.on_data do |c, data|
+                $stdout.print data  
+                done = true if /Restart OK/.match(data)
+              end 
+            end
+          end  
+        end 
+        channel.wait  
       end
+      done 
     end
     
     def install_with_template(template = nil)
