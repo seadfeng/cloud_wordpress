@@ -206,3 +206,29 @@ These autoloaded constants have been unloaded.
 
 Please, check the "Autoloading and Reloading Constants" guide for solutions.
  (called from <top (required)> at /Users/sidefeng/Gem/cloud_wordpress/core/test/dummy/config/environment.rb:5)
+DEPRECATION WARNING: Initialization autoloaded the constants Wordpress::Preferences, Wordpress::Preferences::Preferable, Wordpress::Preferences::PreferableClassMethods, Wordpress::Preferences::Configuration, Wordpress::AppConfiguration, and Wordpress::AuthConfiguration.
+
+Being able to do this is deprecated. Autoloading during initialization is going
+to be an error condition in future versions of Rails.
+
+Reloading does not reboot the application, and therefore code executed during
+initialization does not run again. So, if you reload Wordpress::Preferences, for example,
+the expected changes won't be reflected in that stale Module object.
+
+These autoloaded constants have been unloaded.
+
+Please, check the "Autoloading and Reloading Constants" guide for solutions.
+ (called from <top (required)> at /Users/sidefeng/Gem/cloud_wordpress/core/test/dummy/config/environment.rb:5)
+DEPRECATION WARNING: Initialization autoloaded the constants Wordpress::Preferences, Wordpress::Preferences::Preferable, Wordpress::Preferences::PreferableClassMethods, Wordpress::Preferences::Configuration, Wordpress::AppConfiguration, and Wordpress::AuthConfiguration.
+
+Being able to do this is deprecated. Autoloading during initialization is going
+to be an error condition in future versions of Rails.
+
+Reloading does not reboot the application, and therefore code executed during
+initialization does not run again. So, if you reload Wordpress::Preferences, for example,
+the expected changes won't be reflected in that stale Module object.
+
+These autoloaded constants have been unloaded.
+
+Please, check the "Autoloading and Reloading Constants" guide for solutions.
+ (called from <top (required)> at /Users/sidefeng/Gem/cloud_wordpress/core/test/dummy/config/environment.rb:5)

@@ -19,6 +19,18 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
             send_data "Name,Description\r\n,", :disposition => "attachment; filename=domains.csv" 
         end
 
+        collection_action :import_cfp, method: :put do   
+             
+        end 
+
+        action_item :import_cfp, only: [:index]  do 
+            link_to(
+                I18n.t('active_admin.import_cfp', default: "导入Cloudflare Partner域名"),
+                import_cfp_admin_domains_path ,  
+                method: "put"
+            )    
+        end
+
         index do
             selectable_column
             id_column   

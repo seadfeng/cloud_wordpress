@@ -16,7 +16,7 @@ module Wordpress
                     else
                         @cloudflare = cloudflare
                     end 
-                    
+
                     @headers = {
                         'X-Auth-Email' => @cloudflare[:api_user],
                         'X-Auth-Key' => @cloudflare[:api_token],
@@ -95,7 +95,12 @@ module Wordpress
                     end 
                 end
 
-                private 
+                def list_all_zone(page, per_page)
+                    all_zone = rest_client("#{zone_url}?status=active&page=#{page}&per_page=#{per_page}", "get" )
+                    if zone && zone.code == 200
+                        body = JSON.parse(zone.body)   
+                    end
+                end 
 
                 def find_zone(rootdomain) 
                     zone = rest_client(list_zone_url(rootdomain), "get" )
@@ -108,6 +113,8 @@ module Wordpress
                         raise "Http status: #{zone.code} -> find_zone"
                     end
                 end
+
+                private  
 
                 def create_dns(type, name, content, proxied = false)
                     data =  {

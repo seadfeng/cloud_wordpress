@@ -1,5 +1,5 @@
 module Wordpress
-  class Domain < Wordpress::Base
+  class Domain < Wordpress::Base 
     include Validates
     acts_as_paranoid 
     has_many :blogs
