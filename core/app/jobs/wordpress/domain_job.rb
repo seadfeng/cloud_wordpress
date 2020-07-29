@@ -36,8 +36,7 @@ module Wordpress
 
       def create_zone 
         data = {
-            :domain => domain.name,
-            :type => "ns",
+            :domain => domain.name, 
             :submit => ''
         }
 
