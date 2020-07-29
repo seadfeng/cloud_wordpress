@@ -44,7 +44,7 @@ ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
         column :name
         column :remaining
         column :domain
-        column :api_user  
+        column :api_user   
         column :description  
         column :created_at
         column :updated_at
@@ -71,6 +71,8 @@ ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
         panel t('active_admin.details', model: resource_class.to_s.titleize) do
             attributes_table_for resource do 
                 row :api_user  
+                row :account_id
+                row :zone_id
                 row :domain  
                 row :name  
                 row :description  
