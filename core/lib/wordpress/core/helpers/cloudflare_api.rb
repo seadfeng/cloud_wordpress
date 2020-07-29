@@ -13,8 +13,10 @@ module Wordpress
                             api_user: cloudflare.api_user,
                             api_token: cloudflare.api_token,
                         } 
-                    end
-                    puts @cloudflare
+                    else
+                        @cloudflare = cloudflare
+                    end 
+                    
                     @headers = {
                         'X-Auth-Email' => @cloudflare[:api_user],
                         'X-Auth-Key' => @cloudflare[:api_token],

@@ -75,14 +75,21 @@ ActiveAdmin.register_page "Settings" do
                                     input name: "setting[cfp_user]", value: Wordpress::Config.cfp_user , type: "text"
                                 end
                                 li class: "string input stringish" do
-                                    label "Token", class: "label" 
-                                    input name: "setting[cfp_token]", value: Wordpress::Config.cfp_token , type: "text"
+                                    label "Token", class: "label"  
+                                    input name: "setting[cfp_token]", value: '' , type: "text" 
+                                    div raw("<p class=\"inline-hints\">已设置</p>") if Wordpress::Config.cfp_token    
+                                    
                                 end
                                 li class: "string input stringish" do
                                     label "开启", class: "label"  
                                     select  name: "setting[cfp_enable]" do 
-                                        option "Yes",value: 1, selected: Wordpress::Config.cfp_enable ? 1 : 0
-                                        option "No",value: 0, selected: Wordpress::Config.cfp_enable ? 1 : 0
+                                        if Wordpress::Config.cfp_token
+                                            option "Yes",value: 1, selected: 1 
+                                            option "No",value: 0
+                                        else
+                                            option "Yes",value: 1
+                                            option "No",value: 0, selected: 1 
+                                        end 
                                     end
                                 end
                                 
@@ -92,6 +99,8 @@ ActiveAdmin.register_page "Settings" do
                                 end 
                             end
                         end
+                        div raw("获取API Token : <a href='https://dash.cloudflare.com/profile/api-tokens' target='_blank'>https://dash.cloudflare.com/profile/api-tokens</a>")
+                        br
                         input "更新", type: "submit"
                     end 
                 end
@@ -209,13 +218,18 @@ ActiveAdmin.register_page "Settings" do
             cfp_token = params[:setting][:cfp_token]
             cfp_enable = params[:setting][:cfp_enable]
             Wordpress::Config.cfp_user = cfp_user
-            Wordpress::Config.cfp_token = cfp_token
+            Wordpress::Config.cfp_token = cfp_token if cfp_token
             
-            if cfp_user && cfp_token
-                Wordpress::Config.cfp_enable = cfp_enable 
-                # if cfp_enable 
-                #     Wordpress::Core::Helpers::CloudflareApi.new(cloudflare) 
-                # end 
+            if cfp_user && Wordpress::Config.cfp_token  
+                if cfp_enable 
+                    cloudflare = {
+                        api_user: cfp_user,
+                        api_token: Wordpress::Config.cfp_token
+                    }
+                    cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare) 
+                    get_account_id = cloudflare_api.get_account_id
+                    Wordpress::Config.cfp_account_id =  get_account_id if get_account_id
+                end 
             end
         end
         redirect_to admin_settings_path, notice: "已更新"
