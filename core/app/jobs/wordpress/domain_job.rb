@@ -28,7 +28,20 @@ module Wordpress
       end
 
       def create_zone
-        RestClient.post url, options
+        headers = { 
+            :content_type => :json, 
+            :accept => :json
+        } 
+        data = {
+            domain: self.name
+        }.to_josn
+        url = "#{config.cfp_site}/?action=add"
+        cookies =  { 
+            :user_api_key => config.cfp_token,
+            :user_key => config.cfp_user_id,
+            :cloudflare_email => config.cfp_user ,  
+        }
+        RestClient.post url, data, headers, :cookies => cookies
       end
 
       def find_or_create_zone 
