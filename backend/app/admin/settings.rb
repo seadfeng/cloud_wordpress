@@ -2,65 +2,106 @@ ActiveAdmin.register_page "Settings" do
     menu priority: 160, label: "系统设置" 
 
     content do
-        h3 do 
-            "模版主机可添加到PHP代理进行安装，安装完后再设置"
-        end
-        panel "模版主机设置，设置后除非主机迁移，请勿随意变动！信息不正确会导致博客不能正常创建,添加/修改信息记得对连接进行测试" do   
-            form method: "post", action: admin_settings_update_path do
-                input name: "authenticity_token" , value: form_authenticity_token , type: "hidden" 
-                fieldset class: "inputs" do
-                    ol do  
-                        li class: "string input stringish" do
-                            label "地址", class: "label" 
-                            input name: "setting[template_origin]", value: Wordpress::Config.template_origin , type: "text"
+        columns do 
+            column do   
+                panel "模版主机设置，设置后除非主机迁移，请勿随意变动！信息不正确会导致博客不能正常创建,添加/修改信息记得对连接进行测试" do 
+                    h3 do 
+                        "模版主机可添加到PHP代理进行安装，安装完后再设置"
+                    end  
+                    form method: "post", action: admin_settings_update_path do
+                        input name: "authenticity_token" , value: form_authenticity_token , type: "hidden" 
+                        fieldset class: "inputs" do
+                            ol do  
+                                li class: "string input stringish" do
+                                    label "地址", class: "label" 
+                                    input name: "setting[template_origin]", value: Wordpress::Config.template_origin , type: "text"
+                                end
+                                li class: "string input stringish" do
+                                    label "主机IP", class: "label"  
+                                    input name: "setting[template_host]", value: Wordpress::Config.template_host , type: "text"
+                                end
+                                li class: "string input stringish" do
+                                    label "主机SSH端口", class: "label"  
+                                    input name: "setting[template_host_port]", value: Wordpress::Config.template_host_port , type: "text"
+                                end
+                                li class: "string input stringish" do
+                                    label "主机User", class: "label"  
+                                    input name: "setting[template_host_user]", value: Wordpress::Config.template_host_user , type: "text"
+                                end
+                                li class: "string input stringish" do
+                                    label "主机密码", class: "label"  
+                                    input name: "setting[template_host_password]", value: Wordpress::Config.template_host_password , type: "password"
+                                end
+                                li class: "string input stringish" do
+                                    label "模版项目路径", class: "label"  
+                                    input name: "setting[template_directory]", value: Wordpress::Config.template_directory , type: "text"
+                                end
+                                hr
+                                li class: "string input stringish" do
+                                    label "Mysql主机IP", class: "label"  
+                                    input name: "setting[template_mysql_connection_host]", value: Wordpress::Config.template_mysql_connection_host , type: "text"
+                                end
+                                li class: "string input stringish" do
+                                    label "Mysql User主机IP", class: "label"  
+                                    input name: "setting[template_mysql_host]", value: Wordpress::Config.template_mysql_host , type: "text"
+                                    span "mysqluser@127.0.0.1", class: "inline-hints"
+                                end
+                                li class: "string input stringish" do
+                                    label "Mysql端口", class: "label"  
+                                    input name: "setting[template_mysql_host_port]", value: Wordpress::Config.template_mysql_host_port , type: "text"
+                                end
+                                li class: "string input stringish" do
+                                    label "Mysql User", class: "label"  
+                                    input name: "setting[template_mysql_host_user]", value: Wordpress::Config.template_mysql_host_user , type: "text"
+                                end
+                                li class: "string input stringish" do
+                                    label "Mysql 密码", class: "label"  
+                                    input name: "setting[template_mysql_host_password]", value: Wordpress::Config.template_mysql_host_password , type: "password"
+                                end 
+                            end
+                            input "更新", type: "submit"
                         end
-                        li class: "string input stringish" do
-                            label "主机IP", class: "label"  
-                            input name: "setting[template_host]", value: Wordpress::Config.template_host , type: "text"
-                        end
-                        li class: "string input stringish" do
-                            label "主机SSH端口", class: "label"  
-                            input name: "setting[template_host_port]", value: Wordpress::Config.template_host_port , type: "text"
-                        end
-                        li class: "string input stringish" do
-                            label "主机User", class: "label"  
-                            input name: "setting[template_host_user]", value: Wordpress::Config.template_host_user , type: "text"
-                        end
-                        li class: "string input stringish" do
-                            label "主机密码", class: "label"  
-                            input name: "setting[template_host_password]", value: Wordpress::Config.template_host_password , type: "password"
-                        end
-                        li class: "string input stringish" do
-                            label "模版项目路径", class: "label"  
-                            input name: "setting[template_directory]", value: Wordpress::Config.template_directory , type: "text"
-                        end
-                        hr
-                        li class: "string input stringish" do
-                            label "Mysql主机IP", class: "label"  
-                            input name: "setting[template_mysql_connection_host]", value: Wordpress::Config.template_mysql_connection_host , type: "text"
-                        end
-                        li class: "string input stringish" do
-                            label "Mysql User主机IP", class: "label"  
-                            input name: "setting[template_mysql_host]", value: Wordpress::Config.template_mysql_host , type: "text"
-                            span "mysqluser@127.0.0.1", class: "inline-hints"
-                        end
-                        li class: "string input stringish" do
-                            label "Mysql端口", class: "label"  
-                            input name: "setting[template_mysql_host_port]", value: Wordpress::Config.template_mysql_host_port , type: "text"
-                        end
-                        li class: "string input stringish" do
-                            label "Mysql User", class: "label"  
-                            input name: "setting[template_mysql_host_user]", value: Wordpress::Config.template_mysql_host_user , type: "text"
-                        end
-                        li class: "string input stringish" do
-                            label "Mysql 密码", class: "label"  
-                            input name: "setting[template_mysql_host_password]", value: Wordpress::Config.template_mysql_host_password , type: "password"
-                        end 
                     end
-                    input "更新", type: "submit"
+                end
+            end
+            column do  
+                panel "Cloudflare Partner User Api" do   
+                    form method: "post", action: admin_settings_update_cfp_path do
+                        input name: "authenticity_token" , value: form_authenticity_token , type: "hidden" 
+                        fieldset class: "inputs" do
+                            ol do  
+                                li class: "string input stringish" do
+                                    label "用户", class: "label" 
+                                    input name: "setting[cfp_user]", value: Wordpress::Config.cfp_user , type: "text"
+                                end
+                                li class: "string input stringish" do
+                                    label "Token", class: "label" 
+                                    input name: "setting[cfp_token]", value: Wordpress::Config.cfp_token , type: "text"
+                                end
+                                li class: "string input stringish" do
+                                    label "开启", class: "label"  
+                                    select  name: "setting[cfp_enable]" do 
+                                        option "Yes",value: 1, selected: Wordpress::Config.cfp_enable ? 1 : 0
+                                        option "No",value: 0, selected: Wordpress::Config.cfp_enable ? 1 : 0
+                                    end
+                                end
+                                
+                                li class: "string input stringish" do
+                                    label "Account Id", class: "label" 
+                                    div  Wordpress::Config.cfp_account_id
+                                end 
+                            end
+                        end
+                        input "更新", type: "submit"
+                    end 
                 end
             end
         end
+
+    #    preference :cfp_user, :string, default: ''
+    #    preference :cfp_token, :string, default: ''
+    #    preference :cfp_account_id, :string, default: ''
+    #    preference :cfp_enable, :string, default: ''
     end
 
 
@@ -160,6 +201,24 @@ ActiveAdmin.register_page "Settings" do
             options = {alert: "设置失败" }
         end
         redirect_to admin_settings_path, options
+    end
+
+    page_action :update_cfp, method: :post do 
+        if params[:setting] 
+            cfp_user = params[:setting][:cfp_user]
+            cfp_token = params[:setting][:cfp_token]
+            cfp_enable = params[:setting][:cfp_enable]
+            Wordpress::Config.cfp_user = cfp_user
+            Wordpress::Config.cfp_token = cfp_token
+            
+            if cfp_user && cfp_token
+                Wordpress::Config.cfp_enable = cfp_enable 
+                # if cfp_enable 
+                #     Wordpress::Core::Helpers::CloudflareApi.new(cloudflare) 
+                # end 
+            end
+        end
+        redirect_to admin_settings_path, notice: "已更新"
     end
 
     page_action :update, method: :post do 

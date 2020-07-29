@@ -5,13 +5,19 @@ module Wordpress
             class CloudflareApi
                 attr_reader :cloudflare, :client, :headers,  :zone_id, :total_count, :remaining, :dns_id
 
-                def initialize( cloudflare )
-                    @cloudflare = cloudflare  
-                    @zone_id =  cloudflare.zone_id
-
+                def initialize( *cloudflare )
+                    cloudflare = cloudflare.first  
+                    if (cloudflare.is_a?(Cloudflare)  || cloudflare.is_a?(Wordpress::Cloudflare)  )
+                        @zone_id =  cloudflare.zone_id 
+                        @cloudflare = {
+                            api_user: cloudflare.api_user,
+                            api_token: cloudflare.api_token,
+                        } 
+                    end
+                    puts @cloudflare
                     @headers = {
-                        'X-Auth-Email' => cloudflare.api_user,
-                        'X-Auth-Key' => cloudflare.api_token,
+                        'X-Auth-Email' => @cloudflare[:api_user],
+                        'X-Auth-Key' => @cloudflare[:api_token],
                         :content_type => :json, 
                         :accept => :json
                     } 

@@ -17,6 +17,14 @@
         preference :template_mysql_host_user, :string, default: ''
         preference :template_mysql_host_password, :string, default: ''
 
+        ## Cloudflare Partner User Api
+
+        preference :cfp_user, :string, default: ''
+        preference :cfp_token, :string, default: ''
+        preference :cfp_account_id, :string, default: ''
+        preference :cfp_enable, :boolean, default: false
+        
+
         
         
     end

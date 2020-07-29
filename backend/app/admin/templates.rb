@@ -132,6 +132,7 @@ ActiveAdmin.register Wordpress::Template,  as: "Template" do
             row :updated_at 
         end
       end 
+      
     end
 
 
