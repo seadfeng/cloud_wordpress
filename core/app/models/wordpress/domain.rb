@@ -13,7 +13,7 @@ module Wordpress
 
     scope :active, ->{ joins(:blogs)  } 
     scope :cloudflare, ->{  where("#{Domain.quoted_table_name}.zone_id is not null")  } 
-    scope :un_set_cloudflare, ->{  where("#{Domain.quoted_table_name}.zone_id is null")  } 
+    scope :unuse_cloudflare, ->{  where("#{Domain.quoted_table_name}.zone_id is null")  } 
     scope :not_use, -> {  where("#{Domain.quoted_table_name}.id not in (?)",  active.ids)  }  
 
     after_commit :clear_cache 

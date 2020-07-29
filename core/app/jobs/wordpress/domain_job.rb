@@ -7,8 +7,7 @@ module Wordpress
       def perform(domain, *options)  
         @domain = domain
         @config = Wordpress::Config
-        @options = options.first || {} 
-        puts @options
+        @options = options.first || {}  
         if (@options[:action] == "find_or_create_zone" || @options[:action] == :find_or_create_zone)
             find_or_create_zone
         end
