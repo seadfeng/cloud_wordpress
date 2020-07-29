@@ -67,5 +67,19 @@ ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
         f.actions
     end 
 
+    show do
+        panel t('active_admin.details', model: resource_class.to_s.titleize) do
+            attributes_table_for resource do 
+                row :api_user  
+                row :domain  
+                row :name  
+                row :description  
+                row :created_at  
+                row :updated_at   
+            end
+        end
+    end
+
+
 end 
     

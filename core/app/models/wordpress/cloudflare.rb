@@ -7,7 +7,7 @@ module Wordpress
     
     has_many :blogs
 
-    scope :active, ->{ where("#{Cloudflare.quoted_table_name}.remaining > 0")}
+    scope :active, ->{ where("#{Cloudflare.quoted_table_name}.remaining > 0 and #{Cloudflare.quoted_table_name}.account_id")}
     after_commit :clear_cache 
 
     with_options presence: true do 
