@@ -73,6 +73,7 @@ ActiveAdmin.register Wordpress::Cloudflare,  as: "Cloudflare" do
                 row :api_user  
                 row :account_id
                 row :zone_id
+                row :user_id
                 row :domain  
                 row :name  
                 row :description  
