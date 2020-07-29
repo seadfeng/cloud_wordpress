@@ -23,12 +23,14 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
              
         end 
 
-        action_item :import_cfp, only: [:index]  do 
-            link_to(
-                I18n.t('active_admin.import_cfp', default: "导入Cloudflare Partner域名"),
-                import_cfp_admin_domains_path ,  
-                method: "put"
-            )    
+        action_item :import_cfp, only: [:index]  do  
+            if Wordpress::Config.cfp_enable
+                link_to(
+                    I18n.t('active_admin.import_cfp', default: "导入Cloudflare Partner域名"),
+                    import_cfp_admin_domains_path ,  
+                    method: "put"
+                )    
+            end
         end
 
         index do

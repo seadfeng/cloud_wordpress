@@ -87,7 +87,7 @@ ActiveAdmin.register_page "Settings" do
                                 li class: "string input stringish" do
                                     label "开启", class: "label"  
                                     select  name: "setting[cfp_enable]" do 
-                                        if Wordpress::Config.cfp_token
+                                        if Wordpress::Config.cfp_enable
                                             option "Yes",value: 1, selected: 1 
                                             option "No",value: 0
                                         else
@@ -217,26 +217,40 @@ ActiveAdmin.register_page "Settings" do
     end
 
     page_action :update_cfp, method: :post do 
+        options = { notice: "已更新" } 
         if params[:setting] 
             cfp_user = params[:setting][:cfp_user]
             cfp_token = params[:setting][:cfp_token]
             cfp_enable = params[:setting][:cfp_enable]
             Wordpress::Config.cfp_user = cfp_user
-            Wordpress::Config.cfp_token = cfp_token if cfp_token
+            Wordpress::Config.cfp_token = cfp_token unless cfp_token.blank?
             
             if cfp_user && Wordpress::Config.cfp_token  
-                if cfp_enable 
+                Wordpress::Config.cfp_enable = cfp_enable
+                if Wordpress::Config.cfp_enable 
                     cloudflare = {
                         api_user: cfp_user,
                         api_token: Wordpress::Config.cfp_token
                     }
                     cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare) 
                     get_account_id = cloudflare_api.get_account_id
-                    Wordpress::Config.cfp_account_id =  get_account_id if get_account_id
+                    Wordpress::Config.cfp_account_id =  get_account_id 
+                    if get_account_id
+                        notice = "Account Id: #{get_account_id}"
+                        options = { notice: notice } 
+                    else
+                        Wordpress::Config.cfp_enable = false
+                        Wordpress::Config.cfp_account_id = nil
+                        options = { alert: "Account Id 同步失败,请检查账户信息" } 
+                    end
+                else
+                        options = { alert: "开启Cloudflare Partner便于快速设置DNS" } 
                 end 
             end
         end
-        redirect_to admin_settings_path, notice: "已更新"
+        
+        redirect_back({ fallback_location: ActiveAdmin.application.root_to }.merge(options)) 
+        # redirect_to admin_settings_path, notice: notice
     end
 
     page_action :update, method: :post do 
