@@ -46,6 +46,20 @@ module Wordpress
       update_attribute(:dns_status, 1) if cloudflare_api.create_or_update_dns_cname( self.cloudflare_domain, self.server.cname, proxied )  
     end
 
+    def set_online_dns 
+      if Wordpress::Config.cfp_enable
+        cfp_cloudflare = {
+          api_user: Wordpress::Config.cfp_user,
+          api_token: Wordpress::Config.cfp_token
+        } 
+        cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare) 
+        proxied = true 
+        if cloudflare_api.create_or_update_dns_cname( self.origin, Wordpress::Config.cfp_all_in_one_cname, proxied )  
+          update_attribute(:dns_status, 1) 
+        end
+      end
+    end
+
     def can_login?
       !self.pending? && !self.processing? 
     end

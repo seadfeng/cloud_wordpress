@@ -248,6 +248,8 @@ ActiveAdmin.register_page "Settings" do
                 else
                         options = { alert: "开启Cloudflare Partner便于快速设置DNS" } 
                 end 
+            else
+                Wordpress::Config.cfp_enable = false
             end
         end
         
