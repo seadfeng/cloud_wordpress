@@ -14,7 +14,7 @@ module Wordpress
                             api_token: cloudflare.api_token,
                         } 
                     else
-                        @cloudflare = cloudflare
+                        @cloudflare = cloudflare 
                     end 
 
                     @headers = {
@@ -24,6 +24,10 @@ module Wordpress
                         :accept => :json
                     } 
                 end      
+
+                def set_zone_id(id)
+                    @zone_id =  id
+                end
 
                 def get_user_id
                     @client = rest_client( user_url , 'get', @headers )  

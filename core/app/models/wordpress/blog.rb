@@ -59,6 +59,7 @@ module Wordpress
         } 
         cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cfp_cloudflare) 
         proxied = true 
+        cloudflare_api.set_zone_id(domain.zone_id)
         if cloudflare_api.create_or_update_dns_cname( origin, Wordpress::Config.cfp_all_in_one_cname, proxied ) 
           if (is_root?  || is_www?)
             cloudflare_api.create_or_update_dns_cname( other_origin, Wordpress::Config.cfp_all_in_one_cname, proxied )  
