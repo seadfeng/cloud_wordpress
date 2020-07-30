@@ -21,6 +21,7 @@ module Wordpress
     end  
 
     before_validation :check_server_and_cloudflare
+    before_validation :check_cname
 
     before_validation :set_wordpress_user_and_password, on: :create
     after_create :set_mysql_user_and_password 
@@ -29,6 +30,10 @@ module Wordpress
     attr_accessor :migration
 
     after_commit :clear_cache 
+
+    def check_cname
+      self.cname = "@" if cname.blank?
+    end
 
     def migration
       ''
@@ -43,7 +48,7 @@ module Wordpress
       raise I18n.t('activerecord.errors.models.wordpress/cloudflare.attributes.zone_id.cannot_set_dns_if_zone_id_blank', domain: rootdomain, default: "先获取Cloudflare \"%{domain}\" Zone Id信息，确保域名有解析权限") if cloudflare.zone_id.blank?
       cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cloudflare) 
       proxied = true
-      update_attribute(:dns_status, 1) if cloudflare_api.create_or_update_dns_cname( self.cloudflare_domain, self.server.cname, proxied )  
+      update_attribute(:dns_status, 1) if cloudflare_api.create_or_update_dns_cname( cloudflare_domain, server.cname, proxied )  
     end
 
     def set_online_dns 
@@ -54,7 +59,10 @@ module Wordpress
         } 
         cloudflare_api = Wordpress::Core::Helpers::CloudflareApi.new(cfp_cloudflare) 
         proxied = true 
-        if cloudflare_api.create_or_update_dns_cname( self.origin, Wordpress::Config.cfp_all_in_one_cname, proxied )  
+        if cloudflare_api.create_or_update_dns_cname( origin, Wordpress::Config.cfp_all_in_one_cname, proxied ) 
+          if (is_root?  || is_www?)
+            cloudflare_api.create_or_update_dns_cname( other_origin, Wordpress::Config.cfp_all_in_one_cname, proxied )  
+          end
           update_attribute(:dns_status, 1) 
         end
       end
@@ -93,15 +101,29 @@ module Wordpress
       "https://#{cloudflare_domain}"
     end 
 
+    def is_www? 
+      self.cname == "www"  
+    end
+
+    def is_root? 
+      self.cname == "@"  
+    end
+
+    def other_origin
+      if is_www?
+        origin.gsub(/www./,'')
+      elsif is_root?   
+        "www.#{origin}"
+      end
+    end
+
     def origin
       if domain 
-        if cname == "@" || cname.blank?
+        if is_root?  
           "#{domain.name}"
         else
           "#{cname}.#{domain.name}"
-        end 
-      else
-        nil
+        end  
       end
     end
 
@@ -111,9 +133,7 @@ module Wordpress
     
     def online_origin 
       if domain  
-        "#{scheme}#{origin}/" 
-      else
-        nil
+        "#{scheme}#{origin}/"  
       end
     end
 
