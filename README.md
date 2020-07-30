@@ -37,6 +37,7 @@ $ rake db:migrate
 # config/application.rb
 config.i18n.default_locale = :"zh-CN"
 config.active_job.default_url_options = { host: "demo.cloudwp.xyz" }
+Rails.application.routes.default_url_options[:host] = "demo.cloudwp.xyz"
 ```
 
 ## Sidekiq Config
