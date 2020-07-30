@@ -14,6 +14,9 @@ module Wordpress
     belongs_to :server
 
     has_many :templates, through: :locale
+    has_many :monitors 
+
+    MONITOR_JOBS = %W( Wordpress::BlogCheckOnlineJob )
 
     with_options presence: true do 
       validates_uniqueness_of :domain, allow_blank: true, scope: :cname     
@@ -32,6 +35,10 @@ module Wordpress
     attr_accessor :migration
 
     after_commit :clear_cache 
+
+    def check_online_job_class_name
+      "Wordpress::BlogCheckOnlineJob"
+    end
 
     def check_cname
       self.cname = "@" if cname.blank?

@@ -14,4 +14,12 @@ namespace :wordpress do
             Wordpress::Locale.create(name: 'Spanish (Spain)', code: 'es-ES', position: 4) 
         end
     end
+
+    task :monitor_blog => :environment  do
+        blogs = Blog.publishedBlog.published
+        puts "Monitor BLog Job #{blogs.size}"
+        blogs.each do |blog|
+            blog.monitors.create(action: blog.check_online_job_class_name)
+        end
+    end
 end
