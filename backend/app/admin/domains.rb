@@ -78,6 +78,6 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Domain)
                 f.input :description    
             end
             f.actions
-        end 
+        end  
     end
 end

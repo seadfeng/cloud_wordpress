@@ -45,12 +45,30 @@ module Wordpress
         cookies =  { 
             :user_api_key => config.cfp_token,
             :user_key => config.cfp_user_key,
-            :cloudflare_email => config.cfp_user ,  
-            :tlo_cached_cloud => "1",
-            :tlo_cached_main => "1"
+            :cloudflare_email => config.cfp_user  
         }
         client = RestClient::Request.execute url: url, method: :post, payload: data,  :cookies => cookies, :headers => {  :"Content-Type" => "application/x-www-form-urlencoded" }  
-        client && client.code == 200 &&  /Go to console/.match( client.body )  
+        if client && client.code == 200 
+            if /Go to console/.match( client.body )  
+                ActiveAdmin::Comment.create( 
+                    resource_type: "Wordpress::Domain", 
+                    resource_id: domain.id,
+                    author_type: "AdminUser",
+                    author_id: AdminUser.where(role: "admin")&.first&.id,
+                    body: "成功添加域名到Cloudflare Partner",
+                    namespace: "admin"
+                 )
+            else
+                ActiveAdmin::Comment.create( 
+                    namespace: "admin",
+                    resource_type: "Wordpress::Domain", 
+                    resource_id: domain.id,
+                    author_type: "AdminUser",
+                    author_id: AdminUser.where(role: "admin")&.first&.id,
+                    body: "CloudFlare is already activated for \"cloudwp.xyz\" under a different account. If you want to enable CloudFlare through this partner, please log in to your CloudFlare account and choose \"Disconnect\" on your CloudFlare DNS Settings page."
+                ) 
+            end
+        end
       end
  
 
