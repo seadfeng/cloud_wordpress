@@ -65,7 +65,7 @@ module Wordpress
                     resource_id: domain.id,
                     author_type: "AdminUser",
                     author_id: AdminUser.where(role: "admin")&.first&.id,
-                    body: "CloudFlare is already activated for \"cloudwp.xyz\" under a different account. If you want to enable CloudFlare through this partner, please log in to your CloudFlare account and choose \"Disconnect\" on your CloudFlare DNS Settings page."
+                    body: "CloudFlare is already activated for \"#{domain.name}\" under a different account. If you want to enable CloudFlare through this partner, please log in to your CloudFlare account and choose \"Disconnect\" on your CloudFlare DNS Settings page."
                 ) 
             end
         end
