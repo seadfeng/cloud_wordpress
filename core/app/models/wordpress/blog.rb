@@ -111,10 +111,12 @@ module Wordpress
     end
 
     def other_origin
-      if is_www?
-        origin.gsub(/www./,'')
-      elsif is_root?   
-        "www.#{origin}"
+      if origin
+        if is_www?
+          origin.gsub(/www./,'')
+        elsif is_root?   
+          "www.#{origin}"
+        end
       end
     end
 

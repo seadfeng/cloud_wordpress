@@ -288,19 +288,42 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                     row :created_at   
                 end
             end
+            panel "Cloudflare CNAME Setup" do
+                if  resource.origin
+                    table_for resource do 
+                        column :host_name do 
+                            "#{resource.origin}" if resource.origin
+                        end
+                        column :cname do 
+                            "#{resource.origin}.cdn.cloudflare.net" if resource.origin
+                        end
+                    end
+                end
+                if  resource.other_origin
+                    table_for resource do 
+                        column :host_name do 
+                            "#{resource.other_origin}" if resource.other_origin
+                        end
+                        column :cname do 
+                            "#{resource.other_origin}.cdn.cloudflare.net" if resource.other_origin
+                        end
+                    end 
+                end
+
+            end
             active_admin_comments
         end
 
-        sidebar :tips  do 
-            h3 "操作指南/工作流程"
+        sidebar :tips do 
+            h3 "操作指南"
             ol do
                 li "安装/迁移博客"
                 li "博客达到上线标准【标记完成】"
-                li "【编辑博客】填写域名信息"
-                li "找到PHP代理节点IP，并解析"
-                li "最后点【发布】按钮"
+                li "【编辑博客】填写域名信息" 
+                li "网址准备就绪【发布】"
+                li "找到PHP代理节点IP，并解析()"
                 li "网站正常访问"
-            end
+            end 
         end
     end
 end
