@@ -7,7 +7,7 @@ module Wordpress
       attr_reader :blog
       
       def perform(blog)  
-
+        RestClient.get url 
       end
 
       private
