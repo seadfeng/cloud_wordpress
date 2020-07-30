@@ -27,6 +27,8 @@ module Wordpress
     after_create :set_mysql_user_and_password 
     before_destroy :can_destroy? 
 
+    delegate :cloudflare?, to: :domain
+
     attr_accessor :migration
 
     after_commit :clear_cache 

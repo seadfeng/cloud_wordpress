@@ -288,28 +288,30 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                     row :created_at   
                 end
             end
-            panel "Cloudflare CNAME Setup" do
-                if  resource.origin
-                    table_for resource do 
-                        column :host_name do 
-                            "#{resource.origin}" if resource.origin
-                        end
-                        column :cname do 
-                            "#{resource.origin}.cdn.cloudflare.net" if resource.origin
+            if resource.cloudflare?
+                panel "Cloudflare CNAME Setup" do
+                    if  resource.origin
+                        table_for resource do 
+                            column :host_name do 
+                                "#{resource.origin}" if resource.origin
+                            end
+                            column :cname do 
+                                "#{resource.origin}.cdn.cloudflare.net" if resource.origin
+                            end
                         end
                     end
-                end
-                if  resource.other_origin
-                    table_for resource do 
-                        column :host_name do 
-                            "#{resource.other_origin}" if resource.other_origin
-                        end
-                        column :cname do 
-                            "#{resource.other_origin}.cdn.cloudflare.net" if resource.other_origin
-                        end
-                    end 
-                end
+                    if  resource.other_origin
+                        table_for resource do 
+                            column :host_name do 
+                                "#{resource.other_origin}" if resource.other_origin
+                            end
+                            column :cname do 
+                                "#{resource.other_origin}.cdn.cloudflare.net" if resource.other_origin
+                            end
+                        end 
+                    end
 
+                end
             end
             active_admin_comments
         end
