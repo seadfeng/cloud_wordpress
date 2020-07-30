@@ -47,7 +47,7 @@ module Wordpress
     end
 
     def set_online_dns 
-      if Wordpress::Config.cfp_enable
+      if Wordpress::Config.cfp_enable && domain && domain.cloudflare?
         cfp_cloudflare = {
           api_user: Wordpress::Config.cfp_user,
           api_token: Wordpress::Config.cfp_token

@@ -18,6 +18,9 @@ module Wordpress
 
     after_commit :clear_cache 
 
+    def cloudflare?
+      !!zone_id
+    end
 
     def self.cache_by_name(domain) 
       find_domain = Rails.cache.fetch("domain_key_#{domain}") do
