@@ -323,7 +323,7 @@ if defined?(ActiveAdmin) && defined?(Wordpress::Blog)
                 li "博客达到上线标准【标记完成】"
                 li "【编辑博客】填写域名信息" 
                 li "网址准备就绪【发布】"
-                li "找到PHP代理节点IP，并解析()"
+                li "找到PHP代理节点IP，并解析; 如使用Cloudflare Partner找到CNAME记录解析" 
                 li "网站正常访问"
             end 
         end
