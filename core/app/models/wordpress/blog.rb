@@ -28,13 +28,15 @@ module Wordpress
 
     before_validation :set_wordpress_user_and_password, on: :create
     after_create :set_mysql_user_and_password 
-    before_destroy :can_destroy? 
-
-    delegate :cloudflare?, to: :domain
+    before_destroy :can_destroy?  
 
     attr_accessor :migration
 
     after_commit :clear_cache 
+
+    def cloudflare?
+      domain.cloudflare?  if domain
+    end
 
     def check_online_job_class_name
       "Wordpress::BlogCheckOnlineJob"
