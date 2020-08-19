@@ -51,6 +51,9 @@ Sidekiq.configure_client do |config|
 end
 ```
 
+## Wordpress Host System dependence
+Centos 8.0+
+
 ## System dependence
 rails 6.0+
 mysql 8.0+
