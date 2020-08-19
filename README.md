@@ -64,5 +64,6 @@ https://github.com/mperham/sidekiq/blob/07c0e1f4e60298deeab70999f6a33c86959f196a
 
 https://github.com/rails/webpacker/blob/master/docs/engines.md
 
-## Contributing
-Contribution directions go here.
+## License
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
