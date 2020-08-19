@@ -58,6 +58,14 @@ Centos 8.0+
 rails 6.0+
 mysql 8.0+
 
+## Dependencies
+
+[activeadmin](https://github.com/activeadmin/activeadmin)
+
+[activeadmin_addons](https://github.com/platanus/activeadmin_addons)
+
+[active_admin_role](https://github.com/seadfeng/active_admin_role)
+
 
 ## Sidekiq Service
 
