@@ -1,4 +1,4 @@
-# Cloud_wordpres is used for wordpress site group management
+# wordpres cluster management solution
 
 * Is activeadmin based;
 * WordPress blog domain name connects to Cloudflare Partner;
