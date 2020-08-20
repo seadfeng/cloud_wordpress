@@ -1,5 +1,14 @@
-# Wordpress
-Short description and motivation.
+# Cloud_wordpres is used for wordpress site group management
+
+* Is activeadmin based;
+* WordPress blog domain name connects to Cloudflare Partner;
+* WordPress host auto install;
+* WordPress host distributed management;
+* Clone an existing blog when create a new WordPress;
+* Multi-language WordPress management;
+* php proxy forwarding;
+* Admin user role;
+
 
 ## Usage
 How to use my plugin.
@@ -65,6 +74,8 @@ mysql 8.0+
 [activeadmin_addons](https://github.com/platanus/activeadmin_addons)
 
 [active_admin_role](https://github.com/seadfeng/active_admin_role)
+
+[active_admin_import](https://github.com/activeadmin-plugins/active_admin_import)
 
 
 ## Sidekiq Service
