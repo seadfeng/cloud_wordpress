@@ -25,6 +25,7 @@ And then execute:
 ```bash
 $ bundle install 
 $ rails webpacker:install
+$ rake db:create
 $ rails g active_admin:install
 $ rails g wordpress:install
 $ rake db:migrate
