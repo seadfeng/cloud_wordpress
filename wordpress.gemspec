@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version     = Wordpress::VERSION
   spec.authors     = ["Sead Feng"]
   spec.email       = ["seadfeng@gmail.com"]
-  spec.homepage    = "https://gitlab.seadapp.com/wordpress/wordpress"
+  spec.homepage    = "https://github.com/seadfeng/cloud_wordpress"
   spec.summary     = "Cloud Wordpress"
   spec.description = "Wordpress"
   spec.license     = "MIT"
